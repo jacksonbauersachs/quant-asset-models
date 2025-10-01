@@ -1,0 +1,16 @@
+Palladium Growth Model Analysis (Comprehensive Data)
+============================================================
+
+Model Performance:
+Power: R² = 0.7086
+  Formula: y = 0.0000 * x^2.7767
+
+Exponential: R² = 0.7108
+  Formula: y = 50.8749 * e^(0.000203 * x)
+
+Logarithmic: R² = 0.2946
+  Formula: y = -2215.6440 + 309.4445 * ln(x)
+
+Best Model: Exponential
+R² = 0.7108
+Formula: y = 50.8749 * e^(0.000203 * x)

@@ -1,0 +1,22 @@
+ETHEREUM MODEL-BASED FORWARD PROJECTIONS
+============================================================
+
+Analysis Date: 2025-09-29 21:58:47
+
+ETHEREUM PROJECTIONS
+--------------------
+As of: 2025-09-29
+Current Price: $4,217.25
+Model Fair Price (today): $3,356.20
+1-Year Projected Price: $3,885.50 | Return vs Current: -7.87%
+5-Year Projected Price: $6,396.76 | Return vs Current: 51.68%
+10-Year Projected Price: $10,650.49 | Return vs Current: 152.55%
+Fair-Based Growth Rates (from model fair price):
+  1-Year Growth: 15.77%
+  5-Year Growth: 90.60%
+  10-Year Growth: 217.34%
+
+Notes:
+- Projections use the latest fitted Ethereum growth model.
+- Returns are computed versus the latest observed price.
+- Horizons are 1, 5, and 10 calendar years (365d per year).

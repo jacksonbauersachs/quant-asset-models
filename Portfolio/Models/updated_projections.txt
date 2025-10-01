@@ -1,46 +1,46 @@
 MODEL-BASED FORWARD PROJECTIONS
 ============================================================
 
-Analysis Date: 2025-09-22 16:15:38
+Analysis Date: 2025-09-30 00:08:33
 
 BITCOIN PROJECTIONS
 -------------------
-As of: 2025-09-22
-Current Price: $115,056.00
-Model Fair Price (today): $107,880.96
-1-Year Projected Price: $149,980.52 | Return vs Current: 30.35%
-5-Year Projected Price: $475,826.38 | Return vs Current: 313.56%
-10-Year Projected Price: $1,541,238.62 | Return vs Current: 1239.56%
+As of: 2025-09-30
+Current Price: $114,332.40
+Model Fair Price (today): $108,698.28
+1-Year Projected Price: $151,054.35 | Return vs Current: 32.12%
+5-Year Projected Price: $478,624.54 | Return vs Current: 318.63%
+10-Year Projected Price: $1,548,674.69 | Return vs Current: 1254.54%
 Fair-Based Growth Rates (from model fair price):
-  1-Year Growth: 39.02%
-  5-Year Growth: 341.07%
-  10-Year Growth: 1328.65%
+  1-Year Growth: 38.97%
+  5-Year Growth: 340.32%
+  10-Year Growth: 1324.75%
 
 GOLD PROJECTIONS
 ----------------
-As of: 2025-09-19
-Current Price: $3,657.85
-Model Fair Price (today): $2,641.29
-1-Year Projected Price: $2,858.72 | Return vs Current: -21.85%
-5-Year Projected Price: $3,943.73 | Return vs Current: 7.82%
-10-Year Projected Price: $5,951.97 | Return vs Current: 62.72%
+As of: 2025-09-29
+Current Price: $3,812.85
+Model Fair Price (today): $2,657.70
+1-Year Projected Price: $2,877.98 | Return vs Current: -24.52%
+5-Year Projected Price: $3,978.95 | Return vs Current: 4.36%
+10-Year Projected Price: $6,022.23 | Return vs Current: 57.95%
 Fair-Based Growth Rates (from model fair price):
-  1-Year Growth: 8.23%
-  5-Year Growth: 49.31%
-  10-Year Growth: 125.34%
+  1-Year Growth: 8.29%
+  5-Year Growth: 49.71%
+  10-Year Growth: 126.60%
 
 SILVER PROJECTIONS
 ------------------
-As of: 2025-09-19
-Current Price: $42.23
-Model Fair Price (today): $30.05
-1-Year Projected Price: $31.68 | Return vs Current: -25.00%
-5-Year Projected Price: $39.21 | Return vs Current: -7.16%
-10-Year Projected Price: $51.53 | Return vs Current: 22.01%
+As of: 2025-09-29
+Current Price: $46.95
+Model Fair Price (today): $30.19
+1-Year Projected Price: $31.83 | Return vs Current: -32.20%
+5-Year Projected Price: $39.46 | Return vs Current: -15.95%
+10-Year Projected Price: $51.95 | Return vs Current: 10.64%
 Fair-Based Growth Rates (from model fair price):
-  1-Year Growth: 5.39%
-  5-Year Growth: 30.47%
-  10-Year Growth: 71.46%
+  1-Year Growth: 5.43%
+  5-Year Growth: 30.68%
+  10-Year Growth: 72.04%
 
 Notes:
 - Projections use the latest fitted models in this session.

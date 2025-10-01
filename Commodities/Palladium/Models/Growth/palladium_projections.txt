@@ -1,0 +1,27 @@
+PALLADIUM MODEL-BASED FORWARD PROJECTIONS
+============================================================
+
+Analysis Date: 2025-09-30 20:45:25
+
+PALLADIUM PROJECTIONS
+--------------------
+As of: 2025-09-30 00:00:00
+Current Price: $1252.0000
+Model Fair Price (today): $1888.4695
+1-Year Projected Price: $2033.8785 | Return vs Current: 62.45%
+2-Year Projected Price: $2190.4838 | Return vs Current: 74.96%
+3-Year Projected Price: $2359.1474 | Return vs Current: 88.43%
+5-Year Projected Price: $2736.4350 | Return vs Current: 118.57%
+10-Year Projected Price: $3965.1560 | Return vs Current: 216.71%
+
+Fair-Based Growth Rates (from model fair price):
+  1-Year Growth: 7.70%
+  2-Year Growth: 15.99%
+  3-Year Growth: 24.92%
+  5-Year Growth: 44.90%
+  10-Year Growth: 109.97%
+
+Notes:
+- Projections use the latest fitted Palladium growth model.
+- Model fair price represents the theoretical value based on historical trends.
+- These are statistical projections, not financial advice.

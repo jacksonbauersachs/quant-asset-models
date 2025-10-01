@@ -1,9 +1,0 @@
-a = 0.7041453448811968
-b = -2.29420288747581
-R2 = 0.5909129215088949
-# Formula: log10(price) = a * ln(day) + b
-# Last updated: 2025-07-25 16:44:41
-# Data range: 2017-03-09 to 2025-07-24
-# Total data points: 3,060
-# Current price: $3,719.01
-# All-time high: $4,808.38

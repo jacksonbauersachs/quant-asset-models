@@ -1,0 +1,38 @@
+PALLADIUM RECOVERY TIME ANALYSIS
+================================
+
+Current Situation (2025-09-26):
+- Current Price: $1,252.00
+- Rolling Mean (1-year): $991.62
+- Rolling Std Dev: $93.27
+- Z-Score: +2.79 (2.8 standard deviations ABOVE mean)
+
+KEY FINDINGS:
+=============
+
+1. CURRENT POSITION: Palladium is currently 2.8 standard deviations ABOVE its 1-year rolling mean, 
+   meaning it's in a strong position, not in a drop situation.
+
+2. HISTORICAL RECOVERY TIMES for Major Drops (2+ std dev below mean):
+   - 1977 drop: 0.4 years (151 days)
+   - 1995 drop: 1.4 years (501 days) 
+   - 2015 drops: 0.7-0.8 years (246-294 days)
+
+3. AVERAGE RECOVERY TIME: Approximately 0.8 years (9-10 months)
+
+4. RECOVERY PATTERN: Most significant drops recovered within 6-18 months
+
+IMPLICATIONS:
+============
+
+Since palladium is currently 2.8 standard deviations ABOVE its mean (not below), 
+the current price represents a strong position rather than a drop situation.
+
+If palladium were to experience a significant drop (2+ std dev below mean), 
+historical data suggests recovery typically occurs within:
+- Best case: 4-6 months
+- Typical case: 8-12 months  
+- Worst case: 12-18 months
+
+The 2015-2016 period shows the most recent major drop and recovery cycle, 
+with palladium falling to ~$530-640 range and recovering within 8-10 months.
