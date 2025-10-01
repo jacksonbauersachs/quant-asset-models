@@ -307,12 +307,13 @@ def create_rainbow_chart(df, asset_name, model_results, output_dir):
         x_label = 'Days Since Start'
         title_suffix = f'{asset_name} Price Trend'
     
-    # Set up the plot
+    # Set up the plot with two subplots (log and normal y-axis)
     plt.style.use('default')  # Use default style for better compatibility
-    fig, ax = plt.subplots(figsize=(14, 8))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 12))
     
-    # Plot actual price
-    ax.semilogy(df['Date'], df['Price'], color='blue', linewidth=2, label=f'Actual {asset_name} Price')
+    # Plot actual price on both subplots
+    ax1.semilogy(df['Date'], df['Price'], color='blue', linewidth=2, label=f'Actual {asset_name} Price')
+    ax2.plot(df['Date'], df['Price'], color='blue', linewidth=2, label=f'Actual {asset_name} Price')
     
     if asset_name == 'Bitcoin':
         # Create rainbow bands for Bitcoin
@@ -363,68 +364,84 @@ def create_rainbow_chart(df, asset_name, model_results, output_dir):
                 lower_bound = band_prices[i-1]
                 upper_bound = band_prices[i]
             
-            ax.fill_between(df_filtered['Date'], lower_bound, upper_bound, 
+            ax1.fill_between(df_filtered['Date'], lower_bound, upper_bound, 
+                           color=band_colors[i], alpha=band_alphas[i], 
+                           label=f"{band_names[i]}")
+            ax2.fill_between(df_filtered['Date'], lower_bound, upper_bound, 
                            color=band_colors[i], alpha=band_alphas[i], 
                            label=f"{band_names[i]}")
         
         # Plot model line
-        ax.semilogy(df_filtered['Date'], df_filtered['Model_Price'], 
+        ax1.semilogy(df_filtered['Date'], df_filtered['Model_Price'], 
                     color='black', linestyle='--', linewidth=2, label='Growth Model')
+        ax2.plot(df_filtered['Date'], df_filtered['Model_Price'], 
+                color='black', linestyle='--', linewidth=2, label='Growth Model')
         
         # Highlight current position
         current_price = df_filtered['Price'].iloc[-1]
         current_date = df_filtered['Date'].iloc[-1]
-        ax.scatter(current_date, current_price, color='red', s=100, 
+        ax1.scatter(current_date, current_price, color='red', s=100, 
+                   zorder=10, label=f'Current: ${current_price:,.0f}')
+        ax2.scatter(current_date, current_price, color='red', s=100, 
                    zorder=10, label=f'Current: ${current_price:,.0f}')
         
         # Add model information
         formula_text = f'Model: log₁₀(price) = {model_results["slope"]:.3f} × ln(day) + {model_results["intercept"]:.3f}\nR² = {model_results["r2"]:.4f}'
-        ax.text(0.02, 0.02, formula_text, transform=ax.transAxes, fontsize=10, 
+        ax1.text(0.02, 0.02, formula_text, transform=ax1.transAxes, fontsize=10, 
+                color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
+        ax2.text(0.02, 0.02, formula_text, transform=ax2.transAxes, fontsize=10, 
                 color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
         
     else:
         # For metals, plot trend line
         df['Model_Price'] = df[days_col].apply(model_formula)
-        ax.semilogy(df['Date'], df['Model_Price'], 
+        ax1.semilogy(df['Date'], df['Model_Price'], 
                     color='red', linestyle='--', linewidth=2, label=f'{asset_name} Trend Model')
+        ax2.plot(df['Date'], df['Model_Price'], 
+                color='red', linestyle='--', linewidth=2, label=f'{asset_name} Trend Model')
         
         # Highlight current position
         current_price = df['Price'].iloc[-1]
         current_date = df['Date'].iloc[-1]
-        ax.scatter(current_date, current_price, color='red', s=100, 
+        ax1.scatter(current_date, current_price, color='red', s=100, 
+                   zorder=10, label=f'Current: ${current_price:,.2f}')
+        ax2.scatter(current_date, current_price, color='red', s=100, 
                    zorder=10, label=f'Current: ${current_price:,.2f}')
         
         # Add model information
         best_model = model_results['Best_Model']
         formula_text = f'Best Model: {best_model["name"]}\nR² = {best_model["r2"]:.4f}'
-        ax.text(0.02, 0.02, formula_text, transform=ax.transAxes, fontsize=10, 
+        ax1.text(0.02, 0.02, formula_text, transform=ax1.transAxes, fontsize=10, 
+                color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
+        ax2.text(0.02, 0.02, formula_text, transform=ax2.transAxes, fontsize=10, 
                 color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
     
-    # Formatting
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel(f'{asset_name} Price (USD) - Log Scale', fontsize=12)
-    ax.set_title(f'{title_suffix}\nGrowth Model Analysis', fontsize=16, fontweight='bold')
-    ax.grid(True, alpha=0.3, which='both')
-    
-    # Custom y-axis formatting
-    def price_formatter(x, pos):
-        if x >= 1000000:
-            return f'${x/1000000:.1f}M'
-        elif x >= 1000:
-            return f'${x/1000:.0f}K'
+    # Formatting for both subplots
+    for ax, ylabel_suffix in [(ax1, 'Log Scale'), (ax2, 'Normal Scale')]:
+        ax.set_xlabel('Date', fontsize=12)
+        ax.set_ylabel(f'{asset_name} Price (USD) - {ylabel_suffix}', fontsize=12)
+        ax.set_title(f'{title_suffix} - {ylabel_suffix}', fontsize=14, fontweight='bold')
+        ax.grid(True, alpha=0.3, which='both')
+        
+        # Custom y-axis formatting
+        def price_formatter(x, pos):
+            if x >= 1000000:
+                return f'${x/1000000:.1f}M'
+            elif x >= 1000:
+                return f'${x/1000:.0f}K'
+            else:
+                return f'${x:.0f}'
+        
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(price_formatter))
+        
+        # Add legend
+        ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
+        
+        # Set y-axis limits
+        if asset_name == 'Bitcoin':
+            ax.set_ylim(0.01, max(df_filtered['Price'].max(), df_filtered['Model_Price'].max()) * 2)
         else:
-            return f'${x:.0f}'
-    
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(price_formatter))
-    
-    # Add legend
-    ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
-    
-    # Set y-axis limits
-    if asset_name == 'Bitcoin':
-        ax.set_ylim(0.01, max(df_filtered['Price'].max(), df_filtered['Model_Price'].max()) * 2)
-    else:
-        ax.set_ylim(0.01, max(df['Price'].max(), df['Model_Price'].max()) * 2)
+            ax.set_ylim(0.01, max(df['Price'].max(), df['Model_Price'].max()) * 2)
     
     plt.tight_layout()
     

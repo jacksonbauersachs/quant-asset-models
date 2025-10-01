@@ -34,7 +34,7 @@ def load_palladium_data():
         return None
 
 def create_simple_interactive_chart(df):
-    """Create a simple interactive chart with growth rate slider."""
+    """Create a simple interactive chart with growth rate and intercept sliders."""
     
     # Get initial parameters
     x = df['days'].values
@@ -42,8 +42,8 @@ def create_simple_interactive_chart(df):
     
     # Initial model parameters
     initial_a = 54.36
-    initial_b = 0.000200  # This is the growth rate we'll adjust
-    initial_c = -11.07
+    fixed_b = 0.000172  # Fixed growth rate
+    initial_c = -11.07  # This is the intercept we'll adjust
     
     # Create figure
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
@@ -52,7 +52,7 @@ def create_simple_interactive_chart(df):
     ax1.scatter(df['years'], df[' value'], alpha=0.6, s=1, color='blue', label='Actual Data')
     
     # Initial model line
-    y_initial = initial_a * np.exp(initial_b * x) + initial_c
+    y_initial = initial_a * np.exp(fixed_b * x) + initial_c
     line1, = ax1.plot(df['years'], y_initial, 'r-', linewidth=2, label='Exponential Model')
     
     # Current price line
@@ -61,13 +61,13 @@ def create_simple_interactive_chart(df):
     
     ax1.set_xlabel('Year')
     ax1.set_ylabel('Palladium Price ($)')
-    ax1.set_title('Interactive Palladium Growth Model - Adjust Growth Rate')
+    ax1.set_title('Interactive Palladium Growth Model - Fixed Growth Rate (0.000172), Adjust Intercept')
     ax1.legend()
     ax1.grid(True, alpha=0.3)
     
     # Log scale plot
     ax2.scatter(df['years'], df[' value'], alpha=0.6, s=1, color='blue', label='Actual Data')
-    y_initial_log = initial_a * np.exp(initial_b * x) + initial_c
+    y_initial_log = initial_a * np.exp(fixed_b * x) + initial_c
     line2, = ax2.plot(df['years'], y_initial_log, 'r-', linewidth=2, label='Exponential Model')
     ax2.axhline(y=current_price, color='green', linestyle='--', alpha=0.7, label=f'Current Price: ${current_price:.0f}')
     
@@ -78,19 +78,19 @@ def create_simple_interactive_chart(df):
     ax2.legend()
     ax2.grid(True, alpha=0.3)
     
-    # Create slider
-    ax_slider = plt.axes([0.2, 0.02, 0.6, 0.03])
-    slider = Slider(ax_slider, 'Growth Rate (b)', 0.000050, 0.000500, valinit=initial_b, valfmt='%.6f')
+    # Create slider (only intercept now)
+    ax_slider_c = plt.axes([0.2, 0.02, 0.6, 0.03])
+    slider_c = Slider(ax_slider_c, 'Intercept (c) - Move Curve Up/Down', -200, 200, valinit=initial_c, valfmt='%.1f')
     
     # Info text
-    info_text = fig.text(0.02, 0.15, '', fontsize=11, verticalalignment='top')
+    info_text = fig.text(0.02, 0.20, '', fontsize=11, verticalalignment='top')
     
     def update_model(val):
         """Update the model when slider changes."""
-        b = slider.val
+        c = slider_c.val
         
-        # Calculate new model predictions
-        y_new = initial_a * np.exp(b * x) + initial_c
+        # Calculate new model predictions (using fixed growth rate)
+        y_new = initial_a * np.exp(fixed_b * x) + c
         
         # Update both lines
         line1.set_ydata(y_new)
@@ -103,28 +103,29 @@ def create_simple_interactive_chart(df):
         
         # Calculate fair value (current date)
         current_days = df['days'].iloc[-1]
-        fair_value = initial_a * np.exp(b * current_days) + initial_c
+        fair_value = initial_a * np.exp(fixed_b * current_days) + c
         
         # Calculate undervaluation
         undervaluation = ((fair_value - current_price) / current_price) * 100
         
         # Update info text
-        info_text.set_text(f"""Growth Rate: {b:.6f}
+        info_text.set_text(f"""Fixed Growth Rate (b): {fixed_b:.6f}
+Intercept (c): {c:.1f}
 R² Score: {r2:.4f}
 Current Price: ${current_price:.2f}
 Model Fair Value: ${fair_value:.2f}
 Undervaluation: {undervaluation:.1f}%
 
 Instructions:
-- Drag the slider to adjust the growth rate
+- Drag the slider to move the whole curve up or down
+- Growth rate is fixed at 0.000172
 - Watch how the model line changes in real-time
-- See how fair value and undervaluation change
-- Try different growth rates to see the impact""")
+- See how fair value and undervaluation change""")
         
         fig.canvas.draw_idle()
     
     # Connect slider to update function
-    slider.on_changed(update_model)
+    slider_c.on_changed(update_model)
     
     # Initial update
     update_model(None)
@@ -142,7 +143,8 @@ def main():
         return
     
     print("\nCreating interactive chart...")
-    print("Use the slider at the bottom to adjust the growth rate!")
+    print("Use the slider to adjust the intercept (move curve up/down)!")
+    print("Growth rate is fixed at 0.000172!")
     print("Watch how the model line and fair value change in real-time!")
     
     fig = create_simple_interactive_chart(df)
@@ -153,7 +155,9 @@ def main():
     print("\n" + "=" * 50)
     print("INTERACTIVE CHART COMPLETE")
     print("=" * 50)
-    print("Adjust the growth rate slider to see how it affects:")
+    print("Adjust the slider to see how it affects:")
+    print("- Intercept slider: Move the whole curve up or down")
+    print("- Growth rate is fixed at 0.000172")
     print("- Model fit (R² score)")
     print("- Fair value predictions")
     print("- Undervaluation percentage")

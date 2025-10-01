@@ -1,0 +1,29 @@
+PALLADIUM 50/50 MODEL ANALYSIS
+============================================================
+
+Analysis Date: 2025-09-30 23:07:30
+
+Methodology:
+1. Fixed y-intercept at 54.36
+2. Optimized growth rate (b) and intercept (c) to achieve 50/50 split
+3. This balances time above/below the model line
+4. More robust than R² for volatile data
+5. Finds optimal combination of both parameters
+
+50/50 Model: y = 54.36 * e^(0.000172 * x) + 20.66
+  R² = 0.556873
+  Points above line: 6108 (50.0%)
+  Points below line: 6107 (50.0%)
+  Deviation from 50/50: 0.0%
+
+Fair Value Analysis:
+  Current Price: $1252.00
+  Model Fair Value: $1181.08
+  Deviation: 6.0%
+
+Key Insights:
+- This model balances time above/below the line
+- More robust to outliers than R² minimization
+- Shows the 'true center' of palladium's behavior
+- Better for volatile data like palladium
+- Current price position relative to balanced model

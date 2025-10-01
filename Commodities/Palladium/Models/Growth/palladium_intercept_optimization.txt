@@ -1,0 +1,29 @@
+PALLADIUM Y-INTERCEPT OPTIMIZATION
+============================================================
+
+Analysis Date: 2025-09-30 22:53:51
+
+Methodology:
+1. Fixed growth rate at 0.000172
+2. Tested 100 different y-intercept values (a parameter)
+3. For each a, optimized the offset parameter (c)
+4. Found the combination that maximizes R²
+
+Optimization Results:
+  Fixed Growth Rate: 0.000172
+  Optimal y-intercept (a): 87.4343
+  Optimal offset (c): -74.77
+  Maximum R²: 0.7085
+
+Optimized Model: y = 87.4343 * e^(0.000172 * x) + -74.77
+
+Fair Value Analysis:
+  Current Price: $1252.00
+  Model Fair Value: $1791.70
+  Deviation: -30.1%
+
+Key Insights:
+- This shows the optimal y-intercept for the given growth rate
+- The chart shows how R² changes with different y-intercepts
+- This helps understand the sensitivity of the model to parameters
+- The optimized model provides the best fit for the fixed growth rate
