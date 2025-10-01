@@ -1,0 +1,26 @@
+PALLADIUM PRE-2020 GROWTH MODEL ANALYSIS
+============================================================
+
+Analysis Date: 2025-09-30 21:47:11
+
+This analysis trains the model on data up to 2020 only, then overlays
+the fair value line on post-2020 data to see how it compares.
+
+Best Pre-2020 Model: Exponential
+  Formula: y = 0.3153 * e^(0.000539 * x) + 176.30
+  R² Score: 0.840863
+  RMSE: 167.92
+  Training Data: 1977-2020 (11060 records)
+
+Fair Value Analysis:
+  Current Price: $1252.00
+  Model Fair Value: $4827.99
+  Status: Undervalued by 285.6%
+
+Chart Interpretation:
+- Green dashed line: Model training cutoff (2020)
+- Red line: Model predictions (trained on pre-2020 data)
+- Blue dots: Actual prices (including post-2020)
+- Orange dot: Model prediction for current date
+- Red dot: Current actual price
+- This shows how the model would have predicted post-2020 prices

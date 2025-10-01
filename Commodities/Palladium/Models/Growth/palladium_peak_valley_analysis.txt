@@ -1,0 +1,31 @@
+PALLADIUM PEAK/VALLEY MODEL ANALYSIS
+============================================================
+
+Analysis Date: 2025-09-30 22:24:02
+
+Methodology:
+1. Identified peaks and valleys in palladium price data
+2. Fitted exponential models to peaks only and valleys only
+3. Averaged the parameters to create a balanced model
+4. This reduces overfitting to recent volatility
+
+Peak Model: y = 2.0069 * e^(0.000436 * x) + 289.22
+  R² = 0.908585
+  Fair Value: $4989.51
+  Undervaluation: 298.5%
+
+Valley Model: y = 7.2238 * e^(0.000295 * x) + 52.63
+  R² = 0.813542
+  Fair Value: $1419.96
+  Undervaluation: 13.4%
+
+Average Model: y = 4.6154 * e^(0.000365 * x) + 170.92
+  R² = 0.429970
+  Fair Value: $3243.88
+  Undervaluation: 159.1%
+
+Key Insights:
+- Peak model shows bullish outlook (higher growth rate)
+- Valley model shows bearish outlook (lower growth rate)
+- Average model provides balanced perspective
+- This approach reduces overfitting to recent volatility

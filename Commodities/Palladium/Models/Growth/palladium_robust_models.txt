@@ -1,0 +1,35 @@
+PALLADIUM ROBUST GROWTH MODEL ANALYSIS
+============================================================
+
+Analysis Date: 2025-09-30 21:29:58
+
+This analysis addresses overfitting concerns by testing different approaches:
+
+Exponential_NoRecent:
+  Formula: y = 7.6729 * e^(0.000320 * x) + 114.16
+  R² Score: 0.801490
+  Data Points: 10,807
+  Date Range: 1977-01-05 to 2019-12-31
+
+Power_Smoothed:
+  Formula: y = 0.0000 * x^3.8354 + 114.13
+  R² Score: 0.779320
+  Data Points: 11,851
+  Date Range: 1977-09-27 to 2024-10-17
+
+Power_Filtered:
+  Formula: y = 0.0000 * x^2.7723 + 96.81
+  R² Score: 0.784785
+  Data Points: 11,605
+  Date Range: 1977-01-05 to 2025-09-26
+
+Best Model: Exponential_NoRecent
+  Formula: y = 7.6729 * e^(0.000320 * x) + 114.16
+  R² Score: 0.801490
+  Data Points: 10,807
+  Date Range: 1977-01-05 to 2019-12-31
+
+Notes:
+- This analysis tests different approaches to avoid overfitting to recent spikes
+- Models are compared based on R² score and data coverage
+- The best model provides a more robust long-term trend

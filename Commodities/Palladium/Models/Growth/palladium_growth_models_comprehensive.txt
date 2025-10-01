@@ -8,9 +8,12 @@ Power: R² = 0.7086
 Exponential: R² = 0.7108
   Formula: y = 50.8749 * e^(0.000203 * x)
 
+Polynomial: R² = 0.7193
+  Formula: y = 110.0575 + 0.002399*x + -0.00000191*x² + 0.0000000004*x³
+
 Logarithmic: R² = 0.2946
   Formula: y = -2215.6440 + 309.4445 * ln(x)
 
-Best Model: Exponential
-R² = 0.7108
-Formula: y = 50.8749 * e^(0.000203 * x)
+Best Model: Polynomial
+R² = 0.7193
+Formula: y = 110.0575 + 0.002399*x + -0.00000191*x² + 0.0000000004*x³

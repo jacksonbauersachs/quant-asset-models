@@ -1,7 +1,7 @@
 MODEL-BASED FORWARD PROJECTIONS
 ============================================================
 
-Analysis Date: 2025-09-30 00:08:33
+Analysis Date: 2025-09-30 20:53:35
 
 BITCOIN PROJECTIONS
 -------------------
@@ -9,10 +9,14 @@ As of: 2025-09-30
 Current Price: $114,332.40
 Model Fair Price (today): $108,698.28
 1-Year Projected Price: $151,054.35 | Return vs Current: 32.12%
+2-Year Projected Price: $206,162.33 | Return vs Current: 80.32%
+3-Year Projected Price: $276,863.35 | Return vs Current: 142.16%
 5-Year Projected Price: $478,624.54 | Return vs Current: 318.63%
 10-Year Projected Price: $1,548,674.69 | Return vs Current: 1254.54%
 Fair-Based Growth Rates (from model fair price):
   1-Year Growth: 38.97%
+  2-Year Growth: 89.66%
+  3-Year Growth: 154.71%
   5-Year Growth: 340.32%
   10-Year Growth: 1324.75%
 
@@ -22,10 +26,14 @@ As of: 2025-09-29
 Current Price: $3,812.85
 Model Fair Price (today): $2,657.70
 1-Year Projected Price: $2,877.98 | Return vs Current: -24.52%
+2-Year Projected Price: $3,118.33 | Return vs Current: -18.22%
+3-Year Projected Price: $3,380.58 | Return vs Current: -11.34%
 5-Year Projected Price: $3,978.95 | Return vs Current: 4.36%
 10-Year Projected Price: $6,022.23 | Return vs Current: 57.95%
 Fair-Based Growth Rates (from model fair price):
   1-Year Growth: 8.29%
+  2-Year Growth: 17.33%
+  3-Year Growth: 27.20%
   5-Year Growth: 49.71%
   10-Year Growth: 126.60%
 
@@ -35,14 +43,18 @@ As of: 2025-09-29
 Current Price: $46.95
 Model Fair Price (today): $30.19
 1-Year Projected Price: $31.83 | Return vs Current: -32.20%
+2-Year Projected Price: $33.57 | Return vs Current: -28.49%
+3-Year Projected Price: $35.42 | Return vs Current: -24.56%
 5-Year Projected Price: $39.46 | Return vs Current: -15.95%
 10-Year Projected Price: $51.95 | Return vs Current: 10.64%
 Fair-Based Growth Rates (from model fair price):
   1-Year Growth: 5.43%
+  2-Year Growth: 11.19%
+  3-Year Growth: 17.30%
   5-Year Growth: 30.68%
   10-Year Growth: 72.04%
 
 Notes:
 - Projections use the latest fitted models in this session.
 - Returns are computed versus the latest observed price.
-- Horizons are 1, 5, and 10 calendar years (365d per year).
+- Horizons are 1, 2, 3, 5, and 10 calendar years (365d per year).

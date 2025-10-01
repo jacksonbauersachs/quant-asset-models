@@ -1,0 +1,22 @@
+PALLADIUM PRE-2015 MODEL OVERFITTING ANALYSIS
+============================================================
+
+Analysis Date: 2025-09-30 21:52:40
+
+Model Details:
+  Name: Exponential
+  Formula: y = 26.3440 * e^(0.000234 * x) + 64.68
+  R² Score: 0.685945
+  Training Data: 1977-2015 (9800 records)
+
+Overfitting Analysis:
+  Pre-2015 Mean Deviation: $81.25
+  Post-2015 Mean Deviation: $515.47
+  Overfitting Score: 5.34
+
+Interpretation:
+  Model is OVERFITTED - Significant concern
+
+  Score < 1.0: Model is robust
+  Score 1.0-2.0: Some overfitting
+  Score > 2.0: Significant overfitting

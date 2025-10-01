@@ -461,7 +461,7 @@ def _predict_future_price(df, asset_name, model_results, years_ahead):
             return float(best_model['params'][0] * future_day + best_model['params'][1])
 
 def compute_projections(df, asset_name, model_results):
-    """Compute 1, 5, and 10-year projected returns using the fitted model."""
+    """Compute 1, 2, 3, 5, and 10-year projected returns using the fitted model."""
     if model_results is None:
         return None
     current_price = float(df['Price'].iloc[-1])
@@ -484,7 +484,7 @@ def compute_projections(df, asset_name, model_results):
             fair_price = float(best_model['params'][0] * np.power(last_day, best_model['params'][1]) + best_model['params'][2])
         else:
             fair_price = float(best_model['params'][0] * last_day + best_model['params'][1])
-    horizons = [1, 5, 10]
+    horizons = [1, 2, 3, 5, 10]
     projections = {}
     for y in horizons:
         future_price = _predict_future_price(df, asset_name, model_results, y)
@@ -519,11 +519,11 @@ def save_projections(bitcoin_proj, gold_proj, silver_proj):
             f.write(f"As of: {proj['as_of_date']}\n")
             f.write(f"Current Price: ${proj['current_price']:,.2f}\n")
             f.write(f"Model Fair Price (today): ${proj['fair_price']:,.2f}\n")
-            for years in [1, 5, 10]:
+            for years in [1, 2, 3, 5, 10]:
                 p = proj['projections'][years]
                 f.write(f"{years}-Year Projected Price: ${p['future_price']:,.2f} | Return vs Current: {p['return_pct']:.2f}%\n")
             f.write("Fair-Based Growth Rates (from model fair price):\n")
-            for years in [1, 5, 10]:
+            for years in [1, 2, 3, 5, 10]:
                 p = proj['projections'][years]
                 f.write(f"  {years}-Year Growth: {p['fair_return_pct']:.2f}%\n")
             f.write("\n")
@@ -535,7 +535,7 @@ def save_projections(bitcoin_proj, gold_proj, silver_proj):
         f.write("Notes:\n")
         f.write("- Projections use the latest fitted models in this session.\n")
         f.write("- Returns are computed versus the latest observed price.\n")
-        f.write("- Horizons are 1, 5, and 10 calendar years (365d per year).\n")
+        f.write("- Horizons are 1, 2, 3, 5, and 10 calendar years (365d per year).\n")
 
     print(f"Projections saved to: {results_file}")
     return results_file
@@ -682,7 +682,7 @@ def main():
     results_file = save_comprehensive_results(bitcoin_results, gold_results, silver_results)
     
     # Compute and save projections
-    print("\nComputing forward projections (1y, 5y, 10y)...")
+    print("\nComputing forward projections (1y, 2y, 3y, 5y, 10y)...")
     btc_proj = compute_projections(bitcoin_df if bitcoin_results else None and bitcoin_df, 'Bitcoin', bitcoin_results)
     gold_proj = compute_projections(gold_df if gold_results else None and gold_df, 'Gold', gold_results)
     silver_proj = compute_projections(silver_df if silver_results else None and silver_df, 'Silver', silver_results)

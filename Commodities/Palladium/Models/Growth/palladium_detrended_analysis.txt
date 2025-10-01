@@ -1,0 +1,28 @@
+PALLADIUM DETRENDED GROWTH MODEL ANALYSIS
+============================================================
+
+Analysis Date: 2025-09-30 21:44:24
+
+This analysis uses a model-adjusted y-axis scale that makes the growth model
+appear as a straight diagonal line, making it easy to see deviations.
+
+Best Model: Exponential
+  Formula: y = 54.3632 * e^(0.000199 * x) + -11.09
+  R² Score: 0.710824
+  RMSE: 306.07
+
+Decade-by-Decade Deviation Analysis:
+          mean     std     min      max
+decade                                 
+1970.0  67.908  25.457  39.822  159.981
+1980.0  72.555  32.635  33.724  263.475
+1990.0  41.763  13.014  26.095   85.211
+2000.0  49.936  35.727  15.900  187.225
+2010.0  49.760  10.281  27.364   85.918
+2020.0  63.520  27.999  25.930  117.973
+
+Chart Interpretation:
+- Top chart: Model-adjusted view (model appears as straight diagonal line)
+- Bottom chart: Traditional view for comparison
+- Deviations above/below the model line show over/under-valuation
+- Consistent deviations in recent years may indicate overfitting
