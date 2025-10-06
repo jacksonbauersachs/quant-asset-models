@@ -1,0 +1,46 @@
+SILVER INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2025-10-01 23:25:07
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000150
+Optimal Amplitude: 1.26
+Optimal Intercept: 2.96
+Maximum R²: 0.598736
+
+MODEL FORMULA
+--------------------
+price = 1.26 × exp(0.000150 × days) + 2.96
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $46.95
+Model Fair Price: $29.61
+Undervaluation: +58.6%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $31 | Growth: +5.07%
+  3-Year: $34 | Growth: +16.07%
+  5-Year: $38 | Growth: +28.34%
+  10-Year: $49 | Growth: +65.61%
+  15-Year: $64 | Growth: +114.62%
+  20-Year: $83 | Growth: +179.05%
+
+Current Price-Based Projections (includes undervaluation benefit):
+  1-Year: $31 | Return: +-33.74%
+  3-Year: $34 | Return: +-26.80%
+  5-Year: $38 | Return: +-19.06%
+  10-Year: $49 | Return: +4.44%
+  15-Year: $64 | Return: +35.35%
+  20-Year: $83 | Return: +75.98%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections start from the current (undervalued) price
+- Undervaluation benefit is added to current price-based returns
+- Growth rate is fixed at 0.000150 (0.000224 as requested)

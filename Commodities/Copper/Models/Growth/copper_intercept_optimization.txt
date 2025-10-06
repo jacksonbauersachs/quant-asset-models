@@ -1,0 +1,46 @@
+COPPER INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2025-10-01 23:40:10
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000097
+Optimal Amplitude: 0.43
+Optimal Intercept: -0.20
+Maximum R²: 0.803002
+
+MODEL FORMULA
+--------------------
+price = 0.43 × exp(0.000097 × days) + -0.20
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $4.69
+Model Fair Price: $4.28
+Undervaluation: +9.6%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $4 | Growth: +3.77%
+  3-Year: $5 | Growth: +11.73%
+  5-Year: $5 | Growth: +20.26%
+  10-Year: $6 | Growth: +44.45%
+  15-Year: $7 | Growth: +73.32%
+  20-Year: $9 | Growth: +107.78%
+
+Current Price-Based Projections (includes undervaluation benefit):
+  1-Year: $4 | Return: +-5.32%
+  3-Year: $5 | Return: +1.94%
+  5-Year: $5 | Return: +9.73%
+  10-Year: $6 | Return: +31.80%
+  15-Year: $7 | Return: +58.14%
+  20-Year: $9 | Return: +89.58%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections start from the current (undervalued) price
+- Undervaluation benefit is added to current price-based returns
+- Growth rate is fixed at 0.000097 (0.000150 as requested)
