@@ -1,0 +1,250 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
+from scipy.optimize import minimize_scalar
+import os
+from datetime import datetime
+
+def load_ethereum_data():
+    """Load and prepare Ethereum price data for analysis."""
+    
+    data_file = "Crypto/Etherium/Data/Ethereum Historical Data.csv"
+    
+    if not os.path.exists(data_file):
+        print(f"Error: Ethereum data file not found - {data_file}")
+        return None
+    
+    # Read the data
+    df = pd.read_csv(data_file)
+    
+    # Convert Date to datetime
+    df['Date'] = pd.to_datetime(df['Date'])
+    
+    # Clean Price column - convert to float
+    df['Price'] = df['Price'].astype(float)
+    
+    # Sort by date
+    df = df.sort_values('Date').reset_index(drop=True)
+    
+    # Create days since Ethereum genesis (July 30, 2015) for rainbow chart model
+    ethereum_genesis = pd.Timestamp('2015-07-30')
+    df['Days_Since_Genesis'] = (df['Date'] - ethereum_genesis).dt.days
+    
+    # Start from May 18, 2017 (specific date requested)
+    start_date = pd.Timestamp('2017-05-18')
+    df_filtered = df[df['Date'] >= start_date].copy()
+    
+    print(f"Ethereum data loaded: {len(df_filtered)} records from {df_filtered['Date'].min().strftime('%Y-%m-%d')} to {df_filtered['Date'].max().strftime('%Y-%m-%d')}")
+    print(f"Price range: ${df_filtered['Price'].min():.2f} to ${df_filtered['Price'].max():,.2f}")
+    
+    return df_filtered
+
+def ethereum_rainbow_model(x, slope, intercept):
+    """Ethereum rainbow model: price = 10^(slope * ln(days_since_genesis) + intercept)"""
+    return 10**(slope * np.log(x) + intercept)
+
+def calculate_r2(y_actual, y_pred):
+    """Calculate R² score in log space (like the original Bitcoin model)."""
+    # Convert to log space for R² calculation (matching original model)
+    log_actual = np.log10(y_actual)
+    log_pred = np.log10(y_pred)
+    
+    ss_res = np.sum((log_actual - log_pred) ** 2)
+    ss_tot = np.sum((log_actual - np.mean(log_actual)) ** 2)
+    return 1 - (ss_res / ss_tot)
+
+def find_optimal_slope(df):
+    """Find the optimal slope that maximizes R², with intercept constrained to start at first point."""
+    first_price = df['Price'].iloc[0]
+    first_days = df['Days_Since_Genesis'].iloc[0]
+    days = df['Days_Since_Genesis'].values
+    prices = df['Price'].values
+    
+    def r2_for_slope(slope):
+        """Calculate R² for a given slope (intercept is calculated from first point)."""
+        intercept = np.log10(first_price) - slope * np.log(first_days)
+        y_pred = ethereum_rainbow_model(days, slope, intercept)
+        return calculate_r2(prices, y_pred)
+    
+    # Find optimal slope
+    result = minimize_scalar(lambda s: -r2_for_slope(s), bounds=(0.5, 5.0), method='bounded')
+    optimal_slope = result.x
+    optimal_r2 = -result.fun
+    
+    return optimal_slope, optimal_r2
+
+def update_model(val):
+    """Update the model when slider changes."""
+    slope = slider_slope.val
+    # Calculate intercept so model starts at first day's price
+    first_price = df_filtered['Price'].iloc[0]
+    first_days = df_filtered['Days_Since_Genesis'].iloc[0]
+    intercept = np.log10(first_price) - slope * np.log(first_days)
+    
+    # Calculate model predictions
+    df_filtered['Model_Price'] = df_filtered['Days_Since_Genesis'].apply(lambda x: ethereum_rainbow_model(x, slope, intercept))
+    
+    # Update the model line on both subplots
+    line1.set_ydata(df_filtered['Model_Price'])
+    line2.set_ydata(df_filtered['Model_Price'])
+    
+    # Calculate R²
+    r2 = calculate_r2(df_filtered['Price'], df_filtered['Model_Price'])
+    
+    # Update titles
+    ax1.set_title(f'Ethereum Rainbow Chart - Log Scale\nR² = {r2:.6f}', fontsize=14, fontweight='bold')
+    ax2.set_title(f'Ethereum Rainbow Chart - Normal Scale\nR² = {r2:.6f}', fontsize=14, fontweight='bold')
+    
+    # Update info text (simplified)
+    current_price = df_filtered['Price'].iloc[-1]
+    model_fair_value = df_filtered['Model_Price'].iloc[-1]
+    deviation = ((current_price - model_fair_value) / model_fair_value * 100)
+    
+    info_text = f"Slope: {slope:.6f} | R²: {r2:.6f} | Current: ${current_price:,.0f} | Model: ${model_fair_value:,.0f} | Deviation: {deviation:+.1f}%"
+    
+    ax_info.texts[0].set_text(info_text)
+    
+    # Redraw
+    fig.canvas.draw_idle()
+
+def main():
+    """Create interactive Ethereum rainbow chart."""
+    
+    print("Ethereum Interactive Rainbow Chart")
+    print("=" * 40)
+    
+    # Load data
+    global df_filtered, ax1, ax2, line1, line2, ax_info, slider_slope, fig
+    df_filtered = load_ethereum_data()
+    if df_filtered is None:
+        return
+    
+    # Find optimal slope that maximizes R²
+    print("\nFinding optimal slope to maximize R²...")
+    initial_slope, optimal_r2 = find_optimal_slope(df_filtered)
+    print(f"Optimal slope: {initial_slope:.6f}")
+    print(f"Maximum R²: {optimal_r2:.6f}")
+    
+    # Calculate intercept so model starts at first day's price
+    first_price = df_filtered['Price'].iloc[0]
+    first_days = df_filtered['Days_Since_Genesis'].iloc[0]
+    # Calculate intercept: price = 10^(slope * ln(days) + intercept)
+    # So: intercept = log10(price) - slope * ln(days)
+    initial_intercept = np.log10(first_price) - initial_slope * np.log(first_days)
+    
+    # Create figure with two subplots (exactly like the original)
+    plt.style.use('default')
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
+    
+    # Plot actual Ethereum price on both subplots
+    ax1.semilogy(df_filtered['Date'], df_filtered['Price'], color='blue', linewidth=2, label='Actual Ethereum Price')
+    ax2.plot(df_filtered['Date'], df_filtered['Price'], color='blue', linewidth=2, label='Actual Ethereum Price')
+    
+    # Calculate initial model prices
+    df_filtered['Model_Price'] = df_filtered['Days_Since_Genesis'].apply(lambda x: ethereum_rainbow_model(x, initial_slope, initial_intercept))
+    
+    # Skip the rainbow bands - just show the model line
+    
+    # Plot model line
+    line1, = ax1.semilogy(df_filtered['Date'], df_filtered['Model_Price'], 
+                color='black', linestyle='--', linewidth=2, label='Growth Model')
+    line2, = ax2.plot(df_filtered['Date'], df_filtered['Model_Price'], 
+            color='black', linestyle='--', linewidth=2, label='Growth Model')
+    
+    # Highlight current position
+    current_price = df_filtered['Price'].iloc[-1]
+    current_date = df_filtered['Date'].iloc[-1]
+    ax1.scatter(current_date, current_price, color='red', s=100, 
+               zorder=10, label=f'Current: ${current_price:,.0f}')
+    ax2.scatter(current_date, current_price, color='red', s=100, 
+               zorder=10, label=f'Current: ${current_price:,.0f}')
+    
+    # Add model information
+    initial_r2 = calculate_r2(df_filtered['Price'], df_filtered['Model_Price'])
+    formula_text = f'Model: log₁₀(price) = {initial_slope:.3f} × ln(day) + {initial_intercept:.3f}\nR² = {initial_r2:.4f}'
+    ax1.text(0.02, 0.02, formula_text, transform=ax1.transAxes, fontsize=10, 
+            color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
+    ax2.text(0.02, 0.02, formula_text, transform=ax2.transAxes, fontsize=10, 
+            color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
+    
+    # Formatting for both subplots (exactly like the original)
+    for ax, ylabel_suffix in [(ax1, 'Log Scale'), (ax2, 'Normal Scale')]:
+        ax.set_xlabel('Date', fontsize=12)
+        ax.set_ylabel(f'Ethereum Price (USD) - {ylabel_suffix}', fontsize=12)
+        ax.set_title(f'Ethereum Rainbow Chart - {ylabel_suffix}\nR² = {initial_r2:.6f}', fontsize=14, fontweight='bold')
+        ax.grid(True, alpha=0.3, which='both')
+        
+        # Custom y-axis formatting
+        def price_formatter(x, pos):
+            if x >= 1000000:
+                return f'${x/1000000:.1f}M'
+            elif x >= 1000:
+                return f'${x/1000:.0f}K'
+            else:
+                return f'${x:.0f}'
+        
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(price_formatter))
+        
+        # Add legend
+        ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
+        
+        # Set y-axis limits - reasonable for normal scale, full range for log scale
+        if ax == ax2:  # Normal scale - use reasonable limits based on actual data
+            max_price = max(df_filtered['Price'].max(), df_filtered['Model_Price'].max())
+            # Cap at 2x the maximum actual price to keep it reasonable
+            ax.set_ylim(0, min(max_price * 2, df_filtered['Price'].max() * 3))
+        else:  # Log scale
+            ax.set_ylim(0.01, max(df_filtered['Price'].max(), df_filtered['Model_Price'].max()) * 2)
+    
+    # Create slider - range around optimal slope
+    ax_slope = plt.axes([0.1, 0.02, 0.8, 0.03])
+    slider_range = initial_slope * 0.5  # 50% range around optimal
+    slider_slope = Slider(ax_slope, 'Slope', 
+                         max(0.5, initial_slope - slider_range), 
+                         initial_slope + slider_range, 
+                         valinit=initial_slope, valfmt='%.6f')
+    slider_slope.on_changed(update_model)
+    
+    # Add info panel at the top
+    ax_info = plt.axes([0.02, 0.88, 0.96, 0.08])
+    ax_info.axis('off')
+    
+    # Initial info text (simplified)
+    model_fair_value = df_filtered['Model_Price'].iloc[-1]
+    deviation = ((current_price - model_fair_value) / model_fair_value * 100)
+    
+    info_text = f"Slope: {initial_slope:.6f} | R²: {initial_r2:.6f} | Current: ${current_price:,.0f} | Model: ${model_fair_value:,.0f} | Deviation: {deviation:+.1f}%"
+    
+    ax_info.text(0.02, 0.5, info_text, transform=ax_info.transAxes, fontsize=11, 
+                verticalalignment='center', bbox=dict(facecolor='lightgray', alpha=0.8, boxstyle='round,pad=0.3'))
+    
+    # Instructions (simplified)
+    instructions = f"Adjust slider to change slope. Intercept calculated to start at first day price (${first_price:.2f})"
+    
+    ax_info.text(0.52, 0.5, instructions, transform=ax_info.transAxes, fontsize=10, 
+                verticalalignment='center', bbox=dict(facecolor='lightyellow', alpha=0.8, boxstyle='round,pad=0.3'))
+    
+    plt.tight_layout()
+    
+    # Save the interactive chart
+    output_dir = "Crypto/Etherium/Models/Growth"
+    os.makedirs(output_dir, exist_ok=True)
+    
+    chart_file = os.path.join(output_dir, "ethereum_interactive_rainbow.png")
+    fig.savefig(chart_file, dpi=300, bbox_inches='tight')
+    print(f"Interactive chart saved: {chart_file}")
+    
+    print("\n" + "=" * 60)
+    print("INTERACTIVE ETHEREUM RAINBOW CHART")
+    print("=" * 60)
+    print("Use the slider to adjust the model parameters:")
+    print("• Slope: Controls the growth rate (higher = steeper)")
+    print("• Intercept: Fixed at -12.0")
+    print("• Watch R² score to find the best fit")
+    print("• Current deviation shows if Ethereum is over/undervalued")
+    
+    plt.show()
+
+if __name__ == "__main__":
+    main()

@@ -225,7 +225,7 @@ def main():
         return
     
     # Fixed growth rate
-    fixed_growth_rate = 0.000224
+    fixed_growth_rate = 0.000230
     
     print(f"\nUsing fixed growth rate: {fixed_growth_rate}")
     print("Finding optimal amplitude and intercept to maximize R²...")

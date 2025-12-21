@@ -1,42 +1,42 @@
 SILVER INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2025-10-01 23:25:07
+Analysis Date: 2025-12-21 14:55:51
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000150
-Optimal Amplitude: 1.26
-Optimal Intercept: 2.96
-Maximum R²: 0.598736
+Optimal Amplitude: 1.27
+Optimal Intercept: 2.95
+Maximum R²: 0.599470
 
 MODEL FORMULA
 --------------------
-price = 1.26 × exp(0.000150 × days) + 2.96
+price = 1.27 × exp(0.000150 × days) + 2.95
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $46.95
-Model Fair Price: $29.61
-Undervaluation: +58.6%
+Current Price: $47.60
+Model Fair Price: $29.66
+Undervaluation: +60.5%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
   1-Year: $31 | Growth: +5.07%
-  3-Year: $34 | Growth: +16.07%
-  5-Year: $38 | Growth: +28.34%
-  10-Year: $49 | Growth: +65.61%
-  15-Year: $64 | Growth: +114.62%
-  20-Year: $83 | Growth: +179.05%
+  3-Year: $34 | Growth: +16.08%
+  5-Year: $38 | Growth: +28.36%
+  10-Year: $49 | Growth: +65.65%
+  15-Year: $64 | Growth: +114.69%
+  20-Year: $83 | Growth: +179.16%
 
 Current Price-Based Projections (includes undervaluation benefit):
-  1-Year: $31 | Return: +-33.74%
-  3-Year: $34 | Return: +-26.80%
-  5-Year: $38 | Return: +-19.06%
-  10-Year: $49 | Return: +4.44%
-  15-Year: $64 | Return: +35.35%
-  20-Year: $83 | Return: +75.98%
+  1-Year: $31 | Return: +-34.53%
+  3-Year: $34 | Return: +-27.67%
+  5-Year: $38 | Return: +-20.01%
+  10-Year: $49 | Return: +3.23%
+  15-Year: $64 | Return: +33.78%
+  20-Year: $83 | Return: +73.96%
 
 NOTES
 ----------

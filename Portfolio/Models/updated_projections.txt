@@ -1,58 +1,58 @@
 MODEL-BASED FORWARD PROJECTIONS
 ============================================================
 
-Analysis Date: 2025-10-01 00:18:51
+Analysis Date: 2025-12-21 14:50:05
 
 BITCOIN PROJECTIONS
 -------------------
-As of: 2025-09-30
-Current Price: $114,332.40
-Model Fair Price (today): $108,698.28
-1-Year Projected Price: $151,054.35 | Return vs Current: 32.12%
-2-Year Projected Price: $206,162.33 | Return vs Current: 80.32%
-3-Year Projected Price: $276,863.35 | Return vs Current: 142.16%
-5-Year Projected Price: $478,624.54 | Return vs Current: 318.63%
-10-Year Projected Price: $1,548,674.69 | Return vs Current: 1254.54%
+As of: 2025-11-11
+Current Price: $106,690.01
+Model Fair Price (today): $113,014.18
+1-Year Projected Price: $156,710.36 | Return vs Current: 46.88%
+2-Year Projected Price: $213,465.99 | Return vs Current: 100.08%
+3-Year Projected Price: $286,170.69 | Return vs Current: 168.23%
+5-Year Projected Price: $493,224.30 | Return vs Current: 362.30%
+10-Year Projected Price: $1,587,049.20 | Return vs Current: 1387.53%
 Fair-Based Growth Rates (from model fair price):
-  1-Year Growth: 38.97%
-  2-Year Growth: 89.66%
-  3-Year Growth: 154.71%
-  5-Year Growth: 340.32%
-  10-Year Growth: 1324.75%
+  1-Year Growth: 38.66%
+  2-Year Growth: 88.88%
+  3-Year Growth: 153.22%
+  5-Year Growth: 336.43%
+  10-Year Growth: 1304.29%
 
 GOLD PROJECTIONS
 ----------------
-As of: 2025-09-29
-Current Price: $3,812.85
-Model Fair Price (today): $2,657.70
-1-Year Projected Price: $2,877.98 | Return vs Current: -24.52%
-2-Year Projected Price: $3,118.33 | Return vs Current: -18.22%
-3-Year Projected Price: $3,380.58 | Return vs Current: -11.34%
-5-Year Projected Price: $3,978.95 | Return vs Current: 4.36%
-10-Year Projected Price: $6,022.23 | Return vs Current: 57.95%
+As of: 2025-10-03
+Current Price: $3,860.70
+Model Fair Price (today): $2,667.68
+1-Year Projected Price: $2,889.86 | Return vs Current: -25.15%
+2-Year Projected Price: $3,132.39 | Return vs Current: -18.86%
+3-Year Projected Price: $3,397.13 | Return vs Current: -12.01%
+5-Year Projected Price: $4,001.56 | Return vs Current: 3.65%
+10-Year Projected Price: $6,068.76 | Return vs Current: 57.19%
 Fair-Based Growth Rates (from model fair price):
-  1-Year Growth: 8.29%
-  2-Year Growth: 17.33%
-  3-Year Growth: 27.20%
-  5-Year Growth: 49.71%
-  10-Year Growth: 126.60%
+  1-Year Growth: 8.33%
+  2-Year Growth: 17.42%
+  3-Year Growth: 27.34%
+  5-Year Growth: 50.00%
+  10-Year Growth: 127.49%
 
 SILVER PROJECTIONS
 ------------------
-As of: 2025-09-29
-Current Price: $46.95
-Model Fair Price (today): $30.19
-1-Year Projected Price: $31.83 | Return vs Current: -32.20%
-2-Year Projected Price: $33.57 | Return vs Current: -28.49%
-3-Year Projected Price: $35.42 | Return vs Current: -24.56%
-5-Year Projected Price: $39.46 | Return vs Current: -15.95%
-10-Year Projected Price: $51.95 | Return vs Current: 10.64%
+As of: 2025-10-03
+Current Price: $47.60
+Model Fair Price (today): $30.29
+1-Year Projected Price: $31.94 | Return vs Current: -32.91%
+2-Year Projected Price: $33.69 | Return vs Current: -29.23%
+3-Year Projected Price: $35.55 | Return vs Current: -25.31%
+5-Year Projected Price: $39.63 | Return vs Current: -16.75%
+10-Year Projected Price: $52.24 | Return vs Current: 9.74%
 Fair-Based Growth Rates (from model fair price):
-  1-Year Growth: 5.43%
-  2-Year Growth: 11.19%
-  3-Year Growth: 17.30%
-  5-Year Growth: 30.68%
-  10-Year Growth: 72.04%
+  1-Year Growth: 5.45%
+  2-Year Growth: 11.24%
+  3-Year Growth: 17.39%
+  5-Year Growth: 30.85%
+  10-Year Growth: 72.49%
 
 Notes:
 - Projections use the latest fitted models in this session.

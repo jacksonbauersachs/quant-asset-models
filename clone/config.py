@@ -1,0 +1,98 @@
+"""
+===========================================
+CURRENCY CONFIGURATION FILE
+===========================================
+Edit ALL values in this file to match your currency.
+This is the ONLY file you need to modify when cloning the template.
+"""
+
+# ============================================
+# CURRENCY INFORMATION
+# ============================================
+CURRENCY_NAME = "Dogecoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
+CURRENCY_NAME_LOWER = "dogecoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
+YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+
+# ============================================
+# DATES
+# ============================================
+# GENESIS_DATE is OPTIONAL - if not set, will auto-detect from earliest date in data file
+# Only set this if you want to use a specific launch date (e.g., actual crypto launch date)
+# GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
+GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
+
+START_DATE = "2023-10-19"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+
+# ============================================
+# FILE PATHS (relative to project root)
+# ============================================
+# Example: "Crypto/Etherium/Data"
+DATA_FOLDER = "clone"
+
+# Example: "Ethereum Historical Data.csv"
+HISTORICAL_DATA_FILE = "Dogecoin Historical Data.csv"
+
+# Example: "Crypto/Etherium/Models/Growth"
+OUTPUT_FOLDER = "clone"
+
+# ============================================
+# MODEL PARAMETERS
+# ============================================
+# Fixed slope for intercept optimization (adjust after running interactive_rainbow.py)
+# This is typically found by running the interactive rainbow chart first
+FIXED_SLOPE = 1.4334
+
+# ============================================
+# DATA SOURCE
+# ============================================
+# Using Yahoo Finance (yfinance library) - no API key required!
+# Yahoo Finance ticker format: "CURRENCY-USD" (e.g., "BTC-USD", "DOGE-USD")
+
+# ============================================
+# OPTIMIZATION BOUNDS
+# ============================================
+# Bounds for slope optimization in interactive rainbow chart
+SLOPE_MIN = 0.5
+SLOPE_MAX = 5.0
+
+# Bounds for intercept optimization
+INTERCEPT_MIN = -30
+INTERCEPT_MAX = 0
+
+# ============================================
+# OUTPUT FILE NAMES (auto-generated from CURRENCY_NAME_LOWER)
+# ============================================
+def get_output_files():
+    """Generate output file names based on currency name."""
+    base = CURRENCY_NAME_LOWER
+    return {
+        'interactive_rainbow_png': f"{base}_interactive_rainbow.png",
+        'intercept_optimization_png': f"{base}_intercept_optimization.png",
+        'intercept_optimization_txt': f"{base}_intercept_optimization.txt"
+    }
+
+# ============================================
+# VALIDATION
+# ============================================
+def validate_config():
+    """Validate that all required config values are set."""
+    required = [
+        CURRENCY_NAME, CURRENCY_NAME_LOWER, YAHOO_TICKER,
+        START_DATE, DATA_FOLDER, HISTORICAL_DATA_FILE, OUTPUT_FOLDER
+    ]
+    
+    if None in required or "" in required:
+        raise ValueError("All required configuration values must be set!")
+    
+    # Validate date formats (GENESIS_DATE is optional)
+    from datetime import datetime
+    try:
+        datetime.strptime(START_DATE, '%Y-%m-%d')
+        if GENESIS_DATE is not None and GENESIS_DATE != "":
+            datetime.strptime(GENESIS_DATE, '%Y-%m-%d')
+    except ValueError:
+        raise ValueError("Dates must be in YYYY-MM-DD format!")
+    
+    print(f"✅ Configuration validated for {CURRENCY_NAME}")
+    return True
+

@@ -1,41 +1,41 @@
 BITCOIN INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2025-10-01 23:17:10
+Analysis Date: 2025-12-21 14:53:35
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Slope: 2.425595
-Optimal Intercept: -16.140528
-Maximum R²: 0.960131
+Optimal Intercept: -16.140838
+Maximum R²: 0.960925
 
 MODEL FORMULA
 --------------------
-price = 10^(2.425595 * ln(days_since_genesis) + -16.140528)
+price = 10^(2.425595 * ln(days_since_genesis) + -16.140838)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $114,169.80
-Model Fair Price: $101,630.03
-Undervaluation: +12.34%
+Current Price: $88,262.01
+Model Fair Price: $109,302.72
+Undervaluation: -19.25%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $140,521 | Growth: +38.27%
-  3-Year: $255,169 | Growth: +151.08%
-  5-Year: $437,414 | Growth: +330.40%
-  10-Year: $1,389,845 | Growth: +1267.55%
-  15-Year: $3,620,154 | Growth: +3462.09%
-  20-Year: $8,194,888 | Growth: +7963.45%
+  1-Year: $150,509 | Growth: +37.70%
+  3-Year: $271,403 | Growth: +148.30%
+  5-Year: $462,592 | Growth: +323.22%
+  10-Year: $1,454,416 | Growth: +1230.63%
+  15-Year: $3,761,012 | Growth: +3340.91%
+  20-Year: $8,468,948 | Growth: +7648.16%
 
 Current Price-Based Projections (includes undervaluation benefit):
-  1-Year: $143,772 | Return: +25.93%
-  3-Year: $272,567 | Return: +138.74%
-  5-Year: $477,298 | Return: +318.06%
-  10-Year: $1,547,246 | Return: +1255.22%
-  15-Year: $4,052,745 | Return: +3449.75%
-  20-Year: $9,191,939 | Return: +7951.11%
+  1-Year: $138,526 | Return: +56.95%
+  3-Year: $236,148 | Return: +167.55%
+  5-Year: $390,534 | Return: +342.47%
+  10-Year: $1,191,432 | Return: +1249.88%
+  15-Year: $3,054,010 | Return: +3360.16%
+  20-Year: $6,855,671 | Return: +7667.41%
 
 NOTES
 ----------

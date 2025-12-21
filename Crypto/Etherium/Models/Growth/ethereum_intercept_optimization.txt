@@ -1,0 +1,44 @@
+ETHEREUM INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2025-12-21 14:57:34
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Slope: 0.717579
+Optimal Intercept: -2.481806
+Maximum R²: 0.577097
+
+MODEL FORMULA
+--------------------
+price = 10^(0.717579 * ln(days_since_genesis) + -2.481806)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $2,970.76
+Model Fair Price: $2,706.80
+Undervaluation: +9.75%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $3,150 | Growth: +16.39%
+  3-Year: $4,115 | Growth: +52.03%
+  5-Year: $5,179 | Growth: +91.33%
+  10-Year: $8,242 | Growth: +204.51%
+  15-Year: $11,841 | Growth: +337.46%
+  20-Year: $15,935 | Growth: +488.71%
+
+Current Price-Based Projections (includes undervaluation benefit):
+  1-Year: $3,168 | Return: +6.64%
+  3-Year: $4,227 | Return: +42.28%
+  5-Year: $5,394 | Return: +81.58%
+  10-Year: $8,757 | Return: +194.76%
+  15-Year: $12,706 | Return: +327.71%
+  20-Year: $17,199 | Return: +478.96%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections start from the current (undervalued) price
+- Undervaluation benefit is added to current price-based returns

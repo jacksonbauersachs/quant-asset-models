@@ -47,7 +47,7 @@ def find_optimal_parameters(df, fixed_growth_rate):
     y = df['Price'].values
     
     # Fixed growth rate
-    fixed_b = .000097
+    fixed_b = fixed_growth_rate
     
     def r2_for_parameters(params):
         """Calculate R² for given amplitude and intercept values."""

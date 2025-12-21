@@ -1,46 +1,46 @@
 GOLD INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2025-10-02 12:25:05
+Analysis Date: 2025-12-21 14:54:58
 
 OPTIMIZATION PARAMETERS
 ------------------------------
-Fixed Growth Rate: 0.000224
-Optimal Amplitude: 37.77
-Optimal Intercept: 211.09
-Maximum R²: 0.876037
+Fixed Growth Rate: 0.000230
+Optimal Amplitude: 34.97
+Optimal Intercept: 211.75
+Maximum R²: 0.869894
 
 MODEL FORMULA
 --------------------
-price = 37.77 × exp(0.000224 × days) + 211.09
+price = 34.97 × exp(0.000230 × days) + 211.75
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $3,886.10
-Model Fair Price: $2,611.11
-Undervaluation: +48.8%
+Current Price: $4,327.55
+Model Fair Price: $2,740.46
+Undervaluation: +57.9%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $2,816 | Growth: +7.83%
-  3-Year: $3,278 | Growth: +25.55%
-  5-Year: $3,823 | Growth: +46.42%
-  10-Year: $5,647 | Growth: +116.28%
-  15-Year: $8,393 | Growth: +221.42%
-  20-Year: $12,524 | Growth: +379.66%
+  1-Year: $2,962 | Growth: +8.08%
+  3-Year: $3,465 | Growth: +26.43%
+  5-Year: $4,059 | Growth: +48.13%
+  10-Year: $6,066 | Growth: +121.36%
+  15-Year: $9,120 | Growth: +232.79%
+  20-Year: $13,766 | Growth: +402.33%
 
 Current Price-Based Projections (includes undervaluation benefit):
-  1-Year: $2,816 | Return: +-27.55%
-  3-Year: $3,278 | Return: +-15.64%
-  5-Year: $3,823 | Return: +-1.62%
-  10-Year: $5,647 | Return: +45.32%
-  15-Year: $8,393 | Return: +115.96%
-  20-Year: $12,524 | Return: +222.28%
+  1-Year: $2,962 | Return: +-31.56%
+  3-Year: $3,465 | Return: +-19.94%
+  5-Year: $4,059 | Return: +-6.20%
+  10-Year: $6,066 | Return: +40.18%
+  15-Year: $9,120 | Return: +110.74%
+  20-Year: $13,766 | Return: +218.10%
 
 NOTES
 ----------
 - Model-based projections start from the model's fair value
 - Current price-based projections start from the current (undervalued) price
 - Undervaluation benefit is added to current price-based returns
-- Growth rate is fixed at 0.000224 (0.000224 as requested)
+- Growth rate is fixed at 0.000230 (0.000224 as requested)
