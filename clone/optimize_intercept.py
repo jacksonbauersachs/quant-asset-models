@@ -10,11 +10,14 @@ Usage:
 
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend to prevent file handle issues
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize_scalar
 import os
 import sys
 from datetime import datetime
+import gc
 
 # Import configuration
 try:
@@ -72,8 +75,14 @@ def load_data():
     # Ensure days_since_genesis is at least 1 to avoid log(0) errors
     df['Days_Since_Genesis'] = df['Days_Since_Genesis'].clip(lower=1)
     
-    # Filter from start date
-    start_date = pd.Timestamp(START_DATE)
+    # Filter from start date (auto-detect from first date if not specified)
+    if START_DATE is None or START_DATE == "":
+        start_date = df['Date'].min()
+        print(f"Auto-detected start date from data: {start_date.strftime('%Y-%m-%d')}")
+    else:
+        start_date = pd.Timestamp(START_DATE)
+        print(f"Using configured start date: {start_date.strftime('%Y-%m-%d')}")
+    
     df_filtered = df[df['Date'] >= start_date].copy()
     
     # Filter out any rows with zero or negative prices (can cause log errors)
@@ -235,8 +244,17 @@ def create_optimization_chart(df, slope, optimal_intercept, optimal_r2):
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     
     chart_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_png'])
-    fig.savefig(chart_file, dpi=300, bbox_inches='tight')
+    
+    # Save with proper flushing
+    fig.savefig(chart_file, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+    
+    # Properly close and release file handles
+    fig.clear()
     plt.close(fig)
+    plt.close('all')  # Close all matplotlib figures
+    
+    # Force garbage collection to release file handles (important on Windows)
+    gc.collect()
     
     return chart_file
 

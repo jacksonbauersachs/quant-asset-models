@@ -9,9 +9,9 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = "Dogecoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
-CURRENCY_NAME_LOWER = "dogecoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+CURRENCY_NAME = "Bitcoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
+CURRENCY_NAME_LOWER = "bitcoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
+YAHOO_TICKER = "BTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES
@@ -21,19 +21,21 @@ YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2021-01-28"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+# Leave as empty string "" to auto-detect from first date in data file
+# Or specify a date like "2017-05-18" to start analysis from that date
 
 # ============================================
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Crypto\Doge"
+DATA_FOLDER = "Crypto\Bitcoin\We_both_know"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "Dogecoin Historical Data.csv"
+HISTORICAL_DATA_FILE = "BTC_historical_data.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "Crypto\Doge"
+OUTPUT_FOLDER = "Crypto\Bitcoin\We_both_know"
 
 # ============================================
 # MODEL PARAMETERS
@@ -78,16 +80,17 @@ def validate_config():
     """Validate that all required config values are set."""
     required = [
         CURRENCY_NAME, CURRENCY_NAME_LOWER, YAHOO_TICKER,
-        START_DATE, DATA_FOLDER, HISTORICAL_DATA_FILE, OUTPUT_FOLDER
+        DATA_FOLDER, HISTORICAL_DATA_FILE, OUTPUT_FOLDER
     ]
     
-    if None in required or "" in required:
+    if None in required or "" in [r for r in required if r != START_DATE]:
         raise ValueError("All required configuration values must be set!")
     
-    # Validate date formats (GENESIS_DATE is optional)
+    # Validate date formats (GENESIS_DATE and START_DATE are optional)
     from datetime import datetime
     try:
-        datetime.strptime(START_DATE, '%Y-%m-%d')
+        if START_DATE and START_DATE != "":
+            datetime.strptime(START_DATE, '%Y-%m-%d')
         if GENESIS_DATE is not None and GENESIS_DATE != "":
             datetime.strptime(GENESIS_DATE, '%Y-%m-%d')
     except ValueError:
