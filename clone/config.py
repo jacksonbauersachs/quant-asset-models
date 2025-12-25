@@ -21,26 +21,26 @@ YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2023-10-19"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2021-01-28"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 
 # ============================================
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "clone"
+DATA_FOLDER = "Crypto\Doge"
 
 # Example: "Ethereum Historical Data.csv"
 HISTORICAL_DATA_FILE = "Dogecoin Historical Data.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "clone"
+OUTPUT_FOLDER = "Crypto\Doge"
 
 # ============================================
 # MODEL PARAMETERS
 # ============================================
 # Fixed slope for intercept optimization (adjust after running interactive_rainbow.py)
 # This is typically found by running the interactive rainbow chart first
-FIXED_SLOPE = 1.4334
+FIXED_SLOPE = .22
 
 # ============================================
 # DATA SOURCE
