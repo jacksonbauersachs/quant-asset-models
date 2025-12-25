@@ -51,8 +51,17 @@ def load_data():
     # Read the data
     df = pd.read_csv(data_file)
     
-    # Convert Date to datetime
-    df['Date'] = pd.to_datetime(df['Date'])
+    # Convert Date to datetime - handle multiple formats
+    try:
+        # Try M/D/YYYY format first (original format)
+        df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%Y')
+    except (ValueError, TypeError):
+        try:
+            # Try YYYY-MM-DD format
+            df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d')
+        except (ValueError, TypeError):
+            # Last resort: let pandas auto-detect
+            df['Date'] = pd.to_datetime(df['Date'])
     
     # Clean Price column - convert to float
     df['Price'] = df['Price'].astype(float)

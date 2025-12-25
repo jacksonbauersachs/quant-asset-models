@@ -27,8 +27,16 @@ def get_last_date_from_file(file_path):
     """Get the last date from the existing data file."""
     try:
         df = pd.read_csv(file_path)
-        # Convert the M/D/YYYY format to datetime
-        df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%Y')
+        # Try to parse date - handle both M/D/YYYY and YYYY-MM-DD formats
+        try:
+            df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%Y')
+        except ValueError:
+            # If that fails, try YYYY-MM-DD format
+            try:
+                df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d')
+            except ValueError:
+                # Last resort: let pandas auto-detect
+                df['Date'] = pd.to_datetime(df['Date'])
         last_date = df['Date'].max()
         return last_date.strftime('%Y-%m-%d')
     except Exception as e:
@@ -239,7 +247,14 @@ def update_prices():
     
     # Read existing data
     existing_df = pd.read_csv(data_file)
-    existing_df['Date'] = pd.to_datetime(existing_df['Date'], format='%m/%d/%Y')
+    # Try to parse date - handle both M/D/YYYY and YYYY-MM-DD formats
+    try:
+        existing_df['Date'] = pd.to_datetime(existing_df['Date'], format='%m/%d/%Y')
+    except ValueError:
+        try:
+            existing_df['Date'] = pd.to_datetime(existing_df['Date'], format='%Y-%m-%d')
+        except ValueError:
+            existing_df['Date'] = pd.to_datetime(existing_df['Date'])
     
     # Combine existing and new data
     combined_df = pd.concat([existing_df, new_df], ignore_index=True)

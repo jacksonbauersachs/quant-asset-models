@@ -21,7 +21,7 @@ YAHOO_TICKER = "BTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2011-04-17"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -42,7 +42,7 @@ OUTPUT_FOLDER = "Crypto\Bitcoin\We_both_know"
 # ============================================
 # Fixed slope for intercept optimization (adjust after running interactive_rainbow.py)
 # This is typically found by running the interactive rainbow chart first
-FIXED_SLOPE = .22
+FIXED_SLOPE = 1.4783
 
 # ============================================
 # DATA SOURCE
