@@ -335,20 +335,12 @@ def calculate_projections(df, growth_rate, intercept):
         future_days = current_days + (years * 365.25)
         model_future_price = rainbow_model(future_days, growth_rate, first_price, first_days, intercept)
         
-        # Model-based projection (from fair value)
+        # Model-based projection: percentage relative to fair value
         model_return = ((model_future_price - current_fair_price) / current_fair_price) * 100
         
-        # Current price-based projection (converges toward model's future fair value)
-        if undervaluation < 0:  # If undervalued
-            # Price will converge upward toward fair value, then grow with model
-            undervaluation_benefit = abs(undervaluation)
-            current_return = model_return + undervaluation_benefit
-            current_based_price = current_price * (1 + current_return / 100)
-        else:  # If overvalued
-            # Price will converge downward toward the model's future fair value
-            # Don't go below the model's future fair value - just converge to it
-            current_based_price = model_future_price  # Converge to model's future fair value
-            current_return = ((current_based_price - current_price) / current_price) * 100
+        # Current price-based projection: same dollar value, but percentage relative to current actual price
+        current_based_price = model_future_price  # Same dollar value as model
+        current_return = ((current_based_price - current_price) / current_price) * 100
         
         projections[years] = {
             'model_price': model_future_price,
@@ -365,6 +357,19 @@ def calculate_projections(df, growth_rate, intercept):
         'first_price': first_price,
         'first_days': first_days
     }
+
+def format_price(price):
+    """Format price with appropriate decimal places based on value."""
+    if price < 0.01:
+        return f"${price:.6f}"  # 6 decimals for very small prices (< 1 cent)
+    elif price < 0.1:
+        return f"${price:.5f}"  # 5 decimals for prices < 10 cents
+    elif price < 1.0:
+        return f"${price:.4f}"  # 4 decimals for prices < $1
+    elif price < 1000:
+        return f"${price:.2f}"  # 2 decimals for prices < $1000
+    else:
+        return f"${price:,.0f}"  # No decimals, with commas for prices >= $1000
 
 def save_optimization_results(growth_rate, optimal_intercept, optimal_r2, projections):
     """Save optimization results to a text file."""
@@ -399,8 +404,8 @@ def save_optimization_results(growth_rate, optimal_intercept, optimal_r2, projec
         
         f.write("CURRENT ANALYSIS\n")
         f.write("-" * 20 + "\n")
-        f.write(f"Current Price: ${projections['current_price']:,.2f}\n")
-        f.write(f"Model Fair Price: ${projections['current_fair_price']:,.2f}\n")
+        f.write(f"Current Price: {format_price(projections['current_price'])}\n")
+        f.write(f"Model Fair Price: {format_price(projections['current_fair_price'])}\n")
         f.write(f"Undervaluation: {projections['undervaluation']:+.2f}%\n\n")
         
         f.write("FORWARD PROJECTIONS\n")
@@ -408,19 +413,18 @@ def save_optimization_results(growth_rate, optimal_intercept, optimal_r2, projec
         f.write("Model-Based Projections (from fair value):\n")
         for years in [1, 3, 5, 10, 15, 20]:
             p = projections['projections'][years]
-            f.write(f"  {years}-Year: ${p['model_price']:,.0f} | Growth: {p['model_return']:+.2f}%\n")
+            f.write(f"  {years}-Year: {format_price(p['model_price'])} | Growth: {p['model_return']:+.2f}%\n")
         
-        f.write("\nCurrent Price-Based Projections (converges toward model's future fair value):\n")
+        f.write("\nCurrent Price-Based Projections (same dollar values, percentage relative to current price):\n")
         for years in [1, 3, 5, 10, 15, 20]:
             p = projections['projections'][years]
-            f.write(f"  {years}-Year: ${p['current_based_price']:,.0f} | Return: {p['current_return']:+.2f}%\n")
+            f.write(f"  {years}-Year: {format_price(p['current_based_price'])} | Return: {p['current_return']:+.2f}%\n")
         
         f.write("\nNOTES\n")
         f.write("-" * 10 + "\n")
-        f.write("- Model-based projections start from the model's fair value\n")
-        f.write("- Current price-based projections show convergence toward model's future fair value\n")
-        f.write("- If undervalued: price converges upward then grows with model\n")
-        f.write("- If overvalued: price converges downward to model's future fair value\n")
+        f.write("- Model-based projections: percentage relative to model's fair value\n")
+        f.write("- Current price-based projections: same dollar values, percentage relative to current actual price\n")
+        f.write("- Both show the model's predicted future price, just from different reference points\n")
     
     print(f"Optimization results saved to: {results_file}")
     return results_file

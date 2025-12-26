@@ -371,12 +371,14 @@ def main():
         # Add legend
         ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
     
-    # Create slider - wider range for more sensitivity
+    # Create slider - fixed reasonable range for slopes (0 to 5)
     ax_slope = plt.axes([0.1, 0.02, 0.8, 0.03])
-    # Make the range wider for more sensitivity - ±150% of the slope
-    slider_range = max(abs(initial_slope) * 1.5, 0.1)  # ±150% of slope, or 0.1 minimum
-    slider_min = initial_slope - slider_range
-    slider_max = initial_slope + slider_range
+    # Use a fixed reasonable range for slopes (typically 0-5 for crypto)
+    # This ensures the slider covers useful values regardless of optimal slope
+    slider_min = 0.0
+    slider_max = 5.0
+    # Clamp initial slope to the slider range
+    initial_slope_clamped = max(slider_min, min(slider_max, initial_slope))
     
     # Use a very small step size for fine-grained control
     # Divide range into many small steps so tiny movements = tiny changes
@@ -385,7 +387,7 @@ def main():
     slider_slope = Slider(ax_slope, 'Slope', 
                          slider_min, 
                          slider_max, 
-                         valinit=initial_slope, 
+                         valinit=initial_slope_clamped, 
                          valfmt='%.6f',
                          valstep=step_size)  # Very small step size = less sensitive
     slider_slope.on_changed(update_model)

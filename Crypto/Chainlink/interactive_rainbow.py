@@ -104,14 +104,14 @@ def load_data():
     
     return df_filtered
 
-def rainbow_model(x, slope, intercept):
-    """Logarithmic growth model: price = 10^(slope * ln(days_since_genesis) + intercept)"""
-    # Ensure x is at least 1 to avoid log(0) errors
-    x = np.maximum(x, 1)
-    return 10**(slope * np.log(x) + intercept)
+def rainbow_model(x, growth_rate, first_price, first_days):
+    """Exponential growth model: price = first_price * e^(growth_rate * (days - first_days))"""
+    # Ensure x is at least first_days to avoid issues
+    x = np.maximum(x, first_days)
+    return first_price * np.exp(growth_rate * (x - first_days))
 
 def calculate_r2(y_actual, y_pred):
-    """Calculate R² score for logarithmic growth model (in log space)."""
+    """Calculate R² score for exponential growth model."""
     # Filter out invalid values (zeros, negatives, NaN, Inf)
     valid_mask = (y_actual > 0) & (y_pred > 0) & np.isfinite(y_actual) & np.isfinite(y_pred)
     
@@ -121,86 +121,82 @@ def calculate_r2(y_actual, y_pred):
     y_actual_valid = y_actual[valid_mask]
     y_pred_valid = y_pred[valid_mask]
     
-    # Calculate R² in log space (standard for logarithmic models)
-    log_actual = np.log10(y_actual_valid)
-    log_pred = np.log10(y_pred_valid)
-    
-    ss_res = np.sum((log_actual - log_pred) ** 2)
-    ss_tot = np.sum((log_actual - np.mean(log_actual)) ** 2)
+    # Calculate R² in normal space (not log space for exponential model)
+    ss_res = np.sum((y_actual_valid - y_pred_valid) ** 2)
+    ss_tot = np.sum((y_actual_valid - np.mean(y_actual_valid)) ** 2)
     
     if ss_tot == 0:
         return 0.0
     
     return 1 - (ss_res / ss_tot)
 
-def find_optimal_slope(df):
-    """Find the optimal slope that maximizes R² for logarithmic growth model.
-    Intercept is calculated to anchor the model at the first data point."""
+def find_optimal_growth_rate(df):
+    """Find the optimal growth rate that maximizes R² for exponential growth model."""
+    first_price = df['Price'].iloc[0]
+    first_days = df['Days_Since_Genesis'].iloc[0]
     days = df['Days_Since_Genesis'].values
     prices = df['Price'].values
-    first_price = prices[0]
-    first_days = days[0]
     
-    def r2_for_slope(slope):
-        """Calculate R² for a given slope. Intercept is anchored to first point."""
-        # Calculate intercept so model passes through first point:
-        # first_price = 10^(slope * ln(first_days) + intercept)
-        # intercept = log10(first_price) - slope * ln(first_days)
-        intercept = np.log10(first_price) - slope * np.log(first_days)
+    def r2_for_growth_rate(growth_rate):
+        """Calculate R² for a given growth rate."""
+        y_pred = rainbow_model(days, growth_rate, first_price, first_days)
         
-        y_pred = rainbow_model(days, slope, intercept)
-        
-        # Check if predictions are reasonable
+        # Check if predictions are reasonable (not astronomical)
         max_pred = np.max(y_pred)
         max_actual = np.max(prices)
-        if max_pred > max_actual * 1000 or max_pred < max_actual * 0.001:
+        # If predictions are more than 1000x the max actual price, penalize heavily
+        if max_pred > max_actual * 1000:
             return -10000
         
         r2 = calculate_r2(prices, y_pred)
+        # Return a large negative value if R² is invalid to avoid it
         if not np.isfinite(r2):
             return -10000
         return r2
     
-    # Use reasonable bounds for slope (typically 0.5 to 5.0 for crypto)
-    wide_min = 0.1
-    wide_max = 10.0
+    # Use reasonable bounds for exponential growth rate
+    # Growth rate is typically small (e.g., 0.0001 to 0.01 for daily growth)
+    wide_min = -0.01  # Allow negative growth (decay)
+    wide_max = 0.01   # Max daily growth rate (about 3.65x per year)
     
     try:
-        result = minimize_scalar(lambda s: -r2_for_slope(s), bounds=(wide_min, wide_max), method='bounded')
-        optimal_slope = result.x
+        result = minimize_scalar(lambda g: -r2_for_growth_rate(g), bounds=(wide_min, wide_max), method='bounded')
+        optimal_growth = result.x
         optimal_r2 = -result.fun
         
         # If we hit a boundary, try wider
-        if (abs(optimal_slope - wide_min) < 0.01 or abs(optimal_slope - wide_max) < 0.01):
-            print(f"Slope hit boundary at {optimal_slope:.6f}. Trying wider range...")
-            wider_min = 0.01
-            wider_max = 20.0
-            result = minimize_scalar(lambda s: -r2_for_slope(s), bounds=(wider_min, wider_max), method='bounded')
-            optimal_slope = result.x
+        if (abs(optimal_growth - wide_min) < 0.0001 or abs(optimal_growth - wide_max) < 0.0001):
+            print(f"Growth rate hit boundary at {optimal_growth:.6f}. Trying wider range...")
+            wider_min = -0.05
+            wider_max = 0.05
+            result = minimize_scalar(lambda g: -r2_for_growth_rate(g), bounds=(wider_min, wider_max), method='bounded')
+            optimal_growth = result.x
             optimal_r2 = -result.fun
         
-        # Calculate intercept anchored to first point
-        optimal_intercept = np.log10(first_price) - optimal_slope * np.log(first_days)
+        # Validate the result makes sense
+        test_pred = rainbow_model(days[-1], optimal_growth, first_price, first_days)
+        if not np.isfinite(test_pred) or test_pred > np.max(prices) * 1000:
+            print(f"Warning: Optimal growth rate produces unrealistic predictions. Using conservative default.")
+            optimal_growth = 0.001  # 0.1% daily growth
+            optimal_r2 = r2_for_growth_rate(optimal_growth)
             
     except Exception as e:
-        print(f"Warning: Optimization failed: {e}. Using default slope.")
-        optimal_slope = 2.0  # Default slope
-        optimal_intercept = np.log10(first_price) - optimal_slope * np.log(first_days)
-        optimal_r2 = r2_for_slope(optimal_slope)
+        print(f"Warning: Optimization failed: {e}. Using default growth rate.")
+        optimal_growth = 0.001  # 0.1% daily growth
+        optimal_r2 = r2_for_growth_rate(optimal_growth)
     
-    return optimal_slope, optimal_intercept, optimal_r2
+    return optimal_growth, optimal_r2
 
 def update_model(val):
     """Update the model when slider changes."""
-    slope = slider_slope.val
-    # Calculate intercept so model passes through first point
+    growth_rate = slider_growth_rate.val
+    # Get first point values
     first_price = df_filtered['Price'].iloc[0]
     first_days = df_filtered['Days_Since_Genesis'].iloc[0]
-    intercept = np.log10(first_price) - slope * np.log(first_days)
     
-    # Calculate model predictions using logarithmic growth
+    # Calculate model predictions using exponential growth
     df_filtered['Model_Price'] = df_filtered['Days_Since_Genesis'].apply(
-        lambda x: rainbow_model(x, slope, intercept)
+        lambda x: rainbow_model(x, growth_rate, first_price, first_days)
     )
     
     # Cap unrealistic predictions to keep curve on the chart
@@ -246,7 +242,10 @@ def update_model(val):
     else:
         model_str = f"${model_fair_value:,.0f}"
     
-    info_text = f"Slope: {slope:.6f} | Intercept: {intercept:.6f} | R²: {r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
+    # Calculate annualized growth rate for display
+    annualized_rate = growth_rate * 365.25 * 100  # Convert to percentage
+    
+    info_text = f"Growth Rate: {growth_rate:.6f} ({annualized_rate:.2f}%/yr) | R²: {r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
     
     ax_info.texts[0].set_text(info_text)
     
@@ -260,16 +259,19 @@ def main():
     print("=" * 40)
     
     # Load data
-    global df_filtered, ax1, ax2, line1, line2, ax_info, slider_slope, fig, initial_intercept
+    global df_filtered, ax1, ax2, line1, line2, ax_info, slider_growth_rate, fig
     df_filtered = load_data()
     if df_filtered is None:
         return
     
-    # Find optimal slope and intercept that maximizes R²
-    print("\nFinding optimal slope to maximize R²...")
-    initial_slope, initial_intercept, optimal_r2 = find_optimal_slope(df_filtered)
-    print(f"Optimal slope: {initial_slope:.6f}")
-    print(f"Optimal intercept: {initial_intercept:.6f}")
+    # Find optimal growth rate that maximizes R²
+    print("\nFinding optimal growth rate to maximize R²...")
+    first_price = df_filtered['Price'].iloc[0]
+    first_days = df_filtered['Days_Since_Genesis'].iloc[0]
+    initial_growth_rate, optimal_r2 = find_optimal_growth_rate(df_filtered)
+    print(f"Optimal growth rate: {initial_growth_rate:.6f} per day")
+    annualized_rate = initial_growth_rate * 365.25 * 100
+    print(f"Annualized growth rate: {annualized_rate:.2f}% per year")
     print(f"Maximum R²: {optimal_r2:.6f}")
     
     # Create figure with two subplots
@@ -280,9 +282,9 @@ def main():
     ax1.semilogy(df_filtered['Date'], df_filtered['Price'], color='blue', linewidth=2, label=f'Actual {CURRENCY_NAME} Price')
     ax2.plot(df_filtered['Date'], df_filtered['Price'], color='blue', linewidth=2, label=f'Actual {CURRENCY_NAME} Price')
     
-    # Calculate initial model prices using logarithmic growth
+    # Calculate initial model prices using exponential growth
     df_filtered['Model_Price'] = df_filtered['Days_Since_Genesis'].apply(
-        lambda x: rainbow_model(x, initial_slope, initial_intercept)
+        lambda x: rainbow_model(x, initial_growth_rate, first_price, first_days)
     )
     
     # Cap unrealistic predictions to keep curve on the chart
@@ -322,7 +324,8 @@ def main():
     
     # Add model information
     initial_r2 = calculate_r2(df_filtered['Price'], df_filtered['Model_Price'])
-    formula_text = f'Model: price = 10^({initial_slope:.6f} × ln(day) + {initial_intercept:.6f})\nR² = {initial_r2:.4f}'
+    annualized_rate = initial_growth_rate * 365.25 * 100
+    formula_text = f'Model: price = {first_price:.2f} × e^({initial_growth_rate:.6f} × (day - {first_days:.0f}))\nGrowth: {annualized_rate:.2f}%/yr | R² = {initial_r2:.4f}'
     ax1.text(0.02, 0.02, formula_text, transform=ax1.transAxes, fontsize=10, 
             color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
     ax2.text(0.02, 0.02, formula_text, transform=ax2.transAxes, fontsize=10, 
@@ -371,24 +374,24 @@ def main():
         # Add legend
         ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
     
-    # Create slider - wider range for more sensitivity
-    ax_slope = plt.axes([0.1, 0.02, 0.8, 0.03])
-    # Make the range wider for more sensitivity - ±150% of the slope
-    slider_range = max(abs(initial_slope) * 1.5, 0.1)  # ±150% of slope, or 0.1 minimum
-    slider_min = initial_slope - slider_range
-    slider_max = initial_slope + slider_range
+    # Create slider - wide range for more sensitivity
+    ax_growth = plt.axes([0.1, 0.02, 0.8, 0.03])
+    # Make the range much wider for more sensitivity - ±300% of the growth rate
+    slider_range = max(abs(initial_growth_rate) * 3.0, 0.01)  # ±300% of growth rate, or 1% minimum
+    slider_min = initial_growth_rate - slider_range
+    slider_max = initial_growth_rate + slider_range
     
     # Use a very small step size for fine-grained control
     # Divide range into many small steps so tiny movements = tiny changes
     step_size = (slider_max - slider_min) / 10000.0  # 10,000 steps for very fine control
     
-    slider_slope = Slider(ax_slope, 'Slope', 
+    slider_growth_rate = Slider(ax_growth, 'Growth Rate (per day)', 
                          slider_min, 
                          slider_max, 
-                         valinit=initial_slope, 
+                         valinit=initial_growth_rate, 
                          valfmt='%.6f',
                          valstep=step_size)  # Very small step size = less sensitive
-    slider_slope.on_changed(update_model)
+    slider_growth_rate.on_changed(update_model)
     
     # Add info panel at the top
     ax_info = plt.axes([0.02, 0.88, 0.96, 0.08])
@@ -413,13 +416,15 @@ def main():
     else:
         model_str = f"${model_fair_value:,.0f}"
     
-    info_text = f"Slope: {initial_slope:.6f} | Intercept: {initial_intercept:.6f} | R²: {initial_r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
+    # Calculate annualized growth rate for display
+    annualized_rate = initial_growth_rate * 365.25 * 100
+    
+    info_text = f"Growth Rate: {initial_growth_rate:.6f} ({annualized_rate:.2f}%/yr) | R²: {initial_r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
     
     ax_info.text(0.02, 0.5, info_text, transform=ax_info.transAxes, fontsize=11, 
                 verticalalignment='center', bbox=dict(facecolor='lightgray', alpha=0.8, boxstyle='round,pad=0.3'))
     
-    # Format first price for display
-    first_price = df_filtered['Price'].iloc[0]
+    # Instructions - format first price appropriately
     if first_price < 1:
         first_price_str = f"${first_price:.4f}"
     elif first_price < 1000:
@@ -427,7 +432,7 @@ def main():
     else:
         first_price_str = f"${first_price:,.0f}"
     
-    instructions = f"Adjust slider to change slope. Model starts at first day price ({first_price_str})"
+    instructions = f"Adjust slider to change growth rate. Model starts at first day price ({first_price_str})"
     
     ax_info.text(0.52, 0.5, instructions, transform=ax_info.transAxes, fontsize=10, 
                 verticalalignment='center', bbox=dict(facecolor='lightyellow', alpha=0.8, boxstyle='round,pad=0.3'))
@@ -448,11 +453,11 @@ def main():
     print(f"INTERACTIVE {CURRENCY_NAME.upper()} RAINBOW CHART")
     print("=" * 60)
     print("Use the slider to adjust the model parameters:")
-    print(f"• Slope: Controls logarithmic growth rate (growth slows over time)")
-    print(f"• Intercept: Fixed at {initial_intercept:.6f} (optimized for best fit)")
+    print(f"• Growth Rate: Controls exponential growth ({annualized_rate:.2f}% per year)")
+    print("• Model starts at first day's price automatically")
     print("• Watch R² score to find the best fit")
     print(f"• Current deviation shows if {CURRENCY_NAME} is over/undervalued")
-    print(f"\n💡 TIP: Note the optimal slope ({initial_slope:.6f}) for future reference")
+    print(f"\n💡 TIP: Note the optimal growth rate ({initial_growth_rate:.6f}) for future reference")
     
     plt.show()
 

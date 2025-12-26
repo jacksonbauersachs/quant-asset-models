@@ -61,7 +61,11 @@ def load_data():
             # Last resort: let pandas auto-detect
             df['Date'] = pd.to_datetime(df['Date'])
     
-    # Clean Price column - convert to float
+    # Clean Price column - remove commas and convert to float
+    # Handle comma-separated numbers (e.g., "1,002.60") safely
+    if df['Price'].dtype == 'object':
+        # Remove commas from string values before converting
+        df['Price'] = df['Price'].str.replace(',', '', regex=False)
     df['Price'] = df['Price'].astype(float)
     
     # Sort by date
@@ -195,9 +199,17 @@ def update_model(val):
         lambda x: rainbow_model(x, growth_rate, first_price, first_days)
     )
     
-    # Cap unrealistic predictions to prevent display issues
-    max_reasonable = df_filtered['Price'].max() * 100  # Cap at 100x max price
-    df_filtered['Model_Price'] = df_filtered['Model_Price'].clip(upper=max_reasonable)
+    # Cap unrealistic predictions to keep curve on the chart
+    # Use tighter bounds based on actual data range
+    min_price = df_filtered['Price'].min()
+    max_price = df_filtered['Price'].max()
+    price_range = max_price - min_price
+    
+    # Cap at 5x the max price and 0.1x the min price (tighter bounds)
+    max_reasonable = max_price + price_range * 4  # Allow up to 5x max, but based on range
+    min_reasonable = max(min_price * 0.1, min_price - price_range * 0.5)  # Don't go too low
+    
+    df_filtered['Model_Price'] = df_filtered['Model_Price'].clip(lower=min_reasonable, upper=max_reasonable)
     
     # Update the model line on both subplots
     line1.set_ydata(df_filtered['Model_Price'])
@@ -275,9 +287,17 @@ def main():
         lambda x: rainbow_model(x, initial_growth_rate, first_price, first_days)
     )
     
-    # Cap unrealistic predictions to prevent display issues
-    max_reasonable = df_filtered['Price'].max() * 100  # Cap at 100x max price
-    df_filtered['Model_Price'] = df_filtered['Model_Price'].clip(upper=max_reasonable)
+    # Cap unrealistic predictions to keep curve on the chart
+    # Use tighter bounds based on actual data range
+    min_price = df_filtered['Price'].min()
+    max_price = df_filtered['Price'].max()
+    price_range = max_price - min_price
+    
+    # Cap at 5x the max price and 0.1x the min price (tighter bounds)
+    max_reasonable = max_price + price_range * 4  # Allow up to 5x max, but based on range
+    min_reasonable = max(min_price * 0.1, min_price - price_range * 0.5)  # Don't go too low
+    
+    df_filtered['Model_Price'] = df_filtered['Model_Price'].clip(lower=min_reasonable, upper=max_reasonable)
     
     # Plot model line
     line1, = ax1.semilogy(df_filtered['Date'], df_filtered['Model_Price'], 
@@ -318,36 +338,59 @@ def main():
         ax.set_title(f'{CURRENCY_NAME} Rainbow Chart - {ylabel_suffix}\nR² = {initial_r2:.6f}', fontsize=14, fontweight='bold')
         ax.grid(True, alpha=0.3, which='both')
         
-        # Custom y-axis formatting
-        def price_formatter(x, pos):
-            if x >= 1000000:
-                return f'${x/1000000:.1f}M'
-            elif x >= 1000:
-                return f'${x/1000:.0f}K'
-            else:
-                return f'${x:.0f}'
+        # Dynamic y-axis formatting based on data range
+        min_price = min(df_filtered['Price'].min(), df_filtered['Model_Price'].min())
+        max_price = max(df_filtered['Price'].max(), df_filtered['Model_Price'].max())
+        price_range = max_price - min_price
+        
+        # Create dynamic price formatter based on data range
+        if max_price >= 1000000:
+            def price_formatter(x, pos):
+                return f'${x/1000000:.2f}M'
+        elif max_price >= 1000:
+            def price_formatter(x, pos):
+                return f'${x/1000:.1f}K'
+        elif max_price >= 1:
+            def price_formatter(x, pos):
+                return f'${x:.2f}'
+        else:
+            def price_formatter(x, pos):
+                return f'${x:.4f}'
         
         ax.yaxis.set_major_formatter(plt.FuncFormatter(price_formatter))
         
+        # Set dynamic tick spacing based on price range
+        from matplotlib.ticker import MaxNLocator
+        if ax == ax2:  # Normal scale
+            # Use MaxNLocator to get reasonable number of ticks
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=8, prune='both'))
+            # Set y-axis limits with some padding
+            padding = price_range * 0.1  # 10% padding
+            ax.set_ylim(max(0, min_price - padding), max_price + padding)
+        else:  # Log scale
+            # For log scale, let matplotlib handle it automatically
+            ax.set_ylim(max(0.01, min_price * 0.5), max_price * 2)
+        
         # Add legend
         ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
-        
-        # Set y-axis limits
-        if ax == ax2:  # Normal scale
-            max_price = max(df_filtered['Price'].max(), df_filtered['Model_Price'].max())
-            ax.set_ylim(0, min(max_price * 2, df_filtered['Price'].max() * 3))
-        else:  # Log scale
-            ax.set_ylim(0.01, max(df_filtered['Price'].max(), df_filtered['Model_Price'].max()) * 2)
     
-    # Create slider - wide range around optimal growth rate
+    # Create slider - wide range for more sensitivity
     ax_growth = plt.axes([0.1, 0.02, 0.8, 0.03])
-    slider_range = max(abs(initial_growth_rate) * 2.0, 0.005)  # At least 0.5% range, or 200% of growth rate
+    # Make the range much wider for more sensitivity - ±300% of the growth rate
+    slider_range = max(abs(initial_growth_rate) * 3.0, 0.01)  # ±300% of growth rate, or 1% minimum
     slider_min = initial_growth_rate - slider_range
     slider_max = initial_growth_rate + slider_range
+    
+    # Use a very small step size for fine-grained control
+    # Divide range into many small steps so tiny movements = tiny changes
+    step_size = (slider_max - slider_min) / 10000.0  # 10,000 steps for very fine control
+    
     slider_growth_rate = Slider(ax_growth, 'Growth Rate (per day)', 
                          slider_min, 
                          slider_max, 
-                         valinit=initial_growth_rate, valfmt='%.6f')
+                         valinit=initial_growth_rate, 
+                         valfmt='%.6f',
+                         valstep=step_size)  # Very small step size = less sensitive
     slider_growth_rate.on_changed(update_model)
     
     # Add info panel at the top

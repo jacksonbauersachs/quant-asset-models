@@ -9,9 +9,9 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = ""  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
-CURRENCY_NAME_LOWER = ""  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = ""  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+CURRENCY_NAME = "Dogecoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
+CURRENCY_NAME_LOWER = "dogecoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
+YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES
@@ -21,7 +21,7 @@ YAHOO_TICKER = ""  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "D
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2022-06-18"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -29,13 +29,13 @@ START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysi
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Portfolio/Data"
+DATA_FOLDER = "Crypto/Doge"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "Gold_all_time_price.csv"
+HISTORICAL_DATA_FILE = "Dogecoin_historical_data.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "Commodities/Gold"
+OUTPUT_FOLDER = "Crypto/Doge"
 
 # ============================================
 # MODEL PARAMETERS
