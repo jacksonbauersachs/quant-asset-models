@@ -21,7 +21,7 @@ import gc
 try:
     from config import (
         CURRENCY_NAME, CURRENCY_NAME_LOWER, DATA_FOLDER, HISTORICAL_DATA_FILE,
-        OUTPUT_FOLDER, START_DATE, SLOPE_MIN, SLOPE_MAX,
+        OUTPUT_FOLDER, START_DATE,
         get_output_files, validate_config
     )
     # GENESIS_DATE is optional - will auto-detect from data if not provided
@@ -30,7 +30,7 @@ try:
     except ImportError:
         GENESIS_DATE = None  # Will auto-detect from data
 except ImportError:
-    print("Error: config.py not found! Make sure you're running from the clone folder.")
+    print("Error: config.py not found! Make sure config.py is in the same folder as this script.")
     sys.exit(1)
 
 # Validate config
