@@ -374,11 +374,10 @@ def main():
         # Add legend
         ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
     
-    # Create slider - tight range around optimal for precise control
+    # Create slider - wider range for more sensitivity
     ax_growth = plt.axes([0.1, 0.02, 0.8, 0.03])
-    # Make the range much tighter - only ±20% of the growth rate for precise adjustment
-    # This makes the useful range take up most of the slider instead of just 48-52%
-    slider_range = max(abs(initial_growth_rate) * 0.2, 0.0001)  # ±20% of growth rate, or very small minimum
+    # Make the range wider for more sensitivity - ±150% of the growth rate
+    slider_range = max(abs(initial_growth_rate) * 1.5, 0.01)  # ±150% of growth rate, or 1% minimum
     slider_min = initial_growth_rate - slider_range
     slider_max = initial_growth_rate + slider_range
     
