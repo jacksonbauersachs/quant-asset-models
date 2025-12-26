@@ -9,9 +9,9 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = "Bitcoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
-CURRENCY_NAME_LOWER = "bitcoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "BTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+CURRENCY_NAME = "Dogecoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
+CURRENCY_NAME_LOWER = "dogecoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
+YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES
@@ -21,7 +21,7 @@ YAHOO_TICKER = "BTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2011-04-17"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2021-01-28"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -29,37 +29,28 @@ START_DATE = "2011-04-17"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Crypto\Bitcoin\We_both_know"
+DATA_FOLDER = "Crypto/Doge"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "BTC_historical_data.csv"
+HISTORICAL_DATA_FILE = "Dogecoin_historical_data.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "Crypto\Bitcoin\We_both_know"
+OUTPUT_FOLDER = "Crypto/Doge"
 
 # ============================================
 # MODEL PARAMETERS
 # ============================================
-# Fixed slope for intercept optimization (adjust after running interactive_rainbow.py)
+# Fixed growth rate for optimization (OPTIONAL - set to None to auto-optimize)
 # This is typically found by running the interactive rainbow chart first
-FIXED_SLOPE = 1.4783
+# Growth rate is in "per day" units (e.g., 0.001 = 0.1% per day ≈ 36.5% per year)
+# Set to None to let optimize_intercept.py find the optimal growth rate automatically
+FIXED_GROWTH_RATE = .000774  # Example: 0.001 for 0.1% daily growth
 
 # ============================================
 # DATA SOURCE
 # ============================================
 # Using Yahoo Finance (yfinance library) - no API key required!
 # Yahoo Finance ticker format: "CURRENCY-USD" (e.g., "BTC-USD", "DOGE-USD")
-
-# ============================================
-# OPTIMIZATION BOUNDS
-# ============================================
-# Bounds for slope optimization in interactive rainbow chart
-SLOPE_MIN = 0.5
-SLOPE_MAX = 5.0
-
-# Bounds for intercept optimization
-INTERCEPT_MIN = -30
-INTERCEPT_MAX = 0
 
 # ============================================
 # OUTPUT FILE NAMES (auto-generated from CURRENCY_NAME_LOWER)
@@ -90,11 +81,31 @@ def validate_config():
     from datetime import datetime
     try:
         if START_DATE and START_DATE != "":
-            datetime.strptime(START_DATE, '%Y-%m-%d')
+            # Try multiple date formats
+            try:
+                datetime.strptime(START_DATE, '%Y-%m-%d')
+            except ValueError:
+                try:
+                    datetime.strptime(START_DATE, '%m-%d-%Y')
+                except ValueError:
+                    try:
+                        datetime.strptime(START_DATE, '%m/%d/%Y')
+                    except ValueError:
+                        raise ValueError(f"START_DATE '{START_DATE}' must be in YYYY-MM-DD, M-D-YYYY, or M/D/YYYY format!")
         if GENESIS_DATE is not None and GENESIS_DATE != "":
-            datetime.strptime(GENESIS_DATE, '%Y-%m-%d')
-    except ValueError:
-        raise ValueError("Dates must be in YYYY-MM-DD format!")
+            # Try multiple date formats
+            try:
+                datetime.strptime(GENESIS_DATE, '%Y-%m-%d')
+            except ValueError:
+                try:
+                    datetime.strptime(GENESIS_DATE, '%m-%d-%Y')
+                except ValueError:
+                    try:
+                        datetime.strptime(GENESIS_DATE, '%m/%d/%Y')
+                    except ValueError:
+                        raise ValueError(f"GENESIS_DATE '{GENESIS_DATE}' must be in YYYY-MM-DD, M-D-YYYY, or M/D/YYYY format!")
+    except ValueError as e:
+        raise ValueError(str(e))
     
     print(f"✅ Configuration validated for {CURRENCY_NAME}")
     return True

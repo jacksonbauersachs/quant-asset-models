@@ -8,7 +8,7 @@ from datetime import datetime
 def load_bitcoin_data():
     """Load and prepare Bitcoin price data for analysis."""
     
-    data_file = "Portfolio/Data/Bitcoin_all_time_price.csv"
+    data_file = "Crypto\Bitcoin\We_both_know\BTC_historical_data.csv"
     
     if not os.path.exists(data_file):
         print(f"Error: Bitcoin data file not found - {data_file}")

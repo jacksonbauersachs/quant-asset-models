@@ -1,0 +1,44 @@
+BITCOIN INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2025-12-25 19:29:40
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Slope: 2.424400
+Optimal Intercept: -16.131363
+Maximum R²: 0.960935
+
+MODEL FORMULA
+--------------------
+price = 10^(2.424400 * ln(days_since_genesis) + -16.131363)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $87,611.96
+Model Fair Price: $109,356.53
+Undervaluation: -19.88%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $150,537 | Growth: +37.66%
+  3-Year: $271,304 | Growth: +148.09%
+  5-Year: $462,207 | Growth: +322.66%
+  10-Year: $1,451,822 | Growth: +1227.60%
+  15-Year: $3,751,550 | Growth: +3330.57%
+  20-Year: $8,442,627 | Growth: +7620.28%
+
+Current Price-Based Projections (includes undervaluation benefit):
+  1-Year: $138,025 | Return: +57.54%
+  3-Year: $234,779 | Return: +167.98%
+  5-Year: $387,722 | Return: +342.54%
+  10-Year: $1,180,561 | Return: +1247.49%
+  15-Year: $3,023,009 | Return: +3350.45%
+  20-Year: $6,781,307 | Return: +7640.16%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections start from the current (undervalued) price
+- Undervaluation benefit is added to current price-based returns

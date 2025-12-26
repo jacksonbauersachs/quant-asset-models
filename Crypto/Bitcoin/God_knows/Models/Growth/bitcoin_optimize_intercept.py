@@ -8,7 +8,7 @@ from datetime import datetime
 def load_bitcoin_data():
     """Load and prepare Bitcoin price data for analysis."""
     
-    data_file = "Portfolio/Data/Bitcoin_all_time_price.csv"
+    data_file = "Crypto/Bitcoin/data_update/BTC_historical_data.csv"
     
     if not os.path.exists(data_file):
         print(f"Error: Bitcoin data file not found - {data_file}")
@@ -256,7 +256,7 @@ def main():
         return
     
     # Fixed slope (user specified)
-    fixed_slope = 2.425595
+    fixed_slope = 2.4244
     
     # Optimize intercept
     print(f"\nOptimizing intercept for slope: {fixed_slope}")
