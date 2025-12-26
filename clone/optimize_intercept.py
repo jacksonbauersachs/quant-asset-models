@@ -70,7 +70,11 @@ def load_data():
             # Last resort: let pandas auto-detect
             df['Date'] = pd.to_datetime(df['Date'])
     
-    # Clean Price column - convert to float
+    # Clean Price column - remove commas and convert to float
+    # Handle comma-separated numbers (e.g., "1,002.60") safely
+    if df['Price'].dtype == 'object':
+        # Remove commas from string values before converting
+        df['Price'] = df['Price'].str.replace(',', '', regex=False)
     df['Price'] = df['Price'].astype(float)
     
     # Sort by date
@@ -241,26 +245,41 @@ def create_optimization_chart(df, growth_rate, optimal_intercept, optimal_r2):
                     fontsize=14, fontweight='bold')
         ax.grid(True, alpha=0.3, which='both')
         
-        # Custom y-axis formatting
-        def price_formatter(x, pos):
-            if x >= 1000000:
-                return f'${x/1000000:.1f}M'
-            elif x >= 1000:
-                return f'${x/1000:.0f}K'
-            else:
-                return f'${x:.0f}'
+        # Dynamic y-axis formatting based on data range
+        min_price = min(df['Price'].min(), df['Model_Price'].min())
+        max_price = max(df['Price'].max(), df['Model_Price'].max())
+        price_range = max_price - min_price
+        
+        # Create dynamic price formatter based on data range
+        if max_price >= 1000000:
+            def price_formatter(x, pos):
+                return f'${x/1000000:.2f}M'
+        elif max_price >= 1000:
+            def price_formatter(x, pos):
+                return f'${x/1000:.1f}K'
+        elif max_price >= 1:
+            def price_formatter(x, pos):
+                return f'${x:.2f}'
+        else:
+            def price_formatter(x, pos):
+                return f'${x:.4f}'
         
         ax.yaxis.set_major_formatter(plt.FuncFormatter(price_formatter))
         
+        # Set dynamic tick spacing based on price range
+        from matplotlib.ticker import MaxNLocator
+        if ax == ax2:  # Normal scale
+            # Use MaxNLocator to get reasonable number of ticks
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=8, prune='both'))
+            # Set y-axis limits with some padding
+            padding = price_range * 0.1  # 10% padding
+            ax.set_ylim(max(0, min_price - padding), max_price + padding)
+        else:  # Log scale
+            # For log scale, let matplotlib handle it automatically
+            ax.set_ylim(max(0.01, min_price * 0.5), max_price * 2)
+        
         # Add legend
         ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
-        
-        # Set y-axis limits
-        if ax == ax2:  # Normal scale
-            max_price = max(df['Price'].max(), df['Model_Price'].max())
-            ax.set_ylim(0, min(max_price * 2, df['Price'].max() * 3))
-        else:  # Log scale
-            ax.set_ylim(0.01, max(df['Price'].max(), df['Model_Price'].max()) * 2)
     
     plt.tight_layout()
     
