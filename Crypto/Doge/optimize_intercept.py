@@ -319,14 +319,17 @@ def calculate_projections(df, growth_rate, intercept):
         # Model-based projection (from fair value)
         model_return = ((model_future_price - current_fair_price) / current_fair_price) * 100
         
-        # Current price-based projection (includes undervaluation benefit)
+        # Current price-based projection (converges toward model's future fair value)
         if undervaluation < 0:  # If undervalued
+            # Price will converge upward toward fair value, then grow with model
             undervaluation_benefit = abs(undervaluation)
             current_return = model_return + undervaluation_benefit
+            current_based_price = current_price * (1 + current_return / 100)
         else:  # If overvalued
-            current_return = model_return - abs(undervaluation)
-        
-        current_based_price = current_price * (1 + current_return / 100)
+            # Price will converge downward toward the model's future fair value
+            # Don't go below the model's future fair value - just converge to it
+            current_based_price = model_future_price  # Converge to model's future fair value
+            current_return = ((current_based_price - current_price) / current_price) * 100
         
         projections[years] = {
             'model_price': model_future_price,
@@ -388,7 +391,7 @@ def save_optimization_results(growth_rate, optimal_intercept, optimal_r2, projec
             p = projections['projections'][years]
             f.write(f"  {years}-Year: ${p['model_price']:,.0f} | Growth: {p['model_return']:+.2f}%\n")
         
-        f.write("\nCurrent Price-Based Projections (includes undervaluation benefit):\n")
+        f.write("\nCurrent Price-Based Projections (converges toward model's future fair value):\n")
         for years in [1, 3, 5, 10, 15, 20]:
             p = projections['projections'][years]
             f.write(f"  {years}-Year: ${p['current_based_price']:,.0f} | Return: {p['current_return']:+.2f}%\n")
@@ -396,8 +399,9 @@ def save_optimization_results(growth_rate, optimal_intercept, optimal_r2, projec
         f.write("\nNOTES\n")
         f.write("-" * 10 + "\n")
         f.write("- Model-based projections start from the model's fair value\n")
-        f.write("- Current price-based projections start from the current (undervalued) price\n")
-        f.write("- Undervaluation benefit is added to current price-based returns\n")
+        f.write("- Current price-based projections show convergence toward model's future fair value\n")
+        f.write("- If undervalued: price converges upward then grows with model\n")
+        f.write("- If overvalued: price converges downward to model's future fair value\n")
     
     print(f"Optimization results saved to: {results_file}")
     return results_file

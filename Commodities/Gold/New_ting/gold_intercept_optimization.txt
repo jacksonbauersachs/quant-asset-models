@@ -1,0 +1,46 @@
+GOLD INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2025-12-26 13:22:33
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000142 per day
+Annualized Growth Rate: 5.19% per year
+Optimal Intercept: 0.565266
+Maximum R²: 0.824268
+
+MODEL FORMULA
+--------------------
+price = 102.80 × e^(0.000142 × (day - 605) + 0.565266)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $4,480.80
+Model Fair Price: $2,335.30
+Undervaluation: +91.87%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $2,460 | Growth: +5.32%
+  3-Year: $2,728 | Growth: +16.84%
+  5-Year: $3,027 | Growth: +29.61%
+  10-Year: $3,923 | Growth: +67.98%
+  15-Year: $5,084 | Growth: +117.71%
+  20-Year: $6,589 | Growth: +182.16%
+
+Current Price-Based Projections (converges toward model's future fair value):
+  1-Year: $2,460 | Return: -45.11%
+  3-Year: $2,728 | Return: -39.11%
+  5-Year: $3,027 | Return: -32.45%
+  10-Year: $3,923 | Return: -12.45%
+  15-Year: $5,084 | Return: +13.46%
+  20-Year: $6,589 | Return: +47.06%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections show convergence toward model's future fair value
+- If undervalued: price converges upward then grows with model
+- If overvalued: price converges downward to model's future fair value
