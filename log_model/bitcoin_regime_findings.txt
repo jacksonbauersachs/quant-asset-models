@@ -1,0 +1,224 @@
+======================================================================
+BITCOIN REGIME SHIFT ANALYSIS - FINDINGS REPORT
+======================================================================
+
+Analysis Date: 2025-12-26 22:46:59
+Data Range: 2017-10-01 to 2025-12-24
+
+EXECUTIVE SUMMARY
+----------------------------------------------------------------------
+This analysis uses rolling regression windows to track how Bitcoin's
+growth model parameters (slope, intercept) change over time.
+This helps identify regime shifts where growth dynamics fundamentally change.
+
+KEY FINDINGS
+----------------------------------------------------------------------
+
+3-YEAR ROLLING WINDOW ANALYSIS
+----------------------------------------------------------------------
+Number of windows analyzed: 64
+Average slope: 1.7766
+Slope range: 0.1000 to 4.3477
+Average R²: -0.1235
+R² range: -3.2052 to 0.9286
+
+5-YEAR ROLLING WINDOW ANALYSIS
+----------------------------------------------------------------------
+Number of windows analyzed: 40
+Average slope: 1.9128
+Slope range: 0.5760 to 2.8886
+Average R²: 0.3597
+R² range: 0.0290 to 0.5891
+
+RECENT TRENDS (Last 2 Years)
+----------------------------------------------------------------------
+3-Year Window - Recent Average Slope: 1.0961
+3-Year Window - Recent Average R²: -0.3218
+5-Year Window - Recent Average Slope: 2.2418
+5-Year Window - Recent Average R²: 0.2898
+
+IDENTIFIED REGIME SHIFTS
+----------------------------------------------------------------------
+
+Shift #1:
+  Date: 2019-05-01
+  Slope Before: 1.0435
+  Slope After: 0.3915
+  Change: -62.49%
+
+Shift #2:
+  Date: 2019-05-31
+  Slope Before: 0.3915
+  Slope After: 0.1000
+  Change: -74.45%
+
+Shift #3:
+  Date: 2019-09-28
+  Slope Before: 0.1000
+  Slope After: 0.9669
+  Change: 866.87%
+
+Shift #4:
+  Date: 2019-10-28
+  Slope Before: 0.9669
+  Slope After: 0.5465
+  Change: -43.48%
+
+Shift #5:
+  Date: 2019-11-27
+  Slope Before: 0.5465
+  Slope After: 1.1760
+  Change: 115.18%
+
+Shift #6:
+  Date: 2019-12-27
+  Slope Before: 1.1760
+  Slope After: 1.7960
+  Change: 52.72%
+
+Shift #7:
+  Date: 2020-01-26
+  Slope Before: 1.7960
+  Slope After: 1.2648
+  Change: -29.58%
+
+Shift #8:
+  Date: 2020-02-25
+  Slope Before: 1.2648
+  Slope After: 1.7858
+  Change: 41.20%
+
+Shift #9:
+  Date: 2020-05-25
+  Slope Before: 2.2563
+  Slope After: 3.4290
+  Change: 51.98%
+
+Shift #10:
+  Date: 2020-11-21
+  Slope Before: 3.5533
+  Slope After: 2.8102
+  Change: -20.91%
+
+Shift #11:
+  Date: 2020-12-21
+  Slope Before: 2.8102
+  Slope After: 2.1843
+  Change: -22.27%
+
+Shift #12:
+  Date: 2021-09-17
+  Slope Before: 2.4217
+  Slope After: 3.6133
+  Change: 49.21%
+
+Shift #13:
+  Date: 2021-11-16
+  Slope Before: 3.2796
+  Slope After: 2.6014
+  Change: -20.68%
+
+Shift #14:
+  Date: 2022-02-14
+  Slope Before: 2.7947
+  Slope After: 2.1746
+  Change: -22.19%
+
+Shift #15:
+  Date: 2022-05-15
+  Slope Before: 2.2564
+  Slope After: 1.4415
+  Change: -36.11%
+
+Shift #16:
+  Date: 2022-06-14
+  Slope Before: 1.4415
+  Slope After: 1.0186
+  Change: -29.34%
+
+Shift #17:
+  Date: 2022-07-14
+  Slope Before: 1.0186
+  Slope After: 0.1000
+  Change: -90.18%
+
+Shift #18:
+  Date: 2023-01-10
+  Slope Before: 0.1000
+  Slope After: 0.1603
+  Change: 60.28%
+
+Shift #19:
+  Date: 2023-02-09
+  Slope Before: 0.1603
+  Slope After: 0.1000
+  Change: -37.61%
+
+Shift #20:
+  Date: 2023-07-09
+  Slope Before: 0.1000
+  Slope After: 0.1690
+  Change: 68.97%
+
+Shift #21:
+  Date: 2023-09-07
+  Slope Before: 0.1793
+  Slope After: 0.4412
+  Change: 145.99%
+
+Shift #22:
+  Date: 2023-10-07
+  Slope Before: 0.4412
+  Slope After: 0.5402
+  Change: 22.44%
+
+Shift #23:
+  Date: 2023-11-06
+  Slope Before: 0.5402
+  Slope After: 1.2812
+  Change: 137.17%
+
+Shift #24:
+  Date: 2023-12-06
+  Slope Before: 1.2812
+  Slope After: 1.6942
+  Change: 32.24%
+
+Shift #25:
+  Date: 2024-01-05
+  Slope Before: 1.6942
+  Slope After: 2.8922
+  Change: 70.71%
+
+Shift #26:
+  Date: 2024-03-05
+  Slope Before: 2.8948
+  Slope After: 3.4867
+  Change: 20.45%
+
+Shift #27:
+  Date: 2024-06-03
+  Slope Before: 3.6049
+  Slope After: 4.3477
+  Change: 20.60%
+
+INTERPRETATION
+----------------------------------------------------------------------
+• A DECREASING slope indicates growth is slowing over time
+• A STABLE slope suggests consistent growth dynamics
+• A DECREASING R² suggests the model fits less well (regime shift)
+• Significant slope changes (>20%) may indicate regime shifts
+• 3-year windows are more sensitive to recent changes
+• 5-year windows provide more stable, long-term trends
+
+RECOMMENDATIONS
+----------------------------------------------------------------------
+1. If slope is decreasing over time, consider using a more recent
+   time period for the growth model (e.g., post-2020 data)
+2. If R² is decreasing, the single-slope model may no longer
+   be appropriate - consider piecewise or trend+cycle models
+3. Use the identified regime shift dates as breakpoints for
+   piecewise models if significant shifts are detected
+4. Compare out-of-sample performance: fit model up to 2020,
+   then test predictions on 2021-2025 data
+

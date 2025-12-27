@@ -1,0 +1,45 @@
+LITECOIN INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2025-12-26 22:27:01
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000283 per day
+Annualized Growth Rate: 10.34% per year
+Optimal Intercept: 0.770927
+Maximum R²: -0.200415
+
+MODEL FORMULA
+--------------------
+price = 25.21 × e^(0.000283 × (day - 985) + 0.770927)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $77.26
+Model Fair Price: $132.32
+Undervaluation: -41.61%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $146.72 | Growth: +10.89%
+  3-Year: $180.42 | Growth: +36.36%
+  5-Year: $221.85 | Growth: +67.67%
+  10-Year: $371.98 | Growth: +181.13%
+  15-Year: $623.70 | Growth: +371.38%
+  20-Year: $1,046 | Growth: +690.36%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $146.72 | Return: +89.91%
+  3-Year: $180.42 | Return: +133.52%
+  5-Year: $221.85 | Return: +187.15%
+  10-Year: $371.98 | Return: +381.47%
+  15-Year: $623.70 | Return: +707.28%
+  20-Year: $1,046 | Return: +1253.57%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

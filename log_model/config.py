@@ -26,7 +26,7 @@ YAHOO_TICKER = "BTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2011-04-15"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -114,6 +114,6 @@ def validate_config():
     except ValueError as e:
         raise ValueError(str(e))
     
-    print(f"✅ Configuration validated for {CURRENCY_NAME}")
+    print(f"Configuration validated for {CURRENCY_NAME}")
     return True
 
