@@ -14,9 +14,9 @@ Growth slows over time (unlike exponential which accelerates).
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = ""  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
-CURRENCY_NAME_LOWER = ""  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
-YAHOO_TICKER = ""  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
+CURRENCY_NAME = "Bitcoin"  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
+CURRENCY_NAME_LOWER = "bitcoin"  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
+YAHOO_TICKER = "BTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
 
 # ============================================
 # DATES
@@ -26,7 +26,7 @@ YAHOO_TICKER = ""  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "L
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2011-04-15"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -34,13 +34,13 @@ START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysi
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Chainlink"
-DATA_FOLDER = "Crypto/Chainlink"
+DATA_FOLDER = "Crypto/Bitcoin/data_update"
 
 # Example: "Chainlink_historical_data.csv"
-HISTORICAL_DATA_FILE = "Chainlink_historical_data.csv"
+HISTORICAL_DATA_FILE = "BTC_historical_data.csv"
 
 # Example: "Crypto/Chainlink"
-OUTPUT_FOLDER = "Crypto/Chainlink"
+OUTPUT_FOLDER = "log_model"
 
 # ============================================
 # MODEL PARAMETERS (LOGARITHMIC MODEL)
@@ -50,7 +50,7 @@ OUTPUT_FOLDER = "Crypto/Chainlink"
 # For logarithmic model: price = 10^(slope × ln(day) + intercept)
 # Slope typically ranges from 0.5 to 5.0 for cryptocurrencies
 # Set to None to let optimize_intercept.py find the optimal slope automatically
-FIXED_GROWTH_RATE = None  # This is used as FIXED_SLOPE for logarithmic models
+FIXED_GROWTH_RATE = 1.5745  # This is used as FIXED_SLOPE for logarithmic models
 # Example: 2.5 for a slope of 2.5
 
 # ============================================

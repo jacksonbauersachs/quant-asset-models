@@ -1,42 +1,42 @@
 CHAINLINK INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2025-12-26 14:57:58
+Analysis Date: 2025-12-26 15:21:17
 
 OPTIMIZATION PARAMETERS
 ------------------------------
-Fixed Growth Rate: 0.000330 per day
-Annualized Growth Rate: 12.05% per year
-Optimal Intercept: 0.456427
-Maximum R²: 0.031756
+Fixed Growth Rate: 0.000318 per day
+Annualized Growth Rate: 11.61% per year
+Optimal Intercept: 0.461683
+Maximum R²: 0.033757
 
 MODEL FORMULA
 --------------------
-price = 8.90 × e^(0.000330 × (day - 2172) + 0.456427)
+price = 8.90 × e^(0.000318 × (day - 2172) + 0.461683)
 
 CURRENT ANALYSIS
 --------------------
 Current Price: $12.19
-Model Fair Price: $18.28
-Undervaluation: -33.35%
+Model Fair Price: $18.20
+Undervaluation: -33.06%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $21 | Growth: +12.81%
-  3-Year: $26 | Growth: +43.56%
-  5-Year: $33 | Growth: +82.70%
-  10-Year: $61 | Growth: +233.78%
-  15-Year: $111 | Growth: +509.82%
-  20-Year: $204 | Growth: +1014.12%
+  1-Year: $20 | Growth: +12.32%
+  3-Year: $26 | Growth: +41.69%
+  5-Year: $33 | Growth: +78.74%
+  10-Year: $58 | Growth: +219.47%
+  15-Year: $104 | Growth: +471.01%
+  20-Year: $186 | Growth: +920.61%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $21 | Return: +69.26%
-  3-Year: $26 | Return: +115.40%
-  5-Year: $33 | Return: +174.11%
-  10-Year: $61 | Return: +400.80%
-  15-Year: $111 | Return: +814.95%
-  20-Year: $204 | Return: +1571.59%
+  1-Year: $20 | Return: +67.79%
+  3-Year: $26 | Return: +111.67%
+  5-Year: $33 | Return: +167.02%
+  10-Year: $58 | Return: +377.26%
+  15-Year: $104 | Return: +753.05%
+  20-Year: $186 | Return: +1424.72%
 
 NOTES
 ----------
