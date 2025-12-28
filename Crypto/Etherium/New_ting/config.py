@@ -21,7 +21,7 @@ YAHOO_TICKER = "ETH-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2017-01-01"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2021-01-02"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -44,7 +44,7 @@ OUTPUT_FOLDER = "Crypto/Etherium/New_ting"
 # This is typically found by running the interactive rainbow chart first
 # Growth rate is in "per day" units (e.g., 0.001 = 0.1% per day ≈ 36.5% per year)
 # Set to None to let optimize_intercept.py find the optimal growth rate automatically
-FIXED_GROWTH_RATE = .9315  # Example: 0.001 for 0.1% daily growth
+FIXED_GROWTH_RATE = .4495  # Example: 0.001 for 0.1% daily growth
 
 # ============================================
 # DATA SOURCE
