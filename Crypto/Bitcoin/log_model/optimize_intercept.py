@@ -39,6 +39,12 @@ try:
         FIXED_SLOPE = FIXED_GROWTH_RATE  # For logarithmic model, this is the slope
     except ImportError:
         FIXED_SLOPE = None  # Will optimize if not set
+    
+    # POWER is optional - default to 1.0 if not set
+    try:
+        from config import POWER
+    except ImportError:
+        POWER = 1.0  # Default to linear (power = 1)
 except ImportError:
     print("Error: config.py not found! Make sure you're running from the log_model folder.")
     sys.exit(1)
@@ -114,11 +120,16 @@ def load_data():
     
     return df_filtered
 
-def rainbow_model(x, slope, intercept):
-    """Logarithmic growth model: price = 10^(slope * ln(days_since_genesis) + intercept)"""
-    # Ensure x is at least 1 to avoid log(0) errors
+def rainbow_model(x, slope, intercept, power=1.0):
+    """Growth model: price = 10^(slope * (days^power) + intercept)"""
+    # Ensure x is at least 1 to avoid issues
     x = np.maximum(x, 1)
-    return 10**(slope * np.log(x) + intercept)
+    # Calculate exponent and prevent overflow
+    exponent = slope * (x**power) + intercept
+    exponent = np.clip(exponent, -30, 30)  # Prevent overflow
+    result = 10**exponent
+    result = np.where(np.isfinite(result), result, np.nan)
+    return result
 
 def calculate_r2(y_actual, y_pred):
     """Calculate R² score for logarithmic growth model (in log space)."""
@@ -147,8 +158,8 @@ def objective_function(intercept):
     """Objective function to minimize (negative R² to maximize R²)."""
     global df_filtered, fixed_slope
     
-    # Calculate model predictions with fixed slope and variable intercept
-    y_pred = rainbow_model(df_filtered['Days_Since_Genesis'], fixed_slope, intercept)
+    # Calculate model predictions with fixed slope, fixed power, and variable intercept
+    y_pred = rainbow_model(df_filtered['Days_Since_Genesis'], fixed_slope, intercept, POWER)
     
     # Calculate R²
     r2 = calculate_r2(df_filtered['Price'], y_pred)
@@ -184,13 +195,13 @@ def optimize_intercept_for_r2(df, slope):
             optimal_r2 = -result.fun
         
         # Validate the result makes sense
-        test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept)
+        test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept, POWER)
         if not np.isfinite(test_pred) or test_pred > df['Price'].max() * 1000:
             print(f"Warning: Optimal intercept produces unrealistic predictions. Using default intercept.")
             # Calculate default intercept from first point
             first_price = df['Price'].iloc[0]
             first_days = df['Days_Since_Genesis'].iloc[0]
-            optimal_intercept = np.log10(first_price) - slope * np.log(first_days)
+            optimal_intercept = np.log10(first_price) - slope * (first_days**POWER)
             optimal_r2 = -objective_function(optimal_intercept)
     except Exception as e:
         print(f"Warning: Optimization failed: {e}. Using default intercept.")
@@ -210,7 +221,7 @@ def create_optimization_chart(df, slope, optimal_intercept, optimal_r2):
     
     # Calculate model predictions with optimal parameters
     df['Model_Price'] = df['Days_Since_Genesis'].apply(
-        lambda x: rainbow_model(x, slope, optimal_intercept)
+        lambda x: rainbow_model(x, slope, optimal_intercept, POWER)
     )
     
     # Cap unrealistic predictions to prevent display issues
@@ -242,7 +253,7 @@ def create_optimization_chart(df, slope, optimal_intercept, optimal_r2):
     for ax, ylabel_suffix in [(ax1, 'Log Scale'), (ax2, 'Normal Scale')]:
         ax.set_xlabel('Date', fontsize=12)
         ax.set_ylabel(f'{CURRENCY_NAME} Price (USD) - {ylabel_suffix}', fontsize=12)
-        ax.set_title(f'{CURRENCY_NAME} Optimized Model - {ylabel_suffix}\nSlope: {slope:.6f}, Intercept: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}', 
+        ax.set_title(f'{CURRENCY_NAME} Optimized Model - {ylabel_suffix}\nPower: {POWER:.2f}, Slope: {slope:.6f}, Intercept: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}', 
                     fontsize=14, fontweight='bold')
         ax.grid(True, alpha=0.3, which='both')
         
@@ -322,7 +333,7 @@ def calculate_projections(df, slope, intercept):
     current_days = df['Days_Since_Genesis'].iloc[-1]
     
     # Calculate current fair value using logarithmic model
-    current_fair_price = rainbow_model(current_days, slope, intercept)
+    current_fair_price = rainbow_model(current_days, slope, intercept, POWER)
     
     # Calculate undervaluation
     undervaluation = ((current_price - current_fair_price) / current_fair_price) * 100
@@ -332,22 +343,15 @@ def calculate_projections(df, slope, intercept):
     
     for years in horizons:
         future_days = current_days + (years * 365.25)
-        model_future_price = rainbow_model(future_days, slope, intercept)
+        model_future_price = rainbow_model(future_days, slope, intercept, POWER)
         
-        # Model-based projection (from fair value)
+        # Both projections use the same dollar value (model_future_price)
+        # Model-based projection: percentage relative to fair value
         model_return = ((model_future_price - current_fair_price) / current_fair_price) * 100
         
-        # Current price-based projection (converges toward model's future fair value)
-        if undervaluation < 0:  # If undervalued
-            # Price will converge upward toward fair value, then grow with model
-            undervaluation_benefit = abs(undervaluation)
-            current_return = model_return + undervaluation_benefit
-            current_based_price = current_price * (1 + current_return / 100)
-        else:  # If overvalued
-            # Price will converge downward toward the model's future fair value
-            # Don't go below the model's future fair value - just converge to it
-            current_based_price = model_future_price  # Converge to model's future fair value
-            current_return = ((current_based_price - current_price) / current_price) * 100
+        # Current price-based projection: same dollar value, percentage relative to current price
+        current_based_price = model_future_price  # Same dollar value
+        current_return = ((current_based_price - current_price) / current_price) * 100
         
         projections[years] = {
             'model_price': model_future_price,
@@ -383,7 +387,7 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections)
         
         f.write("MODEL FORMULA\n")
         f.write("-" * 20 + "\n")
-        f.write(f"price = 10^({slope:.6f} × ln(day) + {optimal_intercept:.6f})\n")
+        f.write(f"price = 10^({slope:.6f} × (day^{POWER:.2f}) + {optimal_intercept:.6f})\n")
         f.write("\n")
         
         f.write("CURRENT ANALYSIS\n")
@@ -421,14 +425,15 @@ def optimize_slope_for_r2(df):
     
     def r2_for_slope(slope):
         """Calculate R² for a given slope (optimizing intercept via linear regression)."""
-        # Use linear regression in log space: log10(price) = slope * ln(days) + intercept
+        # Use linear regression in log space: log10(price) = slope * (days^power) + intercept
         log_prices = np.log10(prices)
-        log_days = np.log(days)
+        days_powered = days**POWER
         
         # Calculate intercept that minimizes error for this slope
-        intercept = np.mean(log_prices) - slope * np.mean(log_days)
+        # intercept = mean(log_prices) - slope * mean(days_powered)
+        intercept = np.mean(log_prices) - slope * np.mean(days_powered)
         
-        y_pred = rainbow_model(days, slope, intercept)
+        y_pred = rainbow_model(days, slope, intercept, POWER)
         
         # Check if predictions are reasonable
         max_pred = np.max(y_pred)
@@ -469,7 +474,8 @@ def optimize_slope_for_r2(df):
 def main():
     """Main function to optimize intercept."""
     
-    print(f"{CURRENCY_NAME} Intercept Optimization (Logarithmic Model)")
+    print(f"{CURRENCY_NAME} Intercept Optimization (Growth Model)")
+    print(f"Using Power: {POWER:.2f} (from config.py)")
     print("=" * 40)
     
     # Load data

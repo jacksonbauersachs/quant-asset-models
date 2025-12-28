@@ -1,0 +1,47 @@
+ETHEREUM OPTIMIZATION RESULTS (POWER LAW MODEL)
+==================================================
+
+Analysis Date: 2025-12-28 15:06:38
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Optimal Coefficient (a): 2.027944
+Exponent (b): 0.843500
+First Day Offset: 288.0
+Maximum R²: 0.621173
+
+MODEL FORMULA
+--------------------
+price = 2.027944 × (day - 288.0 + 1)^0.843500
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $2,929.77
+Model Fair Price: $1,879.94
+Undervaluation: +55.84%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $2,054 | Growth: +9.28%
+  3-Year: $2,395 | Growth: +27.42%
+  5-Year: $2,728 | Growth: +45.09%
+  10-Year: $3,528 | Growth: +87.67%
+  15-Year: $4,296 | Growth: +128.51%
+  20-Year: $5,039 | Growth: +168.03%
+
+Current Price-Based Projections (converges toward model's future fair value):
+  1-Year: $2,054 | Return: -29.88%
+  3-Year: $2,395 | Return: -18.24%
+  5-Year: $2,728 | Return: -6.90%
+  10-Year: $3,528 | Return: +20.42%
+  15-Year: $4,296 | Return: +46.63%
+  20-Year: $5,039 | Return: +71.99%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections show convergence toward model's future fair value
+- If undervalued: price converges upward then grows with model
+- If overvalued: price converges downward to model's future fair value
+- Power law exponent b=0.843500 is constrained to 0 < b < 1 for concave (flattening) shape

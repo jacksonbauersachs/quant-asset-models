@@ -1,17 +1,22 @@
 """
 ===========================================
-CURRENCY CONFIGURATION FILE
+CURRENCY CONFIGURATION FILE - LOGARITHMIC MODEL
 ===========================================
 Edit ALL values in this file to match your currency.
 This is the ONLY file you need to modify when cloning the template.
+
+This template uses a LOGARITHMIC growth model:
+  price = 10^(slope × ln(days_since_genesis) + intercept)
+
+Growth slows over time (unlike exponential which accelerates).
 """
 
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = "Ethereum"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
-CURRENCY_NAME_LOWER = "ethereum"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "ETH-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+CURRENCY_NAME = "Ethereum"  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
+CURRENCY_NAME_LOWER = "ethereum"  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
+YAHOO_TICKER = "ETH-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
 
 # ============================================
 # DATES
@@ -21,30 +26,64 @@ YAHOO_TICKER = "ETH-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2021-01-02"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2016-12-23"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
 # ============================================
 # FILE PATHS (relative to project root)
 # ============================================
-# Example: "Crypto/Etherium/Data"
+# Example: "Crypto/Chainlink"
 DATA_FOLDER = "Crypto/Etherium/Data"
 
-# Example: "Ethereum Historical Data.csv"
+# Example: "Chainlink_historical_data.csv"
 HISTORICAL_DATA_FILE = "Ethereum Historical Data.csv"
 
-# Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "Crypto/Etherium/New_ting"
+# Example: "Crypto/Chainlink"
+OUTPUT_FOLDER = "Crypto/Etherium/log_model_clone"
 
 # ============================================
 # MODEL PARAMETERS
 # ============================================
-# Fixed growth rate for optimization (OPTIONAL - set to None to auto-optimize)
+# MODEL_TYPE: 'parametric' or 'powerlaw'
+#   'parametric': price = 10^(slope × (days^power) + intercept)
+#   'powerlaw': price = a × (days - first_day_offset + 1)^b
+MODEL_TYPE = 'powerlaw'  # Options: 'parametric' or 'powerlaw'
+
+# ============================================
+# PARAMETRIC MODEL PARAMETERS
+# ============================================
+# Fixed slope for optimization (OPTIONAL - set to None to auto-optimize)
 # This is typically found by running the interactive rainbow chart first
-# Growth rate is in "per day" units (e.g., 0.001 = 0.1% per day ≈ 36.5% per year)
-# Set to None to let optimize_intercept.py find the optimal growth rate automatically
-FIXED_GROWTH_RATE = .4495  # Example: 0.001 for 0.1% daily growth
+# For parametric model: price = 10^(slope × (days^power) + intercept)
+# Slope typically ranges from 0.5 to 5.0 for cryptocurrencies
+# Set to None to let optimize_intercept.py find the optimal slope automatically
+FIXED_GROWTH_RATE = 39.702383  # This is used as FIXED_SLOPE for parametric models
+# Example: 2.5 for a slope of 2.5
+
+# Power for the parametric growth model (OPTIONAL - default: 1.0)
+# Controls acceleration pattern:
+#   power < 1: growth slows over time (like logarithmic)
+#   power = 1: linear growth
+#   power > 1: growth accelerates (starts slow, speeds up)
+#   power < 0: inverse/decay patterns
+# Set this after finding optimal value in interactive_rainbow_v2.py
+POWER = 0.031266 # Default: 1.0 (linear)
+
+# ============================================
+# POWER LAW MODEL PARAMETERS
+# ============================================
+# Power law formula: price = a × (days - first_day_offset + 1)^b
+# These are typically found by running interactive_point_selector.py and clicking "Power Law"
+# POWER_LAW_A: Coefficient (typically found from power law fit)
+POWER_LAW_A = 6.138442  # Example value - update after running power law fit
+
+# POWER_LAW_B: Exponent (constrained to 0 < b < 1 for concave shape)
+POWER_LAW_B = 0.8435  # Example value - update after running power law fit
+
+# POWER_LAW_FIRST_DAY_OFFSET: Days since genesis of first selected point (for normalization)
+# Set to None to auto-detect from data, or specify the days since genesis of your first reference point
+POWER_LAW_FIRST_DAY_OFFSET = None  # Will auto-detect if None
 
 # ============================================
 # DATA SOURCE
@@ -107,6 +146,6 @@ def validate_config():
     except ValueError as e:
         raise ValueError(str(e))
     
-    print(f"✅ Configuration validated for {CURRENCY_NAME}")
+    print(f"Configuration validated for {CURRENCY_NAME}")
     return True
 
