@@ -1,22 +1,32 @@
 """
 ===========================================
-CURRENCY CONFIGURATION FILE - LOGARITHMIC MODEL
+CURRENCY CONFIGURATION FILE - MULTI-MODEL SUPPORT
 ===========================================
 Edit ALL values in this file to match your currency.
 This is the ONLY file you need to modify when cloning the template.
 
-This template uses a LOGARITHMIC growth model:
-  price = 10^(slope × ln(days_since_genesis) + intercept)
+This template supports THREE model types:
+  1. PARAMETRIC: price = 10^(slope × (days^power) + intercept)
+     - Growth pattern controlled by power parameter
+     - Good for forecasting with flexible growth curves
+  
+  2. POWER LAW: price = a × (days - first_day_offset + 1)^b
+     - Concave shape (0 < b < 1): steep early, flattens over time
+     - Good for modeling diminishing returns
+  
+  3. EXPONENTIAL: price = a × e^(b × (days - first_day_offset))
+     - Accelerating growth (b > 0) or decay (b < 0)
+     - Good for modeling compound growth patterns
 
-Growth slows over time (unlike exponential which accelerates).
+Set MODEL_TYPE below to choose which model to use.
 """
 
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = "Ethereum"  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
-CURRENCY_NAME_LOWER = "ethereum"  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
-YAHOO_TICKER = "ETH-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
+CURRENCY_NAME = "Gold"  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
+CURRENCY_NAME_LOWER = "gold"  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
+YAHOO_TICKER = "GLD-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
 
 # ============================================
 # DATES
@@ -26,7 +36,7 @@ YAHOO_TICKER = "ETH-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2016-12-23"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -34,21 +44,22 @@ START_DATE = "2016-12-23"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Chainlink"
-DATA_FOLDER = "Crypto/Etherium/Data"
+DATA_FOLDER = "Portfolio/Data"
 
 # Example: "Chainlink_historical_data.csv"
-HISTORICAL_DATA_FILE = "Ethereum Historical Data.csv"
+HISTORICAL_DATA_FILE = "Gold_all_time_price.csv"
 
 # Example: "Crypto/Chainlink"
-OUTPUT_FOLDER = "Crypto/Etherium/log_model_clone"
+OUTPUT_FOLDER = "model_templates/point_selecting_method"
 
 # ============================================
 # MODEL PARAMETERS
 # ============================================
-# MODEL_TYPE: 'parametric' or 'powerlaw'
+# MODEL_TYPE: 'parametric', 'powerlaw', or 'exponential'
 #   'parametric': price = 10^(slope × (days^power) + intercept)
 #   'powerlaw': price = a × (days - first_day_offset + 1)^b
-MODEL_TYPE = 'powerlaw'  # Options: 'parametric' or 'powerlaw'
+#   'exponential': price = a × e^(b × (days - first_day_offset))
+MODEL_TYPE = ''  # Options: 'parametric', 'powerlaw', or 'exponential'
 
 # ============================================
 # PARAMETRIC MODEL PARAMETERS
@@ -58,7 +69,7 @@ MODEL_TYPE = 'powerlaw'  # Options: 'parametric' or 'powerlaw'
 # For parametric model: price = 10^(slope × (days^power) + intercept)
 # Slope typically ranges from 0.5 to 5.0 for cryptocurrencies
 # Set to None to let optimize_intercept.py find the optimal slope automatically
-FIXED_GROWTH_RATE = 39.702383  # This is used as FIXED_SLOPE for parametric models
+FIXED_GROWTH_RATE = None  # This is used as FIXED_SLOPE for parametric models (set to None to auto-optimize)
 # Example: 2.5 for a slope of 2.5
 
 # Power for the parametric growth model (OPTIONAL - default: 1.0)
@@ -68,7 +79,7 @@ FIXED_GROWTH_RATE = 39.702383  # This is used as FIXED_SLOPE for parametric mode
 #   power > 1: growth accelerates (starts slow, speeds up)
 #   power < 0: inverse/decay patterns
 # Set this after finding optimal value in interactive_rainbow_v2.py
-POWER = 0.031266 # Default: 1.0 (linear)
+POWER = 1.0  # Default: 1.0 (linear)
 
 # ============================================
 # POWER LAW MODEL PARAMETERS
@@ -76,14 +87,31 @@ POWER = 0.031266 # Default: 1.0 (linear)
 # Power law formula: price = a × (days - first_day_offset + 1)^b
 # These are typically found by running interactive_point_selector.py and clicking "Power Law"
 # POWER_LAW_A: Coefficient (typically found from power law fit)
-POWER_LAW_A = 6.138442  # Example value - update after running power law fit
+POWER_LAW_A = None  # Example value - update after running power law fit (will auto-optimize if None)
 
 # POWER_LAW_B: Exponent (constrained to 0 < b < 1 for concave shape)
-POWER_LAW_B = 0.8435  # Example value - update after running power law fit
+POWER_LAW_B = None  # Example value - update after running power law fit (REQUIRED for powerlaw model)
 
 # POWER_LAW_FIRST_DAY_OFFSET: Days since genesis of first selected point (for normalization)
 # Set to None to auto-detect from data, or specify the days since genesis of your first reference point
 POWER_LAW_FIRST_DAY_OFFSET = None  # Will auto-detect if None
+
+# ============================================
+# EXPONENTIAL MODEL PARAMETERS
+# ============================================
+# Exponential formula: price = a × e^(b × (days - first_day_offset))
+# These are typically found by running interactive_point_selector.py and clicking "Exponential (Growth)"
+# EXPONENTIAL_A: Coefficient (typically found from exponential fit)
+# Set to None to auto-optimize, or set to a value from exponential fit
+EXPONENTIAL_A = None  # Will optimize if None, or set to a value from exponential fit
+
+# EXPONENTIAL_B: Growth rate (positive = growth, negative = decay)
+# This is the shape parameter from selected points - MUST be set for exponential model
+EXPONENTIAL_B = None  # REQUIRED: Set this after running exponential fit in interactive_point_selector.py
+
+# EXPONENTIAL_FIRST_DAY_OFFSET: Days since genesis of first selected point (for normalization)
+# Set to None to auto-detect from data, or specify the days since genesis of your first reference point
+EXPONENTIAL_FIRST_DAY_OFFSET = None  # Will auto-detect if None
 
 # ============================================
 # DATA SOURCE

@@ -41,8 +41,9 @@ selected_markers = []  # List of marker objects
 # Global variables for curves
 curve_line = None  # Parametric model curve
 powerlaw_line = None  # Power law curve
+exponential_line = None  # Exponential model curve
 pchip_line = None  # PCHIP interpolation curve
-current_model_type = None  # 'parametric', 'powerlaw', or 'pchip'
+current_model_type = None  # 'parametric', 'powerlaw', 'exponential', or 'pchip'
 
 def load_data():
     """Load and prepare historical price data."""
@@ -250,6 +251,57 @@ def get_save_file_path():
         save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_selected_points.json')
     return save_file
 
+def get_model_save_file_path():
+    """Get the path to save last selected model."""
+    if os.path.basename(os.getcwd()) == 'log_model_clone':
+        save_file = os.path.join('.', f'{CURRENCY_NAME_LOWER}_last_model.json')
+    else:
+        save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_last_model.json')
+    return save_file
+
+def save_last_model(model_type, **params):
+    """Save the last selected model type and parameters to JSON file."""
+    save_file = get_model_save_file_path()
+    try:
+        model_data = {
+            'model_type': model_type,
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        
+        # Add model-specific parameters
+        if model_type == 'powerlaw' and 'a' in params and 'b' in params and 'first_day_offset' in params:
+            model_data['powerlaw_a'] = float(params['a'])
+            model_data['powerlaw_b'] = float(params['b'])
+            model_data['powerlaw_first_day_offset'] = float(params['first_day_offset'])
+        elif model_type == 'exponential' and 'a' in params and 'b' in params and 'first_day_offset' in params:
+            model_data['exponential_a'] = float(params['a'])
+            model_data['exponential_b'] = float(params['b'])
+            model_data['exponential_first_day_offset'] = float(params['first_day_offset'])
+        elif model_type == 'parametric' and 'power' in params and 'slope' in params and 'intercept' in params:
+            model_data['power'] = float(params['power'])
+            model_data['slope'] = float(params['slope'])
+            model_data['intercept'] = float(params['intercept'])
+        
+        with open(save_file, 'w') as f:
+            json.dump(model_data, f, indent=2)
+        print(f"Saved last model type: {model_type} to {save_file}")
+    except Exception as e:
+        print(f"Error saving model type: {e}")
+
+def load_last_model():
+    """Load the last selected model type from JSON file."""
+    save_file = get_model_save_file_path()
+    if not os.path.exists(save_file):
+        return None
+    
+    try:
+        with open(save_file, 'r') as f:
+            model_data = json.load(f)
+        return model_data
+    except Exception as e:
+        print(f"Error loading model type: {e}")
+        return None
+
 def save_points():
     """Save selected points to JSON file."""
     if len(selected_points) == 0:
@@ -442,6 +494,9 @@ def optimize_for_selected_points():
         # Plot the fitted curve
         plot_fitted_curve(optimal_power, optimal_slope, optimal_intercept, optimal_r2, model_type='parametric')
         
+        # Save the model type
+        save_last_model('parametric', power=optimal_power, slope=optimal_slope, intercept=optimal_intercept)
+        
         # Update status
         status_text.set_text(f"Parametric Model | R² = {optimal_r2:.4f} | Power: {optimal_power:.6f} | Slope: {optimal_slope:.6f} | Intercept: {optimal_intercept:.6f}")
         
@@ -582,12 +637,121 @@ def calculate_powerlaw_fit():
     plot_fitted_curve(None, None, None, r2, model_type='powerlaw', a=a, b=b, 
                      selected_days=valid_original_days, first_day_offset=first_day)
     
+    # Save the model type
+    save_last_model('powerlaw', a=a, b=b, first_day_offset=first_day)
+    
     # Update status - use scientific notation if a is very small
     if abs(a) < 0.01 or abs(a) > 1000:
         a_str = f"{a:.4e}"
     else:
         a_str = f"{a:.6f}"
     status_text.set_text(f"Power Law: y = {a_str} * x^{b:.4f} | R² = {r2:.4f} | Mean error: {mean_error:.2f}%")
+    
+    fig.canvas.draw_idle()
+
+def calculate_exponential_fit():
+    """Calculate and plot exponential fit: y = a * e^(b * (x - offset)) through selected points."""
+    if len(selected_points) < 2:
+        print(f"Error: Need at least 2 points for exponential fit. Currently have {len(selected_points)}")
+        status_text.set_text(f"Error: Need at least 2 points! Currently have {len(selected_points)}")
+        fig.canvas.draw_idle()
+        return
+    
+    # Extract selected data
+    selected_days = np.array([p[2] for p in selected_points])
+    selected_prices = np.array([p[1] for p in selected_points])
+    
+    print(f"\nCalculating exponential fit for {len(selected_points)} selected points...")
+    print(f"Selected days: {selected_days}")
+    print(f"Selected prices: {selected_prices}")
+    
+    # NORMALIZE X-AXIS: Use time since first point instead of days since genesis
+    first_day = np.min(selected_days)
+    normalized_days = selected_days - first_day  # No +1 needed for exponential
+    
+    print(f"Normalized days (time since first point): {normalized_days}")
+    
+    # Exponential: y = a * e^(b * x)
+    # In log space: ln(y) = ln(a) + b * x
+    # This is linear in log-linear space
+    
+    # Filter out zero or negative values
+    valid_mask = (selected_prices > 0)
+    if np.sum(valid_mask) < 2:
+        print("Error: Need at least 2 valid points (prices > 0)")
+        status_text.set_text("Error: Need valid points!")
+        fig.canvas.draw_idle()
+        return
+    
+    valid_normalized_days = normalized_days[valid_mask]
+    valid_prices = selected_prices[valid_mask]
+    valid_original_days = selected_days[valid_mask]
+    
+    # Fit in log-linear space using linear regression
+    log_prices = np.log(valid_prices)
+    
+    # Linear regression: ln(y) = ln(a) + b * x
+    n = len(valid_normalized_days)
+    sum_x = np.sum(valid_normalized_days)
+    sum_y = np.sum(log_prices)
+    sum_x_sq = np.sum(valid_normalized_days**2)
+    sum_xy = np.sum(valid_normalized_days * log_prices)
+    
+    denominator = n * sum_x_sq - sum_x**2
+    if abs(denominator) < 1e-10:
+        print("Error: Cannot fit exponential (points are collinear)")
+        status_text.set_text("Error: Cannot fit exponential!")
+        fig.canvas.draw_idle()
+        return
+    
+    b = (n * sum_xy - sum_x * sum_y) / denominator
+    log_a = (sum_y - b * sum_x) / n
+    a = np.exp(log_a)
+    
+    # Calculate R² using normalized days
+    predicted_prices = a * np.exp(b * valid_normalized_days)
+    log_predicted = np.log(predicted_prices)
+    ss_res = np.sum((log_prices - log_predicted)**2)
+    ss_tot = np.sum((log_prices - np.mean(log_prices))**2)
+    r2 = 1 - (ss_res / ss_tot) if ss_tot > 0 else 0
+    
+    # Calculate errors
+    errors = np.abs(predicted_prices - valid_prices) / valid_prices * 100
+    max_error = np.max(errors)
+    mean_error = np.mean(errors)
+    
+    # Verify first point (to show it's NOT constrained to pass through)
+    first_normalized_day = valid_normalized_days[0]
+    first_predicted = a * np.exp(b * first_normalized_day)
+    first_error = abs(first_predicted - valid_prices[0]) / valid_prices[0] * 100
+    
+    print(f"\nExponential Fit Results (Normalized):")
+    print(f"  Formula: y = {a:.6f} * e^({b:.6f} * (x - {first_day:.1f}))")
+    print(f"  Coefficient (a): {a:.6f}")
+    print(f"  Growth Rate (b): {b:.6f} ({'growth' if b > 0 else 'decay'})")
+    print(f"  First point offset: {first_day:.1f} days")
+    print(f"  R²: {r2:.6f}")
+    print(f"  Mean error: {mean_error:.6f}%")
+    print(f"  Max error: {max_error:.6f}%")
+    print(f"  First point error: {first_error:.2f}% (NOT constrained - this shows it's free to fit)")
+    print(f"  Point-by-point errors:")
+    for i, (days, price, pred_price, error) in enumerate(zip(valid_original_days, valid_prices, predicted_prices, errors)):
+        print(f"    Point {i+1}: {error:.2f}% error")
+    
+    # Plot the exponential curve (pass normalized info)
+    plot_fitted_curve(None, None, None, r2, model_type='exponential', a=a, b=b, 
+                     selected_days=valid_original_days, first_day_offset=first_day)
+    
+    # Save the model type
+    save_last_model('exponential', a=a, b=b, first_day_offset=first_day)
+    
+    # Update status - use scientific notation if a is very small
+    if abs(a) < 0.01 or abs(a) > 1000:
+        a_str = f"{a:.4e}"
+    else:
+        a_str = f"{a:.6f}"
+    growth_str = "growth" if b > 0 else "decay"
+    status_text.set_text(f"Exponential: y = {a_str} * e^({b:.4f}*x) ({growth_str}) | R² = {r2:.4f} | Mean error: {mean_error:.2f}%")
     
     fig.canvas.draw_idle()
 
@@ -646,15 +810,21 @@ def calculate_pchip_interpolation():
 def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=None, b=None, 
                       selected_days=None, first_day_offset=None, selected_dates=None):
     """Plot the fitted curve on the graph."""
-    global curve_line, powerlaw_line, pchip_line, current_model_type
+    global curve_line, powerlaw_line, exponential_line, pchip_line, current_model_type
     
     # Hide the other curve types
     if model_type == 'parametric':
-        # Remove power law and PCHIP if they exist
+        # Remove other curves if they exist
         if powerlaw_line is not None:
             try:
                 powerlaw_line.remove()
                 powerlaw_line = None
+            except:
+                pass
+        if exponential_line is not None:
+            try:
+                exponential_line.remove()
+                exponential_line = None
             except:
                 pass
         if pchip_line is not None:
@@ -670,11 +840,17 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
             except:
                 pass
     elif model_type == 'powerlaw':
-        # Remove parametric and PCHIP if they exist
+        # Remove other curves if they exist
         if curve_line is not None:
             try:
                 curve_line.remove()
                 curve_line = None
+            except:
+                pass
+        if exponential_line is not None:
+            try:
+                exponential_line.remove()
+                exponential_line = None
             except:
                 pass
         if pchip_line is not None:
@@ -689,8 +865,8 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
                 powerlaw_line.remove()
             except:
                 pass
-    else:  # pchip
-        # Remove parametric and power law if they exist
+    elif model_type == 'exponential':
+        # Remove other curves if they exist
         if curve_line is not None:
             try:
                 curve_line.remove()
@@ -701,6 +877,38 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
             try:
                 powerlaw_line.remove()
                 powerlaw_line = None
+            except:
+                pass
+        if pchip_line is not None:
+            try:
+                pchip_line.remove()
+                pchip_line = None
+            except:
+                pass
+        # Remove existing exponential if any
+        if exponential_line is not None:
+            try:
+                exponential_line.remove()
+            except:
+                pass
+    else:  # pchip
+        # Remove other curves if they exist
+        if curve_line is not None:
+            try:
+                curve_line.remove()
+                curve_line = None
+            except:
+                pass
+        if powerlaw_line is not None:
+            try:
+                powerlaw_line.remove()
+                powerlaw_line = None
+            except:
+                pass
+        if exponential_line is not None:
+            try:
+                exponential_line.remove()
+                exponential_line = None
             except:
                 pass
         # Remove existing PCHIP if any
@@ -771,6 +979,44 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
             ax.set_ylim(current_ylim)
         else:
             print("Warning: No valid days for power law!")
+            return
+    elif model_type == 'exponential':
+        # Exponential: y = a * e^(b * (x - offset))
+        if a is None or b is None or first_day_offset is None:
+            print("Error: Exponential parameters (a, b, first_day_offset) required!")
+            return
+        
+        # Always use full date range for exponential
+        days = df_filtered['Days_Since_Genesis'].values
+        mask = days > 0
+        days_valid = days[mask]
+        
+        if len(days_valid) > 0:
+            # Normalize: x_norm = x - first_day_offset
+            normalized_days = days_valid - first_day_offset
+            
+            # Exponential: y = a * e^(b * normalized_days)
+            prices_exponential = a * np.exp(b * normalized_days)
+            
+            # Ensure prices are valid
+            prices_exponential = np.where(np.isfinite(prices_exponential) & (prices_exponential > 0), prices_exponential, np.nan)
+            
+            # Format coefficient for label
+            if abs(a) < 0.01 or abs(a) > 1000:
+                a_label = f"{a:.4e}"
+            else:
+                a_label = f"{a:.6f}"
+            
+            # Plot exponential curve over full timeline
+            dates_valid = df_filtered['Date'].values[mask]
+            exponential_line, = ax.semilogy(dates_valid, prices_exponential, 
+                                          color='red', linestyle='-', linewidth=2, 
+                                          label=f'Exponential (b={b:.4f}, R²={r2:.4f})', zorder=5)
+            current_model_type = 'exponential'
+            # Restore y-axis limits to preserve view (don't auto-zoom)
+            ax.set_ylim(current_ylim)
+        else:
+            print("Warning: No valid days for exponential!")
             return
     else:  # pchip
         # PCHIP interpolation
@@ -843,7 +1089,7 @@ def clear_last_point(event):
         marker.remove()
         
         # Remove curves if exist (need to recalculate)
-        global curve_line, powerlaw_line, pchip_line
+        global curve_line, powerlaw_line, exponential_line, pchip_line
         if 'curve_line' in globals() and curve_line is not None:
             try:
                 curve_line.remove()
@@ -856,6 +1102,12 @@ def clear_last_point(event):
             except:
                 pass
             powerlaw_line = None
+        if 'exponential_line' in globals() and exponential_line is not None:
+            try:
+                exponential_line.remove()
+            except:
+                pass
+            exponential_line = None
         if 'pchip_line' in globals() and pchip_line is not None:
             try:
                 pchip_line.remove()
@@ -881,7 +1133,7 @@ def clear_points(event):
     selected_markers = []
     
     # Remove curves if exist
-    global curve_line, powerlaw_line, pchip_line
+    global curve_line, powerlaw_line, exponential_line, pchip_line
     if 'curve_line' in globals() and curve_line is not None:
         try:
             curve_line.remove()
@@ -894,6 +1146,12 @@ def clear_points(event):
         except:
             pass
         powerlaw_line = None
+    if 'exponential_line' in globals() and exponential_line is not None:
+        try:
+            exponential_line.remove()
+        except:
+            pass
+        exponential_line = None
     if 'pchip_line' in globals() and pchip_line is not None:
         try:
             pchip_line.remove()
@@ -915,18 +1173,20 @@ def main():
     print("1. Use the zoom tool (magnifying glass icon) or mouse wheel to zoom in for precise placement")
     print("2. Left-click on the price graph to select points (click again to remove)")
     print("3. Use the pan tool (hand icon) to move around when zoomed in")
-    print("4. Select at least 2 points for power law/PCHIP, or 3+ points for parametric model")
-    print("5. Click 'Calculate R²' for parametric growth model (good for forecasting)")
-    print("6. Click 'Power Law' for concave power law fit (0 < b < 1, steep early, flattens)")
-    print("7. Click 'PCHIP' for shape-preserving interpolation (steep early, flattens, passes through all points)")
-    print("8. You can switch between models to compare!")
-    print("9. Selected points are automatically saved and will load next time")
-    print("10. Click 'Clear Points' to start over")
+    print("4. Select at least 2 points for power law/exponential/PCHIP, or 3+ points for parametric model")
+    print("5. Click 'Calculate R²' for PARAMETRIC model: price = 10^(slope × (days^power) + intercept)")
+    print("6. Click 'Power Law' for POWER LAW model: price = a × (days - offset + 1)^b (0 < b < 1, concave)")
+    print("7. Click 'Exponential' for EXPONENTIAL model: price = a × e^(b × (days - offset)) (accelerating growth)")
+    print("8. Click 'PCHIP' for PCHIP interpolation: smooth curve through all points (steep early, flattens)")
+    print("9. You can switch between models to compare!")
+    print("10. Selected points are automatically saved and will load next time")
+    print("11. Click 'Clear Points' to start over")
     print("\nTip: Zoom in on local maxima/minima for more precise point selection!")
     
-    global df_filtered, ax, fig, status_text, curve_line, powerlaw_line, pchip_line, current_model_type, selected_points, selected_markers
+    global df_filtered, ax, fig, status_text, curve_line, powerlaw_line, exponential_line, pchip_line, current_model_type, selected_points, selected_markers
     curve_line = None
     powerlaw_line = None
+    exponential_line = None
     pchip_line = None
     current_model_type = None
     
@@ -984,30 +1244,34 @@ def main():
         print(f"Plotted {len(selected_points)} saved points on graph")
     
     # Add status text
-    status_text = ax.text(0.02, 0.98, f"Selected points: {len(selected_points)} | Click to add points, then calculate: R² (parametric), Power Law, or PCHIP", 
+    status_text = ax.text(0.02, 0.98, f"Selected points: {len(selected_points)} | Click to add points, then calculate: Parametric (R²), Power Law, Exponential, or PCHIP", 
                          transform=ax.transAxes, fontsize=10, 
                          verticalalignment='top',
                          bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
     
     # Add buttons
-    ax_calculate = plt.axes([0.45, 0.02, 0.10, 0.04])
-    btn_calculate = Button(ax_calculate, 'Calculate R²')
+    ax_calculate = plt.axes([0.40, 0.02, 0.09, 0.04])
+    btn_calculate = Button(ax_calculate, 'Parametric\n(R²)')
     btn_calculate.on_clicked(lambda x: optimize_for_selected_points())
     
-    ax_powerlaw = plt.axes([0.56, 0.02, 0.10, 0.04])
-    btn_powerlaw = Button(ax_powerlaw, 'Power Law')
+    ax_powerlaw = plt.axes([0.50, 0.02, 0.09, 0.04])
+    btn_powerlaw = Button(ax_powerlaw, 'Power Law\n(Concave)')
     btn_powerlaw.on_clicked(lambda x: calculate_powerlaw_fit())
     
-    ax_pchip = plt.axes([0.67, 0.02, 0.10, 0.04])
-    btn_pchip = Button(ax_pchip, 'PCHIP')
+    ax_exponential = plt.axes([0.60, 0.02, 0.09, 0.04])
+    btn_exponential = Button(ax_exponential, 'Exponential\n(Growth)')
+    btn_exponential.on_clicked(lambda x: calculate_exponential_fit())
+    
+    ax_pchip = plt.axes([0.70, 0.02, 0.09, 0.04])
+    btn_pchip = Button(ax_pchip, 'PCHIP\n(Interp)')
     btn_pchip.on_clicked(lambda x: calculate_pchip_interpolation())
     
-    ax_clear_last = plt.axes([0.78, 0.02, 0.08, 0.04])
+    ax_clear_last = plt.axes([0.80, 0.02, 0.07, 0.04])
     btn_clear_last = Button(ax_clear_last, 'Undo')
     btn_clear_last.on_clicked(clear_last_point)
     
-    ax_clear = plt.axes([0.87, 0.02, 0.08, 0.04])
-    btn_clear = Button(ax_clear, 'Clear All')
+    ax_clear = plt.axes([0.88, 0.02, 0.07, 0.04])
+    btn_clear = Button(ax_clear, 'Clear')
     btn_clear.on_clicked(clear_points)
     
     # Connect click event

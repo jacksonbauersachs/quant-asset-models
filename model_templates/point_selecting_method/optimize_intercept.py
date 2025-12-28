@@ -59,6 +59,14 @@ try:
         POWER_LAW_A = None
         POWER_LAW_B = None
         POWER_LAW_FIRST_DAY_OFFSET = None
+    
+    # Exponential parameters (only used if MODEL_TYPE == 'exponential')
+    try:
+        from config import EXPONENTIAL_A, EXPONENTIAL_B, EXPONENTIAL_FIRST_DAY_OFFSET
+    except ImportError:
+        EXPONENTIAL_A = None
+        EXPONENTIAL_B = None
+        EXPONENTIAL_FIRST_DAY_OFFSET = None
 except ImportError:
     print("Error: config.py not found! Make sure you're running from the log_model folder.")
     sys.exit(1)
@@ -66,6 +74,28 @@ except ImportError:
 # Validate config
 validate_config()
 output_files = get_output_files()
+
+def load_saved_model_type():
+    """Load the last selected model type from interactive_point_selector.py."""
+    import json
+    import os
+    
+    # Use same path logic as interactive_point_selector.py
+    if os.path.basename(os.getcwd()) == 'log_model_clone':
+        save_file = os.path.join('.', f'{CURRENCY_NAME_LOWER}_last_model.json')
+    else:
+        save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_last_model.json')
+    
+    if not os.path.exists(save_file):
+        return None
+    
+    try:
+        with open(save_file, 'r') as f:
+            model_data = json.load(f)
+        return model_data
+    except Exception as e:
+        print(f"Note: Could not load saved model type: {e}")
+        return None
 
 def load_data():
     """Load and prepare price data for analysis."""
@@ -156,8 +186,17 @@ def powerlaw_model(x, a, b, first_day_offset):
     result = np.where(np.isfinite(result) & (result > 0), result, np.nan)
     return result
 
+def exponential_model(x, a, b, first_day_offset):
+    """Exponential model: price = a * e^(b * (days - first_day_offset))"""
+    # Normalize: x_norm = x - first_day_offset
+    x_norm = x - first_day_offset
+    # Exponential: y = a * e^(b * x_norm)
+    result = a * np.exp(b * x_norm)
+    result = np.where(np.isfinite(result) & (result > 0), result, np.nan)
+    return result
+
 def calculate_r2(y_actual, y_pred):
-    """Calculate R² score for logarithmic growth model (in log space)."""
+    """Calculate R² score for logarithmic/parametric growth model (in log10 space)."""
     # Filter out invalid values (zeros, negatives, NaN, Inf)
     valid_mask = (y_actual > 0) & (y_pred > 0) & np.isfinite(y_actual) & np.isfinite(y_pred)
     
@@ -170,6 +209,29 @@ def calculate_r2(y_actual, y_pred):
     # Calculate R² in log space (standard for logarithmic models)
     log_actual = np.log10(y_actual_valid)
     log_pred = np.log10(y_pred_valid)
+    
+    ss_res = np.sum((log_actual - log_pred) ** 2)
+    ss_tot = np.sum((log_actual - np.mean(log_actual)) ** 2)
+    
+    if ss_tot == 0:
+        return 0.0
+    
+    return 1 - (ss_res / ss_tot)
+
+def calculate_r2_exponential(y_actual, y_pred):
+    """Calculate R² score for exponential model (in natural log space)."""
+    # Filter out invalid values (zeros, negatives, NaN, Inf)
+    valid_mask = (y_actual > 0) & (y_pred > 0) & np.isfinite(y_actual) & np.isfinite(y_pred)
+    
+    if not np.any(valid_mask):
+        return 0.0  # No valid data
+    
+    y_actual_valid = y_actual[valid_mask]
+    y_pred_valid = y_pred[valid_mask]
+    
+    # Calculate R² in natural log space (standard for exponential models)
+    log_actual = np.log(y_actual_valid)
+    log_pred = np.log(y_pred_valid)
     
     ss_res = np.sum((log_actual - log_pred) ** 2)
     ss_tot = np.sum((log_actual - np.mean(log_actual)) ** 2)
@@ -201,6 +263,19 @@ def objective_function_powerlaw(a):
     
     # Calculate R²
     r2 = calculate_r2(df_filtered['Price'], y_pred)
+    
+    # Return negative R² (minimize negative = maximize positive)
+    return -r2
+
+def objective_function_exponential(a):
+    """Objective function for exponential model (minimize negative R² to maximize R²)."""
+    global df_filtered, exponential_b, exponential_first_day_offset
+    
+    # Calculate model predictions with variable coefficient a, fixed b and first_day_offset
+    y_pred = exponential_model(df_filtered['Days_Since_Genesis'], a, exponential_b, exponential_first_day_offset)
+    
+    # Calculate R² (use natural log for exponential)
+    r2 = calculate_r2_exponential(df_filtered['Price'], y_pred)
     
     # Return negative R² (minimize negative = maximize positive)
     return -r2
@@ -304,6 +379,57 @@ def optimize_coefficient_for_r2(df, b, first_day_offset, initial_a=None):
         print(f"Warning: Optimization failed: {e}. Using initial estimate.")
         optimal_a = initial_a
         optimal_r2 = -objective_function_powerlaw(optimal_a)
+    
+    print(f"Optimal coefficient a: {optimal_a:.6f} (optimized to fit all {len(df)} data points)")
+    print(f"Maximum R²: {optimal_r2:.6f}")
+    
+    return optimal_a, optimal_r2
+
+def optimize_coefficient_for_r2_exponential(df, b, first_day_offset, initial_a=None):
+    """Find the optimal coefficient a that maximizes R² for exponential model (fixed b and first_day_offset).
+    
+    This optimizes a to fit ALL data points, not just selected points.
+    Uses b and first_day_offset from config (from selected points) as fixed shape parameters.
+    """
+    global df_filtered, exponential_b, exponential_first_day_offset
+    df_filtered = df
+    exponential_b = b
+    exponential_first_day_offset = first_day_offset
+    
+    print(f"Optimizing coefficient a for exponential with b={b:.6f}, first_day_offset={first_day_offset:.1f}")
+    print(f"Fitting to ALL {len(df)} price points in dataset...")
+    
+    # Calculate initial guess if not provided
+    if initial_a is None:
+        # Use first point to estimate initial a
+        first_price = df['Price'].iloc[0]
+        first_days = df['Days_Since_Genesis'].iloc[0]
+        first_normalized = first_days - first_day_offset
+        initial_a = first_price / np.exp(b * first_normalized) if np.isfinite(np.exp(b * first_normalized)) else 1.0
+        print(f"Initial coefficient estimate: {initial_a:.6f}")
+    else:
+        print(f"Using initial coefficient from config: {initial_a:.6f}")
+    
+    # Use wide bounds for coefficient a (must be positive)
+    wide_min = 1e-10
+    wide_max = 1e10
+    
+    try:
+        result = minimize_scalar(objective_function_exponential, bounds=(wide_min, wide_max), method='bounded')
+        
+        optimal_a = result.x
+        optimal_r2 = -result.fun  # Convert back to positive R²
+        
+        # Validate the result makes sense
+        test_pred = exponential_model(df['Days_Since_Genesis'].iloc[-1], optimal_a, b, first_day_offset)
+        if not np.isfinite(test_pred) or test_pred > df['Price'].max() * 1000:
+            print(f"Warning: Optimal coefficient produces unrealistic predictions. Using initial estimate.")
+            optimal_a = initial_a
+            optimal_r2 = -objective_function_exponential(optimal_a)
+    except Exception as e:
+        print(f"Warning: Optimization failed: {e}. Using initial estimate.")
+        optimal_a = initial_a
+        optimal_r2 = -objective_function_exponential(optimal_a)
     
     print(f"Optimal coefficient a: {optimal_a:.6f} (optimized to fit all {len(df)} data points)")
     print(f"Maximum R²: {optimal_r2:.6f}")
@@ -530,6 +656,117 @@ def create_optimization_chart_powerlaw(df, a, b, first_day_offset, optimal_r2):
     
     return chart_file
 
+def create_optimization_chart_exponential(df, a, b, first_day_offset, optimal_r2):
+    """Create a chart showing the exponential optimization results."""
+    
+    # Calculate model predictions with optimal parameters
+    df['Model_Price'] = df['Days_Since_Genesis'].apply(
+        lambda x: exponential_model(x, a, b, first_day_offset)
+    )
+    
+    # Cap unrealistic predictions to prevent display issues
+    max_reasonable = df['Price'].max() * 100  # Cap at 100x max price
+    df['Model_Price'] = df['Model_Price'].clip(upper=max_reasonable)
+    
+    # Create figure with two subplots
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
+    
+    # Plot actual price on both subplots
+    ax1.semilogy(df['Date'], df['Price'], color='blue', linewidth=2, label=f'Actual {CURRENCY_NAME} Price')
+    ax2.plot(df['Date'], df['Price'], color='blue', linewidth=2, label=f'Actual {CURRENCY_NAME} Price')
+    
+    # Plot optimized model line
+    ax1.semilogy(df['Date'], df['Model_Price'], 
+                color='red', linestyle='--', linewidth=2, label='Optimized Exponential Model')
+    ax2.plot(df['Date'], df['Model_Price'], 
+            color='red', linestyle='--', linewidth=2, label='Optimized Exponential Model')
+    
+    # Highlight current position
+    current_price = df['Price'].iloc[-1]
+    current_date = df['Date'].iloc[-1]
+    ax1.scatter(current_date, current_price, color='red', s=100, 
+               zorder=10, label=f'Current: ${current_price:,.0f}')
+    ax2.scatter(current_date, current_price, color='red', s=100, 
+               zorder=10, label=f'Current: ${current_price:,.0f}')
+    
+    # Formatting for both subplots
+    for ax, ylabel_suffix in [(ax1, 'Log Scale'), (ax2, 'Normal Scale')]:
+        ax.set_xlabel('Date', fontsize=12)
+        ax.set_ylabel(f'{CURRENCY_NAME} Price (USD) - {ylabel_suffix}', fontsize=12)
+        growth_str = "growth" if b > 0 else "decay"
+        ax.set_title(f'{CURRENCY_NAME} Optimized Exponential Model - {ylabel_suffix}\nCoefficient (a): {a:.6f}, Growth Rate (b): {b:.6f} ({growth_str}), First Day Offset: {first_day_offset:.1f}, R²: {optimal_r2:.6f}', 
+                    fontsize=14, fontweight='bold')
+        ax.grid(True, alpha=0.3, which='both')
+        
+        # Dynamic y-axis formatting based on data range
+        min_price = min(df['Price'].min(), df['Model_Price'].min())
+        max_price = max(df['Price'].max(), df['Model_Price'].max())
+        price_range = max_price - min_price
+        
+        # Create dynamic price formatter based on data range
+        if max_price >= 1000000:
+            def price_formatter(x, pos):
+                return f'${x/1000000:.2f}M'
+        elif max_price >= 1000:
+            def price_formatter(x, pos):
+                return f'${x/1000:.1f}K'
+        elif max_price >= 1:
+            def price_formatter(x, pos):
+                return f'${x:.2f}'
+        else:
+            def price_formatter(x, pos):
+                return f'${x:.4f}'
+        
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(price_formatter))
+        
+        # Set dynamic tick spacing based on price range
+        from matplotlib.ticker import MaxNLocator
+        if ax == ax2:  # Normal scale
+            # Use MaxNLocator to get reasonable number of ticks
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=8, prune='both'))
+            # Set y-axis limits with some padding
+            padding = price_range * 0.1  # 10% padding
+            ax.set_ylim(max(0, min_price - padding), max_price + padding)
+        else:  # Log scale
+            # For log scale, let matplotlib handle it automatically
+            ax.set_ylim(max(0.01, min_price * 0.5), max_price * 2)
+        
+        # Add legend
+        ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))
+    
+    plt.tight_layout()
+    
+    # Save the chart
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    
+    chart_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_png'])
+    
+    # Save with proper flushing
+    fig.savefig(chart_file, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+    
+    # Properly close and release file handles
+    fig.clear()
+    plt.close(fig)
+    plt.close('all')  # Close all matplotlib figures
+    
+    # Force garbage collection to release file handles (important on Windows)
+    gc.collect()
+    
+    # Open the image file automatically
+    try:
+        if platform.system() == 'Windows':
+            os.startfile(chart_file)
+        elif platform.system() == 'Darwin':  # macOS
+            subprocess.run(['open', chart_file])
+        else:  # Linux and other Unix-like systems
+            subprocess.run(['xdg-open', chart_file])
+        print(f"Opened image: {chart_file}")
+    except Exception as e:
+        print(f"Note: Could not auto-open image: {e}")
+        print(f"Image saved at: {chart_file}")
+    
+    return chart_file
+
 def calculate_projections(df, slope, intercept):
     """Calculate projections for 1, 3, 5, 10, 15, and 20 years (parametric model)."""
     
@@ -589,6 +826,47 @@ def calculate_projections_powerlaw(df, a, b, first_day_offset):
     for years in horizons:
         future_days = current_days + (years * 365.25)
         model_future_price = powerlaw_model(future_days, a, b, first_day_offset)
+        
+        # Both projections use the same dollar value (model_future_price)
+        # Model-based projection: percentage relative to fair value
+        model_return = ((model_future_price - current_fair_price) / current_fair_price) * 100
+        
+        # Current price-based projection: same dollar value, percentage relative to current price
+        current_based_price = model_future_price  # Same dollar value
+        current_return = ((current_based_price - current_price) / current_price) * 100
+        
+        projections[years] = {
+            'model_price': model_future_price,
+            'current_based_price': current_based_price,
+            'model_return': model_return,
+            'current_return': current_return
+        }
+    
+    return {
+        'current_price': current_price,
+        'current_fair_price': current_fair_price,
+        'undervaluation': undervaluation,
+        'projections': projections
+    }
+
+def calculate_projections_exponential(df, a, b, first_day_offset):
+    """Calculate projections for 1, 3, 5, 10, 15, and 20 years (exponential model)."""
+    
+    current_price = df['Price'].iloc[-1]
+    current_days = df['Days_Since_Genesis'].iloc[-1]
+    
+    # Calculate current fair value using exponential model
+    current_fair_price = exponential_model(current_days, a, b, first_day_offset)
+    
+    # Calculate undervaluation
+    undervaluation = ((current_price - current_fair_price) / current_fair_price) * 100
+    
+    horizons = [1, 3, 5, 10, 15, 20]
+    projections = {}
+    
+    for years in horizons:
+        future_days = current_days + (years * 365.25)
+        model_future_price = exponential_model(future_days, a, b, first_day_offset)
         
         # Both projections use the same dollar value (model_future_price)
         # Model-based projection: percentage relative to fair value
@@ -717,6 +995,59 @@ def save_optimization_results_powerlaw(a, b, first_day_offset, optimal_r2, proje
     print(f"Optimization results saved to: {results_file}")
     return results_file
 
+def save_optimization_results_exponential(a, b, first_day_offset, optimal_r2, projections):
+    """Save optimization results to a text file (exponential model)."""
+    
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    
+    results_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_txt'])
+    
+    with open(results_file, 'w') as f:
+        f.write(f"{CURRENCY_NAME.upper()} OPTIMIZATION RESULTS (EXPONENTIAL MODEL)\n")
+        f.write("=" * 50 + "\n\n")
+        f.write(f"Analysis Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        
+        f.write("OPTIMIZATION PARAMETERS\n")
+        f.write("-" * 30 + "\n")
+        f.write(f"Optimal Coefficient (a): {a:.6f}\n")
+        f.write(f"Growth Rate (b): {b:.6f} ({'growth' if b > 0 else 'decay'})\n")
+        f.write(f"First Day Offset: {first_day_offset:.1f}\n")
+        f.write(f"Maximum R²: {optimal_r2:.6f}\n\n")
+        
+        f.write("MODEL FORMULA\n")
+        f.write("-" * 20 + "\n")
+        f.write(f"price = {a:.6f} × e^({b:.6f} × (day - {first_day_offset:.1f}))\n")
+        f.write("\n")
+        
+        f.write("CURRENT ANALYSIS\n")
+        f.write("-" * 20 + "\n")
+        f.write(f"Current Price: ${projections['current_price']:,.2f}\n")
+        f.write(f"Model Fair Price: ${projections['current_fair_price']:,.2f}\n")
+        f.write(f"Undervaluation: {projections['undervaluation']:+.2f}%\n\n")
+        
+        f.write("FORWARD PROJECTIONS\n")
+        f.write("-" * 25 + "\n")
+        f.write("Model-Based Projections (from fair value):\n")
+        for years in [1, 3, 5, 10, 15, 20]:
+            p = projections['projections'][years]
+            f.write(f"  {years}-Year: ${p['model_price']:,.0f} | Growth: {p['model_return']:+.2f}%\n")
+        
+        f.write("\nCurrent Price-Based Projections (converges toward model's future fair value):\n")
+        for years in [1, 3, 5, 10, 15, 20]:
+            p = projections['projections'][years]
+            f.write(f"  {years}-Year: ${p['current_based_price']:,.0f} | Return: {p['current_return']:+.2f}%\n")
+        
+        f.write("\nNOTES\n")
+        f.write("-" * 10 + "\n")
+        f.write("- Model-based projections start from the model's fair value\n")
+        f.write("- Current price-based projections show convergence toward model's future fair value\n")
+        f.write("- If undervalued: price converges upward then grows with model\n")
+        f.write("- If overvalued: price converges downward to model's future fair value\n")
+        f.write(f"- Exponential model shows {'accelerating growth' if b > 0 else 'decay'} over time\n")
+    
+    print(f"Optimization results saved to: {results_file}")
+    return results_file
+
 def optimize_slope_for_r2(df):
     """Find the optimal slope that maximizes R² (optimizing intercept for each slope)."""
     days = df['Days_Since_Genesis'].values
@@ -773,7 +1104,77 @@ def optimize_slope_for_r2(df):
 def main():
     """Main function to optimize intercept (parametric) or coefficient (power law)."""
     
-    print(f"{CURRENCY_NAME} Optimization ({MODEL_TYPE.upper()} Model)")
+    # Declare all global variables at the start (before any use)
+    global POWER_LAW_B, POWER_LAW_A, POWER_LAW_FIRST_DAY_OFFSET
+    global EXPONENTIAL_B, EXPONENTIAL_A, EXPONENTIAL_FIRST_DAY_OFFSET
+    global FIXED_SLOPE, POWER
+    
+    # Check for saved model type from interactive_point_selector.py
+    # Only use it if config doesn't explicitly set MODEL_TYPE or parameters
+    saved_model = load_saved_model_type()
+    # Handle empty string MODEL_TYPE as "not set"
+    model_type_to_use = MODEL_TYPE if MODEL_TYPE and MODEL_TYPE.strip() else None
+    use_saved_model = False
+    
+    # Determine if config explicitly sets model type or parameters
+    config_explicitly_sets_model = False
+    
+    # Check if config explicitly sets model-specific parameters
+    # Empty string or None means not explicitly set
+    if model_type_to_use:  # Not empty string or None
+        if model_type_to_use == 'powerlaw' and POWER_LAW_B is not None:
+            config_explicitly_sets_model = True
+        elif model_type_to_use == 'exponential' and EXPONENTIAL_B is not None:
+            config_explicitly_sets_model = True
+        elif model_type_to_use == 'parametric' and FIXED_SLOPE is not None:
+            config_explicitly_sets_model = True
+    
+    # If config doesn't explicitly set model, check for saved model
+    if not config_explicitly_sets_model and saved_model and saved_model.get('model_type'):
+        saved_type = saved_model['model_type']
+        # Only use saved type if it's not 'pchip' (pchip is interpolation only)
+        if saved_type in ['parametric', 'powerlaw', 'exponential']:
+            model_type_to_use = saved_type
+            use_saved_model = True
+            print(f"\nUsing saved model type from interactive_point_selector.py: {saved_type}")
+            if model_type_to_use:
+                print(f"(Config MODEL_TYPE='{model_type_to_use}' and no explicit parameters set)")
+            else:
+                print(f"(Config MODEL_TYPE not set, using saved model)")
+            
+            # Update global variables with saved parameters (only if config doesn't set them)
+            if saved_type == 'powerlaw' and 'powerlaw_b' in saved_model:
+                if POWER_LAW_B is None:
+                    POWER_LAW_B = saved_model.get('powerlaw_b')
+                if POWER_LAW_A is None:
+                    POWER_LAW_A = saved_model.get('powerlaw_a')
+                if POWER_LAW_FIRST_DAY_OFFSET is None:
+                    POWER_LAW_FIRST_DAY_OFFSET = saved_model.get('powerlaw_first_day_offset')
+                print(f"  Using saved power law parameters: b={POWER_LAW_B}, a={POWER_LAW_A}, offset={POWER_LAW_FIRST_DAY_OFFSET}")
+            elif saved_type == 'exponential' and 'exponential_b' in saved_model:
+                if EXPONENTIAL_B is None:
+                    EXPONENTIAL_B = saved_model.get('exponential_b')
+                if EXPONENTIAL_A is None:
+                    EXPONENTIAL_A = saved_model.get('exponential_a')
+                if EXPONENTIAL_FIRST_DAY_OFFSET is None:
+                    EXPONENTIAL_FIRST_DAY_OFFSET = saved_model.get('exponential_first_day_offset')
+                print(f"  Using saved exponential parameters: b={EXPONENTIAL_B}, a={EXPONENTIAL_A}, offset={EXPONENTIAL_FIRST_DAY_OFFSET}")
+            elif saved_type == 'parametric' and 'slope' in saved_model:
+                if FIXED_SLOPE is None:
+                    FIXED_SLOPE = saved_model.get('slope')
+                saved_power = saved_model.get('power')
+                if saved_power is not None:
+                    POWER = saved_power
+                print(f"  Using saved parametric parameters: slope={FIXED_SLOPE}, power={POWER}")
+    elif config_explicitly_sets_model:
+        print(f"\nUsing model type and parameters from config.py (overrides saved model)")
+    
+    # If still no model type determined, default to parametric
+    if not model_type_to_use:
+        model_type_to_use = 'parametric'
+        print(f"\nNo model type specified in config or saved. Defaulting to parametric model.")
+    
+    print(f"{CURRENCY_NAME} Optimization ({model_type_to_use.upper()} Model)")
     print("=" * 40)
     
     # Load data
@@ -781,7 +1182,7 @@ def main():
     if df is None:
         return
     
-    if MODEL_TYPE == 'powerlaw':
+    if model_type_to_use == 'powerlaw':
         # Power law model: optimize coefficient a
         if POWER_LAW_B is None or POWER_LAW_B <= 0 or POWER_LAW_B >= 1:
             print("Error: POWER_LAW_B must be set in config.py and must be 0 < b < 1")
@@ -825,6 +1226,58 @@ def main():
         print("=" * 60)
         print(f"Optimal Coefficient (a): {optimal_a:.6f}")
         print(f"Exponent (b): {POWER_LAW_B:.6f}")
+        print(f"First Day Offset: {first_day_offset:.1f}")
+        print(f"Maximum R²: {optimal_r2:.6f}")
+        print(f"Current Price: ${projections['current_price']:,.2f}")
+        print(f"Model Fair Price: ${projections['current_fair_price']:,.2f}")
+        print(f"Undervaluation: {projections['undervaluation']:+.2f}%")
+        print(f"\nResults saved to: {results_file}")
+    
+    elif model_type_to_use == 'exponential':
+        # Exponential model: optimize coefficient a
+        if EXPONENTIAL_B is None:
+            print("Error: EXPONENTIAL_B must be set in config.py")
+            print("Run interactive_point_selector.py and click 'Exponential' to get the values.")
+            return
+        
+        # Determine first_day_offset
+        if EXPONENTIAL_FIRST_DAY_OFFSET is None:
+            # Auto-detect: use minimum days since genesis in data
+            first_day_offset = df['Days_Since_Genesis'].min()
+            print(f"Auto-detected first_day_offset: {first_day_offset:.1f} days")
+        else:
+            first_day_offset = EXPONENTIAL_FIRST_DAY_OFFSET
+            print(f"Using configured first_day_offset: {first_day_offset:.1f} days")
+        
+        # Always optimize coefficient a to maximize R² across ALL price points
+        # Using b and first_day_offset from config (from interactive point selector) as fixed shape parameters
+        growth_str = "growth" if EXPONENTIAL_B > 0 else "decay"
+        print(f"\nUsing exponential shape parameters from config (from selected points):")
+        print(f"  Growth Rate (b): {EXPONENTIAL_B:.6f} (fixed - determines {growth_str} rate)")
+        print(f"  First Day Offset: {first_day_offset:.1f} (fixed - normalization reference)")
+        print(f"\nOptimizing coefficient a to maximize R² across ALL {len(df)} price points...")
+        print(f"(This adjusts the vertical position to best fit all data, not just selected points)")
+        optimal_a, optimal_r2 = optimize_coefficient_for_r2_exponential(df, EXPONENTIAL_B, first_day_offset, initial_a=EXPONENTIAL_A)
+        
+        # Create optimization chart
+        print("\nCreating optimization chart...")
+        chart_file = create_optimization_chart_exponential(df, optimal_a, EXPONENTIAL_B, first_day_offset, optimal_r2)
+        print(f"Chart saved: {chart_file}")
+        
+        # Calculate projections
+        print("\nCalculating forward projections...")
+        projections = calculate_projections_exponential(df, optimal_a, EXPONENTIAL_B, first_day_offset)
+        
+        # Save results
+        print("\nSaving optimization results...")
+        results_file = save_optimization_results_exponential(optimal_a, EXPONENTIAL_B, first_day_offset, optimal_r2, projections)
+        
+        # Print summary
+        print("\n" + "=" * 60)
+        print("OPTIMIZATION COMPLETE")
+        print("=" * 60)
+        print(f"Optimal Coefficient (a): {optimal_a:.6f}")
+        print(f"Growth Rate (b): {EXPONENTIAL_B:.6f} ({growth_str})")
         print(f"First Day Offset: {first_day_offset:.1f}")
         print(f"Maximum R²: {optimal_r2:.6f}")
         print(f"Current Price: ${projections['current_price']:,.2f}")
