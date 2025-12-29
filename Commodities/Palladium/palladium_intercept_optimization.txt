@@ -1,0 +1,45 @@
+PALLADIUM INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2025-12-29 12:31:17
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000176 per day
+Annualized Growth Rate: 6.43% per year
+Optimal Intercept: 0.715580
+Maximum R²: 0.321435
+
+MODEL FORMULA
+--------------------
+price = 316.75 × e^(0.000176 × (day - 4048) + 0.715580)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $1,698
+Model Fair Price: $1,832
+Undervaluation: -7.31%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $1,954 | Growth: +6.64%
+  3-Year: $2,222 | Growth: +21.27%
+  5-Year: $2,526 | Growth: +37.91%
+  10-Year: $3,484 | Growth: +90.19%
+  15-Year: $4,805 | Growth: +162.28%
+  20-Year: $6,626 | Growth: +261.71%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $1,954 | Return: +15.05%
+  3-Year: $2,222 | Return: +30.84%
+  5-Year: $2,526 | Return: +48.79%
+  10-Year: $3,484 | Return: +105.19%
+  15-Year: $4,805 | Return: +182.98%
+  20-Year: $6,626 | Return: +290.25%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

@@ -1,7 +1,7 @@
 GOLD OPTIMIZATION RESULTS (EXPONENTIAL MODEL)
 ==================================================
 
-Analysis Date: 2025-12-28 18:28:02
+Analysis Date: 2025-12-29 12:18:43
 
 OPTIMIZATION PARAMETERS
 ------------------------------

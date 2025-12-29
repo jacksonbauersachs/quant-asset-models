@@ -61,6 +61,21 @@ def load_data():
             # Last resort: let pandas auto-detect
             df['Date'] = pd.to_datetime(df['Date'])
     
+    # Handle different column names for price (Price, Value, Close, etc.)
+    price_column = None
+    for col in ['Price', 'Value', 'Close', 'Adj Close']:
+        if col in df.columns:
+            price_column = col
+            break
+    
+    if price_column is None:
+        print(f"Error: Could not find price column. Available columns: {list(df.columns)}")
+        return None
+    
+    # Rename to 'Price' for consistency
+    if price_column != 'Price':
+        df['Price'] = df[price_column]
+    
     # Clean Price column - remove commas and convert to float
     # Handle comma-separated numbers (e.g., "1,002.60") safely
     if df['Price'].dtype == 'object':
