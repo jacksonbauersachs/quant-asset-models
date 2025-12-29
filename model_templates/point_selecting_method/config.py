@@ -24,9 +24,9 @@ Set MODEL_TYPE below to choose which model to use.
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = "Gold"  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
-CURRENCY_NAME_LOWER = "gold"  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
-YAHOO_TICKER = "GLD-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
+CURRENCY_NAME = "Dogecoin"  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
+CURRENCY_NAME_LOWER = "dogecoin"  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
+YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
 
 # ============================================
 # DATES
@@ -36,7 +36,7 @@ YAHOO_TICKER = "GLD-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2022-06-18"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -44,13 +44,13 @@ START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysi
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Chainlink"
-DATA_FOLDER = "Portfolio/Data"
+DATA_FOLDER = "Crypto/Doge/Lows"
 
 # Example: "Chainlink_historical_data.csv"
-HISTORICAL_DATA_FILE = "Gold_all_time_price.csv"
+HISTORICAL_DATA_FILE = "Dogecoin_historical_data.csv"
 
 # Example: "Crypto/Chainlink"
-OUTPUT_FOLDER = "model_templates/point_selecting_method"
+OUTPUT_FOLDER = "Crypto/Doge/Lows"
 
 # ============================================
 # MODEL PARAMETERS

@@ -245,18 +245,16 @@ def on_click(event):
 
 def get_save_file_path():
     """Get the path to save selected points."""
-    if os.path.basename(os.getcwd()) == 'log_model_clone':
-        save_file = os.path.join('.', f'{CURRENCY_NAME_LOWER}_selected_points.json')
-    else:
-        save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_selected_points.json')
+    # ONLY use script directory - never OUTPUT_FOLDER or other locations
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    save_file = os.path.join(script_dir, f'{CURRENCY_NAME_LOWER}_selected_points.json')
     return save_file
 
 def get_model_save_file_path():
     """Get the path to save last selected model."""
-    if os.path.basename(os.getcwd()) == 'log_model_clone':
-        save_file = os.path.join('.', f'{CURRENCY_NAME_LOWER}_last_model.json')
-    else:
-        save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_last_model.json')
+    # Save in the same directory as the script (where points are saved)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    save_file = os.path.join(script_dir, f'{CURRENCY_NAME_LOWER}_last_model.json')
     return save_file
 
 def save_last_model(model_type, **params):

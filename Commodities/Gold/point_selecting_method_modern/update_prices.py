@@ -20,7 +20,7 @@ try:
         HISTORICAL_DATA_FILE
     )
 except ImportError:
-    print("Error: config.py not found! Make sure you're running from the clone folder.")
+    print("Error: config.py not found! Make sure you're running from the log_model folder.")
     sys.exit(1)
 
 def get_last_date_from_file(file_path):
@@ -243,7 +243,7 @@ def update_prices():
     
     print(f"Fetched {len(new_df)} new days of data")
     print(f"Date range: {new_df['Date'].min().strftime('%m/%d/%Y')} to {new_df['Date'].max().strftime('%m/%d/%Y')}")
-    print(f"Price range: ${new_df['Price'].min():.2f} to ${new_df['Price'].max():.2f}")
+    print(f"Price range: ${new_df['Price'].min():.2f} to {new_df['Price'].max():.2f}")
     
     # Read existing data
     existing_df = pd.read_csv(data_file)

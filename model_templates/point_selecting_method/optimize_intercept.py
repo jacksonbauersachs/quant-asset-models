@@ -80,22 +80,21 @@ def load_saved_model_type():
     import json
     import os
     
-    # Use same path logic as interactive_point_selector.py
-    if os.path.basename(os.getcwd()) == 'log_model_clone':
-        save_file = os.path.join('.', f'{CURRENCY_NAME_LOWER}_last_model.json')
-    else:
-        save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_last_model.json')
+    # PRIORITY: Check script directory FIRST (where the model was saved)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    script_file = os.path.join(script_dir, f'{CURRENCY_NAME_LOWER}_last_model.json')
     
-    if not os.path.exists(save_file):
-        return None
+    if os.path.exists(script_file):
+        try:
+            with open(script_file, 'r') as f:
+                model_data = json.load(f)
+            print(f"Loaded saved model from: {script_file}")
+            return model_data
+        except Exception as e:
+            print(f"Note: Could not load saved model type from {script_file}: {e}")
     
-    try:
-        with open(save_file, 'r') as f:
-            model_data = json.load(f)
-        return model_data
-    except Exception as e:
-        print(f"Note: Could not load saved model type: {e}")
-        return None
+    # No fallback - ONLY use script directory
+    return None
 
 def load_data():
     """Load and prepare price data for analysis."""
@@ -515,10 +514,9 @@ def create_optimization_chart(df, slope, optimal_intercept, optimal_r2):
     
     plt.tight_layout()
     
-    # Save the chart
-    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    
-    chart_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_png'])
+    # Save the chart - ONLY use script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    chart_file = os.path.join(script_dir, output_files['intercept_optimization_png'])
     
     # Save with proper flushing
     fig.savefig(chart_file, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
@@ -625,10 +623,9 @@ def create_optimization_chart_powerlaw(df, a, b, first_day_offset, optimal_r2):
     
     plt.tight_layout()
     
-    # Save the chart
-    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    
-    chart_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_png'])
+    # Save the chart - ONLY use script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    chart_file = os.path.join(script_dir, output_files['intercept_optimization_png'])
     
     # Save with proper flushing
     fig.savefig(chart_file, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
@@ -736,10 +733,9 @@ def create_optimization_chart_exponential(df, a, b, first_day_offset, optimal_r2
     
     plt.tight_layout()
     
-    # Save the chart
-    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    
-    chart_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_png'])
+    # Save the chart - ONLY use script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    chart_file = os.path.join(script_dir, output_files['intercept_optimization_png'])
     
     # Save with proper flushing
     fig.savefig(chart_file, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
@@ -893,9 +889,9 @@ def calculate_projections_exponential(df, a, b, first_day_offset):
 def save_optimization_results(slope, optimal_intercept, optimal_r2, projections):
     """Save optimization results to a text file (parametric model)."""
     
-    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    
-    results_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_txt'])
+    # Save - ONLY use script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    results_file = os.path.join(script_dir, output_files['intercept_optimization_txt'])
     
     with open(results_file, 'w') as f:
         f.write(f"{CURRENCY_NAME.upper()} INTERCEPT OPTIMIZATION RESULTS (PARAMETRIC MODEL)\n")
@@ -945,9 +941,9 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections)
 def save_optimization_results_powerlaw(a, b, first_day_offset, optimal_r2, projections):
     """Save optimization results to a text file (power law model)."""
     
-    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    
-    results_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_txt'])
+    # Save - ONLY use script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    results_file = os.path.join(script_dir, output_files['intercept_optimization_txt'])
     
     with open(results_file, 'w') as f:
         f.write(f"{CURRENCY_NAME.upper()} OPTIMIZATION RESULTS (POWER LAW MODEL)\n")
@@ -998,9 +994,9 @@ def save_optimization_results_powerlaw(a, b, first_day_offset, optimal_r2, proje
 def save_optimization_results_exponential(a, b, first_day_offset, optimal_r2, projections):
     """Save optimization results to a text file (exponential model)."""
     
-    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    
-    results_file = os.path.join(OUTPUT_FOLDER, output_files['intercept_optimization_txt'])
+    # Save - ONLY use script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    results_file = os.path.join(script_dir, output_files['intercept_optimization_txt'])
     
     with open(results_file, 'w') as f:
         f.write(f"{CURRENCY_NAME.upper()} OPTIMIZATION RESULTS (EXPONENTIAL MODEL)\n")
@@ -1112,6 +1108,8 @@ def main():
     # Check for saved model type from interactive_point_selector.py
     # Only use it if config doesn't explicitly set MODEL_TYPE or parameters
     saved_model = load_saved_model_type()
+    if saved_model:
+        print(f"Found saved model: {saved_model.get('model_type', 'unknown')} from {saved_model.get('timestamp', 'unknown time')}")
     # Handle empty string MODEL_TYPE as "not set"
     model_type_to_use = MODEL_TYPE if MODEL_TYPE and MODEL_TYPE.strip() else None
     use_saved_model = False

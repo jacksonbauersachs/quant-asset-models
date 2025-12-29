@@ -45,6 +45,17 @@ exponential_line = None  # Exponential model curve
 pchip_line = None  # PCHIP interpolation curve
 current_model_type = None  # 'parametric', 'powerlaw', 'exponential', or 'pchip'
 
+# Global variable for scale
+use_log_scale = True  # True for log scale, False for normal scale
+ax = None  # Will be set in main()
+fig = None  # Will be set in main()
+price_line = None  # Main price data line
+df_filtered = None  # Will be set in main()
+status_text = None  # Will be set in main()
+
+# Store last model parameters for re-plotting after scale toggle
+last_model_params = None  # Dict with model_type and parameters
+
 def load_data():
     """Load and prepare historical price data."""
     try:
@@ -245,18 +256,16 @@ def on_click(event):
 
 def get_save_file_path():
     """Get the path to save selected points."""
-    if os.path.basename(os.getcwd()) == 'log_model_clone':
-        save_file = os.path.join('.', f'{CURRENCY_NAME_LOWER}_selected_points.json')
-    else:
-        save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_selected_points.json')
+    # ONLY use script directory - never OUTPUT_FOLDER or other locations
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    save_file = os.path.join(script_dir, f'{CURRENCY_NAME_LOWER}_selected_points.json')
     return save_file
 
 def get_model_save_file_path():
     """Get the path to save last selected model."""
-    if os.path.basename(os.getcwd()) == 'log_model_clone':
-        save_file = os.path.join('.', f'{CURRENCY_NAME_LOWER}_last_model.json')
-    else:
-        save_file = os.path.join(OUTPUT_FOLDER, f'{CURRENCY_NAME_LOWER}_last_model.json')
+    # Save in the same directory as the script (where points are saved)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    save_file = os.path.join(script_dir, f'{CURRENCY_NAME_LOWER}_last_model.json')
     return save_file
 
 def save_last_model(model_type, **params):
@@ -807,10 +816,117 @@ def calculate_pchip_interpolation():
     
     fig.canvas.draw_idle()
 
+def toggle_scale(event):
+    """Toggle between log scale and normal scale."""
+    global use_log_scale, price_line, curve_line, powerlaw_line, exponential_line, pchip_line, last_model_params, current_model_type
+    
+    # Toggle scale
+    use_log_scale = not use_log_scale
+    
+    # Clear all lines
+    if price_line is not None:
+        try:
+            price_line.remove()
+        except:
+            pass
+        price_line = None
+    
+    # Remove all curve lines
+    if curve_line is not None:
+        try:
+            curve_line.remove()
+        except:
+            pass
+        curve_line = None
+    if powerlaw_line is not None:
+        try:
+            powerlaw_line.remove()
+        except:
+            pass
+        powerlaw_line = None
+    if exponential_line is not None:
+        try:
+            exponential_line.remove()
+        except:
+            pass
+        exponential_line = None
+    if pchip_line is not None:
+        try:
+            pchip_line.remove()
+        except:
+            pass
+        pchip_line = None
+    
+    # Set y-axis scale
+    if use_log_scale:
+        ax.set_yscale('log')
+    else:
+        ax.set_yscale('linear')
+    
+    # Re-plot price data
+    if use_log_scale:
+        price_line, = ax.semilogy(df_filtered['Date'], df_filtered['Price'], 
+                                 color='blue', linewidth=2, label='Actual Price', alpha=0.7)
+    else:
+        price_line, = ax.plot(df_filtered['Date'], df_filtered['Price'], 
+                             color='blue', linewidth=2, label='Actual Price', alpha=0.7)
+    
+    # Re-plot selected points
+    for marker in selected_markers:
+        try:
+            marker.remove()
+        except:
+            pass
+    selected_markers.clear()
+    for date, price, days in selected_points:
+        marker = ax.scatter(date, price, 
+                          color='red', s=30, zorder=10, marker='o', 
+                          edgecolors='black', linewidths=1)
+        selected_markers.append(marker)
+    
+    # Re-plot current model if one exists
+    if last_model_params is not None:
+        model_type = last_model_params.get('model_type')
+        if model_type == 'parametric':
+            plot_fitted_curve(
+                last_model_params.get('power'),
+                last_model_params.get('slope'),
+                last_model_params.get('intercept'),
+                last_model_params.get('r2'),
+                model_type='parametric'
+            )
+        elif model_type == 'powerlaw':
+            plot_fitted_curve(
+                None, None, None,
+                last_model_params.get('r2'),
+                model_type='powerlaw',
+                a=last_model_params.get('a'),
+                b=last_model_params.get('b'),
+                first_day_offset=last_model_params.get('first_day_offset')
+            )
+        elif model_type == 'exponential':
+            plot_fitted_curve(
+                None, None, None,
+                last_model_params.get('r2'),
+                model_type='exponential',
+                a=last_model_params.get('a'),
+                b=last_model_params.get('b'),
+                first_day_offset=last_model_params.get('first_day_offset')
+            )
+        elif model_type == 'pchip' and len(selected_points) >= 2:
+            calculate_pchip_interpolation()
+    
+    # Update button label
+    btn_toggle.label.set_text('Normal\nScale' if use_log_scale else 'Log\nScale')
+    
+    # Update legend
+    ax.legend(loc='upper left')
+    fig.canvas.draw()
+
 def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=None, b=None, 
                       selected_days=None, first_day_offset=None, selected_dates=None):
     """Plot the fitted curve on the graph."""
-    global curve_line, powerlaw_line, exponential_line, pchip_line, current_model_type
+    global curve_line, powerlaw_line, exponential_line, pchip_line, current_model_type, use_log_scale, last_model_params
     
     # Hide the other curve types
     if model_type == 'parametric':
@@ -935,8 +1051,13 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
             print("Warning: Model produces no valid prices!")
             return
         
-        # Plot curve on log scale
-        curve_line, = ax.semilogy(df_filtered['Date'], model_prices, 
+        # Plot curve using appropriate scale
+        if use_log_scale:
+            curve_line, = ax.semilogy(df_filtered['Date'], model_prices, 
+                                     color='green', linestyle='--', linewidth=2, 
+                                     label=f'Parametric Model (R² = {r2:.4f})', zorder=5)
+        else:
+            curve_line, = ax.plot(df_filtered['Date'], model_prices, 
                                  color='green', linestyle='--', linewidth=2, 
                                  label=f'Parametric Model (R² = {r2:.4f})', zorder=5)
         current_model_type = 'parametric'
@@ -971,7 +1092,12 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
             
             # Plot power law curve over full timeline
             dates_valid = df_filtered['Date'].values[mask]
-            powerlaw_line, = ax.semilogy(dates_valid, prices_powerlaw, 
+            if use_log_scale:
+                powerlaw_line, = ax.semilogy(dates_valid, prices_powerlaw, 
+                                           color='orange', linestyle='-', linewidth=2, 
+                                           label=f'Power Law (b={b:.4f}, R²={r2:.4f})', zorder=5)
+            else:
+                powerlaw_line, = ax.plot(dates_valid, prices_powerlaw, 
                                        color='orange', linestyle='-', linewidth=2, 
                                        label=f'Power Law (b={b:.4f}, R²={r2:.4f})', zorder=5)
             current_model_type = 'powerlaw'
@@ -1009,7 +1135,12 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
             
             # Plot exponential curve over full timeline
             dates_valid = df_filtered['Date'].values[mask]
-            exponential_line, = ax.semilogy(dates_valid, prices_exponential, 
+            if use_log_scale:
+                exponential_line, = ax.semilogy(dates_valid, prices_exponential, 
+                                              color='red', linestyle='-', linewidth=2, 
+                                              label=f'Exponential (b={b:.4f}, R²={r2:.4f})', zorder=5)
+            else:
+                exponential_line, = ax.plot(dates_valid, prices_exponential, 
                                           color='red', linestyle='-', linewidth=2, 
                                           label=f'Exponential (b={b:.4f}, R²={r2:.4f})', zorder=5)
             current_model_type = 'exponential'
@@ -1054,7 +1185,12 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
         dates_interp = np.array(dates_interp)
         
         # Plot PCHIP curve
-        pchip_line, = ax.semilogy(dates_interp, prices_interp, 
+        if use_log_scale:
+            pchip_line, = ax.semilogy(dates_interp, prices_interp, 
+                                     color='purple', linestyle='-', linewidth=2, 
+                                     label='PCHIP Interpolation (steep early, flattens later)', zorder=5)
+        else:
+            pchip_line, = ax.plot(dates_interp, prices_interp, 
                                  color='purple', linestyle='-', linewidth=2, 
                                  label='PCHIP Interpolation (steep early, flattens later)', zorder=5)
         current_model_type = 'pchip'
@@ -1074,6 +1210,36 @@ def plot_fitted_curve(power, slope, intercept, r2, model_type='parametric', a=No
         
         ax.set_xlim([min_date_plot, max_date_plot])
         ax.set_ylim([min_price_plot, max_price_plot])
+    
+    # Store model parameters for re-plotting after scale toggle
+    if model_type == 'parametric':
+        last_model_params = {
+            'model_type': 'parametric',
+            'power': power,
+            'slope': slope,
+            'intercept': intercept,
+            'r2': r2
+        }
+    elif model_type == 'powerlaw':
+        last_model_params = {
+            'model_type': 'powerlaw',
+            'a': a,
+            'b': b,
+            'first_day_offset': first_day_offset,
+            'r2': r2
+        }
+    elif model_type == 'exponential':
+        last_model_params = {
+            'model_type': 'exponential',
+            'a': a,
+            'b': b,
+            'first_day_offset': first_day_offset,
+            'r2': r2
+        }
+    elif model_type == 'pchip':
+        last_model_params = {
+            'model_type': 'pchip'
+        }
     
     # Update legend
     ax.legend(loc='upper left')
@@ -1190,6 +1356,9 @@ def main():
     pchip_line = None
     current_model_type = None
     
+    # Declare global variables at the start
+    global fig, ax, price_line, df_filtered, status_text
+    
     df_filtered = load_data()
     if df_filtered is None:
         return
@@ -1203,8 +1372,11 @@ def main():
     # Create figure
     fig, ax = plt.subplots(figsize=(14, 8))
     
+    # Set initial scale to log
+    ax.set_yscale('log')
+    
     # Plot price data on log scale
-    ax.semilogy(df_filtered['Date'], df_filtered['Price'], 
+    price_line, = ax.semilogy(df_filtered['Date'], df_filtered['Price'], 
                color='blue', linewidth=2, label='Actual Price', alpha=0.7)
     
     # Format axes
@@ -1250,6 +1422,11 @@ def main():
                          bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
     
     # Add buttons
+    ax_toggle = plt.axes([0.30, 0.02, 0.09, 0.04])
+    global btn_toggle
+    btn_toggle = Button(ax_toggle, 'Normal\nScale')
+    btn_toggle.on_clicked(toggle_scale)
+    
     ax_calculate = plt.axes([0.40, 0.02, 0.09, 0.04])
     btn_calculate = Button(ax_calculate, 'Parametric\n(R²)')
     btn_calculate.on_clicked(lambda x: optimize_for_selected_points())

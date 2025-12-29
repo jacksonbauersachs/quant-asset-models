@@ -1,0 +1,7 @@
+{
+  "model_type": "exponential",
+  "timestamp": "2025-12-28 18:27:10",
+  "exponential_a": 256.59999999999974,
+  "exponential_b": 0.0002622200234564947,
+  "exponential_first_day_offset": 9586.0
+}

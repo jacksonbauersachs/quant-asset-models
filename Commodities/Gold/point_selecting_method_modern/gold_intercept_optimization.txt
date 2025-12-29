@@ -1,0 +1,47 @@
+GOLD OPTIMIZATION RESULTS (EXPONENTIAL MODEL)
+==================================================
+
+Analysis Date: 2025-12-28 18:28:02
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Optimal Coefficient (a): 323.365998
+Growth Rate (b): 0.000262 (growth)
+First Day Offset: 9586.0
+Maximum R²: 0.840782
+
+MODEL FORMULA
+--------------------
+price = 323.365998 × e^(0.000262 × (day - 9586.0))
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $4,480.80
+Model Fair Price: $3,453.54
+Undervaluation: +29.75%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $3,801 | Growth: +10.05%
+  3-Year: $4,603 | Growth: +33.29%
+  5-Year: $5,575 | Growth: +61.43%
+  10-Year: $8,999 | Growth: +160.58%
+  15-Year: $14,527 | Growth: +320.65%
+  20-Year: $23,451 | Growth: +579.05%
+
+Current Price-Based Projections (converges toward model's future fair value):
+  1-Year: $3,801 | Return: -15.18%
+  3-Year: $4,603 | Return: +2.73%
+  5-Year: $5,575 | Return: +24.42%
+  10-Year: $8,999 | Return: +100.84%
+  15-Year: $14,527 | Return: +224.22%
+  20-Year: $23,451 | Return: +423.37%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections show convergence toward model's future fair value
+- If undervalued: price converges upward then grows with model
+- If overvalued: price converges downward to model's future fair value
+- Exponential model shows accelerating growth over time

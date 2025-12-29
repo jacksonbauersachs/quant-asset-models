@@ -1,0 +1,47 @@
+DOGECOIN OPTIMIZATION RESULTS (EXPONENTIAL MODEL)
+==================================================
+
+Analysis Date: 2025-12-28 18:58:39
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Optimal Coefficient (a): 0.105170
+Growth Rate (b): 0.000183 (growth)
+First Day Offset: 1682.0
+Maximum R²: 0.185989
+
+MODEL FORMULA
+--------------------
+price = 0.105170 × e^(0.000183 × (day - 1682.0))
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $0.12
+Model Fair Price: $0.13
+Undervaluation: -7.42%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $0 | Growth: +6.92%
+  3-Year: $0 | Growth: +22.24%
+  5-Year: $0 | Growth: +39.75%
+  10-Year: $0 | Growth: +95.30%
+  15-Year: $0 | Growth: +172.93%
+  20-Year: $1 | Growth: +281.41%
+
+Current Price-Based Projections (converges toward model's future fair value):
+  1-Year: $0 | Return: +15.49%
+  3-Year: $0 | Return: +32.03%
+  5-Year: $0 | Return: +50.94%
+  10-Year: $0 | Return: +110.94%
+  15-Year: $0 | Return: +194.78%
+  20-Year: $1 | Return: +311.96%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections show convergence toward model's future fair value
+- If undervalued: price converges upward then grows with model
+- If overvalued: price converges downward to model's future fair value
+- Exponential model shows accelerating growth over time
