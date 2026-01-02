@@ -9,9 +9,9 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = "Dogecoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
-CURRENCY_NAME_LOWER = "dogecoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+CURRENCY_NAME = "Silver"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
+CURRENCY_NAME_LOWER = "silver"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
+YAHOO_TICKER = "SI=F"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES
@@ -21,7 +21,7 @@ YAHOO_TICKER = "DOGE-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2022-06-18"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2001-11-26"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -29,13 +29,13 @@ START_DATE = "2022-06-18"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Crypto/Doge"
+DATA_FOLDER = "Commodities/Silver/exponential"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "Dogecoin_historical_data.csv"
+HISTORICAL_DATA_FILE = "Silver_historical_data.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "Crypto/Doge"
+OUTPUT_FOLDER = "Commodities/Silver/exponential"
 
 # ============================================
 # MODEL PARAMETERS
@@ -44,7 +44,7 @@ OUTPUT_FOLDER = "Crypto/Doge"
 # This is typically found by running the interactive rainbow chart first
 # Growth rate is in "per day" units (e.g., 0.001 = 0.1% per day ≈ 36.5% per year)
 # Set to None to let optimize_intercept.py find the optimal growth rate automatically
-FIXED_GROWTH_RATE = .000774  # Example: 0.001 for 0.1% daily growth
+FIXED_GROWTH_RATE = .000157  # Example: 0.001 for 0.1% daily growth
 
 # ============================================
 # DATA SOURCE
