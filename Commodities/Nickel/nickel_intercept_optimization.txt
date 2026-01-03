@@ -1,0 +1,45 @@
+NICKEL INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-02 19:50:50
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000117 per day
+Annualized Growth Rate: 4.27% per year
+Optimal Intercept: 0.701472
+Maximum R²: -0.174559
+
+MODEL FORMULA
+--------------------
+price = 3865.76 × e^(0.000117 × (day - 3256) + 0.701472)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $16,700
+Model Fair Price: $24,807
+Undervaluation: -32.68%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $25,890 | Growth: +4.37%
+  3-Year: $28,200 | Growth: +13.68%
+  5-Year: $30,716 | Growth: +23.82%
+  10-Year: $38,033 | Growth: +53.32%
+  15-Year: $47,093 | Growth: +89.84%
+  20-Year: $58,311 | Growth: +135.06%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $25,890 | Return: +55.03%
+  3-Year: $28,200 | Return: +68.86%
+  5-Year: $30,716 | Return: +83.93%
+  10-Year: $38,033 | Return: +127.74%
+  15-Year: $47,093 | Return: +181.99%
+  20-Year: $58,311 | Return: +249.17%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

@@ -1,0 +1,45 @@
+NATURAL_GAS INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-03 15:35:52
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: -0.000016 per day
+Annualized Growth Rate: -0.58% per year
+Optimal Intercept: 0.948508
+Maximum R²: 0.072203
+
+MODEL FORMULA
+--------------------
+price = 1.83 × e^(-0.000016 × (day - 392) + 0.948508)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $3.62
+Model Fair Price: $4.10
+Undervaluation: -11.76%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $4.08 | Growth: -0.58%
+  3-Year: $4.03 | Growth: -1.74%
+  5-Year: $3.98 | Growth: -2.88%
+  10-Year: $3.87 | Growth: -5.68%
+  15-Year: $3.76 | Growth: -8.39%
+  20-Year: $3.65 | Growth: -11.03%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $4.08 | Return: +12.66%
+  3-Year: $4.03 | Return: +11.35%
+  5-Year: $3.98 | Return: +10.06%
+  10-Year: $3.87 | Return: +6.89%
+  15-Year: $3.76 | Return: +3.81%
+  20-Year: $3.65 | Return: +0.82%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points
