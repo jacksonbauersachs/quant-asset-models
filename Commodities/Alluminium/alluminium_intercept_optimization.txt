@@ -1,0 +1,45 @@
+ALLUMINIUM INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-02 17:26:46
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000021 per day
+Annualized Growth Rate: 0.77% per year
+Optimal Intercept: 0.122593
+Maximum R²: 0.403476
+
+MODEL FORMULA
+--------------------
+price = 1528.00 × e^(0.000021 × (day - 1) + 0.122593)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $2,987
+Model Fair Price: $2,277
+Undervaluation: +31.20%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $2,294 | Growth: +0.77%
+  3-Year: $2,330 | Growth: +2.33%
+  5-Year: $2,366 | Growth: +3.91%
+  10-Year: $2,458 | Growth: +7.97%
+  15-Year: $2,554 | Growth: +12.19%
+  20-Year: $2,654 | Growth: +16.58%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $2,294 | Return: -23.20%
+  3-Year: $2,330 | Return: -22.01%
+  5-Year: $2,366 | Return: -20.80%
+  10-Year: $2,458 | Return: -17.71%
+  15-Year: $2,554 | Return: -14.49%
+  20-Year: $2,654 | Return: -11.15%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points
