@@ -886,8 +886,50 @@ def calculate_projections_exponential(df, a, b, first_day_offset):
         'projections': projections
     }
 
-def save_optimization_results(slope, optimal_intercept, optimal_r2, projections):
+def calculate_annual_growth_rate(slope, power, current_days):
+    """Calculate annual growth percentage from parametric model parameters.
+    
+    For parametric model: price = 10^(slope * (days^power) + intercept)
+    The growth rate in log space is: d(log10(price))/d(days) = slope * power * (days^(power-1))
+    Annual growth percentage = (10^(slope * power * (days^(power-1)) * 365.25) - 1) * 100
+    """
+    import math
+    
+    if power == 1.0:
+        # Linear case: growth rate is constant
+        # d(log10(price))/d(days) = slope
+        # Annual growth = (10^(slope * 365.25) - 1) * 100
+        annual_growth_factor = 10**(slope * 365.25)
+        annual_growth_pct = (annual_growth_factor - 1) * 100
+    else:
+        # Non-linear case: growth rate depends on current day
+        # Calculate growth rate at current day
+        growth_rate_per_day = slope * power * (current_days**(power - 1))
+        # Annual growth = (10^(growth_rate_per_day * 365.25) - 1) * 100
+        annual_growth_factor = 10**(growth_rate_per_day * 365.25)
+        annual_growth_pct = (annual_growth_factor - 1) * 100
+    
+    return annual_growth_pct
+
+def save_optimization_results(slope, optimal_intercept, optimal_r2, projections, df=None):
     """Save optimization results to a text file (parametric model)."""
+    
+    # Calculate annual growth rate
+    # Get current days from dataframe if available, otherwise estimate
+    if df is not None and 'Days_Since_Genesis' in df.columns:
+        current_days = df['Days_Since_Genesis'].iloc[-1]
+    else:
+        # Estimate from current price and model
+        current_fair_price = projections['current_fair_price']
+        if POWER == 1.0:
+            # For power=1: log10(price) = slope * days + intercept
+            # days = (log10(price) - intercept) / slope
+            current_days = (np.log10(current_fair_price) - optimal_intercept) / slope
+        else:
+            # For other powers, use a reasonable estimate
+            current_days = 5500  # Rough estimate
+    
+    annual_growth_pct = calculate_annual_growth_rate(slope, POWER, current_days)
     
     # Save - ONLY use script directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -903,7 +945,8 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections)
         f.write(f"Fixed Slope: {slope:.6f}\n")
         f.write(f"Optimal Intercept: {optimal_intercept:.6f}\n")
         f.write(f"Power: {POWER:.6f}\n")
-        f.write(f"Maximum R²: {optimal_r2:.6f}\n\n")
+        f.write(f"Maximum R²: {optimal_r2:.6f}\n")
+        f.write(f"Annual Growth Rate: {annual_growth_pct:+.2f}%\n\n")
         
         f.write("MODEL FORMULA\n")
         f.write("-" * 20 + "\n")
@@ -938,8 +981,43 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections)
     print(f"Optimization results saved to: {results_file}")
     return results_file
 
-def save_optimization_results_powerlaw(a, b, first_day_offset, optimal_r2, projections):
+def calculate_annual_growth_rate_powerlaw(b, current_days, first_day_offset):
+    """Calculate annual growth percentage from power law model parameters.
+    
+    For power law model: price = a * (days - first_day_offset + 1)^b
+    The normalized days: x = days - first_day_offset + 1
+    After 1 year: x_new = x + 365.25
+    Annual growth = ((x + 365.25)/x)^b - 1 = (1 + 365.25/x)^b - 1
+    """
+    x = current_days - first_day_offset + 1
+    if x <= 0:
+        x = 1  # Avoid division by zero
+    
+    # Annual growth factor: (1 + 365.25/x)^b
+    annual_growth_factor = (1 + 365.25 / x) ** b
+    annual_growth_pct = (annual_growth_factor - 1) * 100
+    
+    return annual_growth_pct
+
+def save_optimization_results_powerlaw(a, b, first_day_offset, optimal_r2, projections, df=None):
     """Save optimization results to a text file (power law model)."""
+    
+    # Calculate annual growth rate
+    # Get current days from dataframe if available, otherwise estimate
+    if df is not None and 'Days_Since_Genesis' in df.columns:
+        current_days = df['Days_Since_Genesis'].iloc[-1]
+    else:
+        # Estimate from current price and model
+        current_fair_price = projections['current_fair_price']
+        # For power law: price = a * (days - first_day_offset + 1)^b
+        # days = (price/a)^(1/b) + first_day_offset - 1
+        if a > 0 and b > 0:
+            x_est = (current_fair_price / a) ** (1 / b)
+            current_days = x_est + first_day_offset - 1
+        else:
+            current_days = 1000  # Rough estimate
+    
+    annual_growth_pct = calculate_annual_growth_rate_powerlaw(b, current_days, first_day_offset)
     
     # Save - ONLY use script directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -955,7 +1033,8 @@ def save_optimization_results_powerlaw(a, b, first_day_offset, optimal_r2, proje
         f.write(f"Optimal Coefficient (a): {a:.6f}\n")
         f.write(f"Exponent (b): {b:.6f}\n")
         f.write(f"First Day Offset: {first_day_offset:.1f}\n")
-        f.write(f"Maximum R²: {optimal_r2:.6f}\n\n")
+        f.write(f"Maximum R²: {optimal_r2:.6f}\n")
+        f.write(f"Annual Growth Rate: {annual_growth_pct:+.2f}%\n\n")
         
         f.write("MODEL FORMULA\n")
         f.write("-" * 20 + "\n")
@@ -1216,7 +1295,7 @@ def main():
         
         # Save results
         print("\nSaving optimization results...")
-        results_file = save_optimization_results_powerlaw(optimal_a, POWER_LAW_B, first_day_offset, optimal_r2, projections)
+        results_file = save_optimization_results_powerlaw(optimal_a, POWER_LAW_B, first_day_offset, optimal_r2, projections, df=df)
         
         # Print summary
         print("\n" + "=" * 60)
@@ -1310,7 +1389,7 @@ def main():
         
         # Save results
         print("\nSaving optimization results...")
-        results_file = save_optimization_results(fixed_slope, optimal_intercept, optimal_r2, projections)
+        results_file = save_optimization_results(fixed_slope, optimal_intercept, optimal_r2, projections, df=df)
         
         # Print summary
         print("\n" + "=" * 60)

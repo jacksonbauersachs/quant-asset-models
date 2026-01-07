@@ -1,0 +1,47 @@
+BITCOIN INTERCEPT OPTIMIZATION RESULTS (PARAMETRIC MODEL)
+==================================================
+
+Analysis Date: 2026-01-03 18:44:30
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Slope: 6.536923
+Optimal Intercept: -10.681409
+Power: 0.100359
+Maximum R²: 0.747485
+Annual Growth Rate: +26.17%
+
+MODEL FORMULA
+--------------------
+price = 10^(6.536923 × (day^0.100359) + -10.681409)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $90,441.16
+Model Fair Price: $75,003.14
+Undervaluation: +20.58%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $94,020 | Growth: +25.36%
+  3-Year: $142,688 | Growth: +90.24%
+  5-Year: $208,299 | Growth: +177.72%
+  10-Year: $471,621 | Growth: +528.80%
+  15-Year: $934,392 | Growth: +1145.80%
+  20-Year: $1,684,434 | Growth: +2145.82%
+
+Current Price-Based Projections (converges toward model's future fair value):
+  1-Year: $94,020 | Return: +3.96%
+  3-Year: $142,688 | Return: +57.77%
+  5-Year: $208,299 | Return: +130.31%
+  10-Year: $471,621 | Return: +421.47%
+  15-Year: $934,392 | Return: +933.15%
+  20-Year: $1,684,434 | Return: +1762.46%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections show convergence toward model's future fair value
+- If undervalued: price converges upward then grows with model
+- If overvalued: price converges downward to model's future fair value

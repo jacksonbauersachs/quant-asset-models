@@ -1,0 +1,45 @@
+UNISWAP INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-03 21:26:09
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000000 per day
+Annualized Growth Rate: 0.00% per year
+Optimal Intercept: -0.488703
+Maximum R²: -0.000000
+
+MODEL FORMULA
+--------------------
+price = 11.86 × e^(0.000000 × (day - 562) + -0.488703)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $5.96
+Model Fair Price: $7.28
+Undervaluation: -18.12%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $7.28 | Growth: +0.00%
+  3-Year: $7.28 | Growth: +0.00%
+  5-Year: $7.28 | Growth: +0.00%
+  10-Year: $7.28 | Growth: +0.00%
+  15-Year: $7.28 | Growth: +0.00%
+  20-Year: $7.28 | Growth: +0.00%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $7.28 | Return: +22.13%
+  3-Year: $7.28 | Return: +22.13%
+  5-Year: $7.28 | Return: +22.13%
+  10-Year: $7.28 | Return: +22.13%
+  15-Year: $7.28 | Return: +22.13%
+  20-Year: $7.28 | Return: +22.13%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

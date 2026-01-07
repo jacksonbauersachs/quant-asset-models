@@ -1,0 +1,47 @@
+INJECTION INTERCEPT OPTIMIZATION RESULTS (PARAMETRIC MODEL)
+==================================================
+
+Analysis Date: 2026-01-03 22:54:02
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Slope: 0.000098
+Optimal Intercept: 0.838160
+Power: 1.000000
+Maximum R²: 0.085838
+Annual Growth Rate: +8.59%
+
+MODEL FORMULA
+--------------------
+price = 10^(0.000098 × (day^1.000000) + 0.838160)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $5.01
+Model Fair Price: $10.58
+Undervaluation: -52.64%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $11 | Growth: +8.59%
+  3-Year: $14 | Growth: +28.05%
+  5-Year: $16 | Growth: +51.00%
+  10-Year: $24 | Growth: +128.01%
+  15-Year: $36 | Growth: +244.28%
+  20-Year: $55 | Growth: +419.86%
+
+Current Price-Based Projections (converges toward model's future fair value):
+  1-Year: $11 | Return: +129.27%
+  3-Year: $14 | Return: +170.35%
+  5-Year: $16 | Return: +218.80%
+  10-Year: $24 | Return: +381.38%
+  15-Year: $36 | Return: +626.88%
+  20-Year: $55 | Return: +997.58%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections show convergence toward model's future fair value
+- If undervalued: price converges upward then grows with model
+- If overvalued: price converges downward to model's future fair value

@@ -1,0 +1,45 @@
+TONCOIN INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-03 21:13:01
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000000 per day
+Annualized Growth Rate: 0.00% per year
+Optimal Intercept: 1.451247
+Maximum R²: -0.000000
+
+MODEL FORMULA
+--------------------
+price = 0.69 × e^(0.000000 × (day - 1) + 1.451247)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $1.86
+Model Fair Price: $2.93
+Undervaluation: -36.55%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $2.93 | Growth: +0.00%
+  3-Year: $2.93 | Growth: +0.00%
+  5-Year: $2.93 | Growth: +0.00%
+  10-Year: $2.93 | Growth: +0.00%
+  15-Year: $2.93 | Growth: +0.00%
+  20-Year: $2.93 | Growth: +0.00%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $2.93 | Return: +57.61%
+  3-Year: $2.93 | Return: +57.61%
+  5-Year: $2.93 | Return: +57.61%
+  10-Year: $2.93 | Return: +57.61%
+  15-Year: $2.93 | Return: +57.61%
+  20-Year: $2.93 | Return: +57.61%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

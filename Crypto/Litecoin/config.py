@@ -21,7 +21,7 @@ YAHOO_TICKER = "LTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2020-06-15"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2022-04-20"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -29,13 +29,13 @@ START_DATE = "2020-06-15"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "model_templates\exponential_adjust"
+DATA_FOLDER = "Crypto/Litecoin"
 
 # Example: "Ethereum Historical Data.csv"
 HISTORICAL_DATA_FILE = "Litecoin_historical_data.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "model_templates\exponential_adjust"
+OUTPUT_FOLDER = "Crypto/Litecoin"
 
 # ============================================
 # MODEL PARAMETERS

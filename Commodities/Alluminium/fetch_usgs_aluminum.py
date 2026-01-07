@@ -50,3 +50,4 @@ def fetch_usgs_data():
 if __name__ == "__main__":
     fetch_usgs_data()
 
+

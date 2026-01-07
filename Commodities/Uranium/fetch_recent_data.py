@@ -50,3 +50,4 @@ else:
     print("2. Check EIA reports for recent data")
     print("3. Use a different data source")
 
+

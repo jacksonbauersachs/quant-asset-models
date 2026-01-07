@@ -1,0 +1,45 @@
+PEPE INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-03 21:51:57
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000000 per day
+Annualized Growth Rate: 0.00% per year
+Optimal Intercept: 2.008245
+Maximum R²: -0.000000
+
+MODEL FORMULA
+--------------------
+price = 0.00 × e^(0.000000 × (day - 13) + 2.008245)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $0.000006
+Model Fair Price: $0.000007
+Undervaluation: -16.48%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $0.000007 | Growth: +0.00%
+  3-Year: $0.000007 | Growth: +0.00%
+  5-Year: $0.000007 | Growth: +0.00%
+  10-Year: $0.000007 | Growth: +0.00%
+  15-Year: $0.000007 | Growth: +0.00%
+  20-Year: $0.000007 | Growth: +0.00%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $0.000007 | Return: +19.74%
+  3-Year: $0.000007 | Return: +19.74%
+  5-Year: $0.000007 | Return: +19.74%
+  10-Year: $0.000007 | Return: +19.74%
+  15-Year: $0.000007 | Return: +19.74%
+  20-Year: $0.000007 | Return: +19.74%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

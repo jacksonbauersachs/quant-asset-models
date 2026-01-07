@@ -1,0 +1,48 @@
+RENDER OPTIMIZATION RESULTS (POWER LAW MODEL)
+==================================================
+
+Analysis Date: 2026-01-03 22:32:42
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Optimal Coefficient (a): 0.015878
+Exponent (b): 0.691696
+First Day Offset: 6.0
+Maximum R²: 0.512050
+Annual Growth Rate: +12.14%
+
+MODEL FORMULA
+--------------------
+price = 0.015878 × (day - 6.0 + 1)^0.691696
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $1.80
+Model Fair Price: $3.08
+Undervaluation: -41.42%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $3 | Growth: +12.14%
+  3-Year: $4 | Growth: +34.82%
+  5-Year: $5 | Growth: +55.92%
+  10-Year: $6 | Growth: +103.90%
+  15-Year: $8 | Growth: +147.26%
+  20-Year: $9 | Growth: +187.45%
+
+Current Price-Based Projections (converges toward model's future fair value):
+  1-Year: $3 | Return: +91.42%
+  3-Year: $4 | Return: +130.15%
+  5-Year: $5 | Return: +166.16%
+  10-Year: $6 | Return: +248.06%
+  15-Year: $8 | Return: +322.08%
+  20-Year: $9 | Return: +390.69%
+
+NOTES
+----------
+- Model-based projections start from the model's fair value
+- Current price-based projections show convergence toward model's future fair value
+- If undervalued: price converges upward then grows with model
+- If overvalued: price converges downward to model's future fair value
+- Power law exponent b=0.691696 is constrained to 0 < b < 1 for concave (flattening) shape
