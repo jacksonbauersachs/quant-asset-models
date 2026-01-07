@@ -168,7 +168,10 @@ def objective_function(intercept):
     return -r2
 
 def optimize_intercept_for_r2(df, growth_rate):
-    """Find the optimal intercept that maximizes R² for a given fixed growth rate."""
+    """Find the optimal intercept that maximizes R² for a given fixed growth rate.
+    The intercept is anchored at the first data point (base intercept = 0),
+    then a small vertical offset is optimized to minimize R² without changing
+    the fundamental position of the curve."""
     global df_filtered, fixed_growth_rate, first_price, first_days
     df_filtered = df
     fixed_growth_rate = growth_rate
@@ -178,38 +181,50 @@ def optimize_intercept_for_r2(df, growth_rate):
     print(f"Optimizing intercept for fixed growth rate: {growth_rate:.6f} per day")
     annualized_rate = growth_rate * 365.25 * 100
     print(f"Annualized growth rate: {annualized_rate:.2f}% per year")
-    print("Searching for optimal intercept...")
+    print("Anchoring curve at first data point, then optimizing small vertical offset...")
     
-    # Use wide bounds for intercept (in log space, so can be negative or positive)
-    wide_min = -10.0
-    wide_max = 10.0
+    def objective_function(vertical_offset):
+        """Objective function: minimize negative R² with small vertical offset.
+        The offset is in log space, so it's a multiplicative adjustment."""
+        # Base intercept = 0 makes model pass through first point exactly
+        base_intercept = 0.0
+        intercept = base_intercept + vertical_offset
+        
+        # Calculate model predictions
+        y_pred = rainbow_model(df_filtered['Days_Since_Genesis'], fixed_growth_rate, 
+                              first_price, first_days, intercept)
+        
+        # Calculate R²
+        r2 = calculate_r2(df_filtered['Price'], y_pred)
+        
+        return -r2
+    
+    # Use much smaller bounds for vertical offset (just fine-tuning)
+    # This keeps the curve anchored at the first point
+    offset_min = -2.0  # Small adjustment range
+    offset_max = 2.0
     
     try:
-        result = minimize_scalar(objective_function, bounds=(wide_min, wide_max), method='bounded')
-        optimal_intercept = result.x
-        optimal_r2 = -result.fun  # Convert back to positive R²
-        
-        # If we hit a boundary, try even wider
-        if abs(optimal_intercept - wide_min) < 0.1 or abs(optimal_intercept - wide_max) < 0.1:
-            print(f"Intercept hit boundary. Trying wider range...")
-            wider_min = -20.0
-            wider_max = 20.0
-            result = minimize_scalar(objective_function, bounds=(wider_min, wider_max), method='bounded')
-            optimal_intercept = result.x
-            optimal_r2 = -result.fun
+        result = minimize_scalar(objective_function, bounds=(offset_min, offset_max), method='bounded')
+        optimal_offset = result.x
+        optimal_intercept = 0.0 + optimal_offset  # Base intercept (0) + offset
+        optimal_r2 = -result.fun
         
         # Validate the result makes sense
-        test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], growth_rate, first_price, first_days, optimal_intercept)
+        test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], growth_rate, 
+                                 first_price, first_days, optimal_intercept)
         if not np.isfinite(test_pred) or test_pred > df['Price'].max() * 1000:
-            print(f"Warning: Optimal intercept produces unrealistic predictions. Using default intercept=0.")
+            print(f"Warning: Optimal intercept produces unrealistic predictions. Using intercept=0.")
             optimal_intercept = 0.0
-            optimal_r2 = -objective_function(optimal_intercept)
+            optimal_r2 = -objective_function(0.0)
+            optimal_offset = 0.0
     except Exception as e:
-        print(f"Warning: Optimization failed: {e}. Using default intercept=0.")
+        print(f"Warning: Optimization failed: {e}. Using intercept=0.")
         optimal_intercept = 0.0
-        optimal_r2 = -objective_function(optimal_intercept)
+        optimal_r2 = -objective_function(0.0)
+        optimal_offset = 0.0
     
-    print(f"Optimal intercept: {optimal_intercept:.6f}")
+    print(f"Optimal intercept: {optimal_intercept:.6f} (base: 0.0, offset: {optimal_offset:.6f})")
     print(f"Maximum R²: {optimal_r2:.6f}")
     
     return optimal_intercept, optimal_r2
