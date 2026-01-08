@@ -26,7 +26,7 @@ YAHOO_TICKER = "BTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-U
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
 GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
 
-START_DATE = "2011-04-10"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
+START_DATE = "2011-06-08"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
 # Or specify a date like "2017-05-18" to start analysis from that date
 
@@ -40,7 +40,7 @@ DATA_FOLDER = "Crypto/Bitcoin/data_update"
 HISTORICAL_DATA_FILE = "BTC_historical_data.csv"
 
 # Example: "Crypto/Chainlink"
-OUTPUT_FOLDER = "log_model"
+OUTPUT_FOLDER = "Crypto/Bitcoin/log_model"
 
 # ============================================
 # MODEL PARAMETERS (LOGARITHMIC MODEL)
@@ -50,17 +50,17 @@ OUTPUT_FOLDER = "log_model"
 # For logarithmic model: price = 10^(slope × ln(day) + intercept)
 # Slope typically ranges from 0.5 to 5.0 for cryptocurrencies
 # Set to None to let optimize_intercept.py find the optimal slope automatically
-FIXED_GROWTH_RATE = .567242  # This is used as FIXED_SLOPE for logarithmic models
+FIXED_GROWTH_RATE = 1.3005  # This is used as FIXED_SLOPE for logarithmic models
 # Example: 2.5 for a slope of 2.5
 
 # Power for the growth model (OPTIONAL - default: 1.0)
 # Controls acceleration pattern:
 #   power < 1: growth slows over time (like logarithmic)
-#   power = 1: linear growth
+#   power = 1: linear growth (base 10)
 #   power > 1: growth accelerates (starts slow, speeds up)
 #   power < 0: inverse/decay patterns
 # Set this after finding optimal value in interactive_rainbow_v2.py
-POWER = 0.295017 # Default: 1.0 (linear)
+POWER = 1.0  # Default: 1.0 (linear, base 10)
 
 # ============================================
 # DATA SOURCE

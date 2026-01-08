@@ -247,16 +247,6 @@ def objective_function_param(intercept):
     # Calculate model predictions with fixed slope, fixed power, and variable intercept
     y_pred = rainbow_model(df_filtered['Days_Since_Genesis'], fixed_slope, intercept, POWER)
     
-    # Validate predictions are reasonable before calculating R²
-    max_pred = np.max(y_pred)
-    max_actual = np.max(df_filtered['Price'])
-    min_pred = np.min(y_pred)
-    min_actual = np.min(df_filtered['Price'])
-    
-    # If predictions are way off, return a very bad score
-    if not np.all(np.isfinite(y_pred)) or max_pred > max_actual * 1000 or min_pred < min_actual * 0.001:
-        return 1e10  # Very bad score (we're minimizing, so return large positive)
-    
     # Calculate R²
     r2 = calculate_r2(df_filtered['Price'], y_pred)
     
@@ -295,16 +285,7 @@ def optimize_intercept_for_r2(df, slope):
     df_filtered = df
     fixed_slope = slope
     
-    # Validate slope is reasonable for the power and data range
-    max_days = df['Days_Since_Genesis'].max()
-    max_exponent = slope * (max_days**POWER)
-    
-    if abs(max_exponent) > 25:  # Before clipping at 30
-        print(f"WARNING: Slope {slope:.6f} with power {POWER:.6f} produces very large exponents (max: {max_exponent:.2f})")
-        print(f"  This may cause numerical issues. Consider using a smaller slope or different power.")
-        print(f"  Suggested: slope should be < {25 / (max_days**POWER):.6f} for power {POWER:.6f}")
-    
-    print(f"Optimizing intercept for fixed slope: {slope:.6f}, power: {POWER:.6f}")
+    print(f"Optimizing intercept for fixed slope: {slope:.6f}")
     print("Searching for optimal intercept...")
     
     # Use wide bounds for intercept (in log space, so can be negative or positive)
@@ -327,24 +308,13 @@ def optimize_intercept_for_r2(df, slope):
         
         # Validate the result makes sense
         test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept, POWER)
-        max_actual = df['Price'].max()
-        if not np.isfinite(test_pred) or test_pred > max_actual * 1000 or test_pred < max_actual * 0.001:
-            print(f"Warning: Optimal intercept produces unrealistic predictions (predicted: {test_pred:.2e}, actual max: {max_actual:.2f}).")
-            print(f"  This suggests the slope/power combination may be incorrect.")
-            print(f"  Recalculating intercept from first data point...")
+        if not np.isfinite(test_pred) or test_pred > df['Price'].max() * 1000:
+            print(f"Warning: Optimal intercept produces unrealistic predictions. Using default intercept.")
             # Calculate default intercept from first point
             first_price = df['Price'].iloc[0]
             first_days = df['Days_Since_Genesis'].iloc[0]
             optimal_intercept = np.log10(first_price) - slope * (first_days**POWER)
             optimal_r2 = -objective_function_param(optimal_intercept)
-            
-            # Validate again
-            test_pred2 = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept, POWER)
-            if not np.isfinite(test_pred2) or test_pred2 > max_actual * 1000:
-                print(f"ERROR: Even default intercept produces unrealistic predictions!")
-                print(f"  The slope ({slope:.6f}) and power ({POWER:.6f}) combination is incompatible with the data.")
-                print(f"  Please check your saved model parameters or config settings.")
-                raise ValueError(f"Slope {slope:.6f} and power {POWER:.6f} produce invalid predictions")
     except Exception as e:
         print(f"Warning: Optimization failed: {e}. Using default intercept.")
         # Calculate default intercept from first point
@@ -798,19 +768,9 @@ def calculate_projections(df, slope, intercept):
     
     current_price = df['Price'].iloc[-1]
     current_days = df['Days_Since_Genesis'].iloc[-1]
-    max_actual = df['Price'].max()
-    min_actual = df['Price'].min()
     
     # Calculate current fair value using parametric model
     current_fair_price = rainbow_model(current_days, slope, intercept, POWER)
-    
-    # Validate current fair price is reasonable
-    if not np.isfinite(current_fair_price) or current_fair_price > max_actual * 1000 or current_fair_price < min_actual * 0.001:
-        print(f"WARNING: Model produces unrealistic current fair price: {current_fair_price:.2e}")
-        print(f"  Actual price range: ${min_actual:.2f} to ${max_actual:.2f}")
-        print(f"  This suggests the model parameters (slope={slope:.6f}, intercept={intercept:.6f}, power={POWER:.6f}) are incorrect.")
-        # Use current price as fallback
-        current_fair_price = current_price
     
     # Calculate undervaluation
     undervaluation = ((current_price - current_fair_price) / current_fair_price) * 100
@@ -821,12 +781,6 @@ def calculate_projections(df, slope, intercept):
     for years in horizons:
         future_days = current_days + (years * 365.25)
         model_future_price = rainbow_model(future_days, slope, intercept, POWER)
-        
-        # Validate future price is reasonable
-        if not np.isfinite(model_future_price) or model_future_price > max_actual * 1e6:
-            print(f"WARNING: {years}-year projection is unrealistic: {model_future_price:.2e}")
-            # Cap at reasonable maximum
-            model_future_price = max_actual * 100
         
         # Both projections use the same dollar value (model_future_price)
         # Model-based projection: percentage relative to fair value
@@ -932,50 +886,8 @@ def calculate_projections_exponential(df, a, b, first_day_offset):
         'projections': projections
     }
 
-def calculate_annual_growth_rate(slope, power, current_days):
-    """Calculate annual growth percentage from parametric model parameters.
-    
-    For parametric model: price = 10^(slope * (days^power) + intercept)
-    The growth rate in log space is: d(log10(price))/d(days) = slope * power * (days^(power-1))
-    Annual growth percentage = (10^(slope * power * (days^(power-1)) * 365.25) - 1) * 100
-    """
-    import math
-    
-    if power == 1.0:
-        # Linear case: growth rate is constant
-        # d(log10(price))/d(days) = slope
-        # Annual growth = (10^(slope * 365.25) - 1) * 100
-        annual_growth_factor = 10**(slope * 365.25)
-        annual_growth_pct = (annual_growth_factor - 1) * 100
-    else:
-        # Non-linear case: growth rate depends on current day
-        # Calculate growth rate at current day
-        growth_rate_per_day = slope * power * (current_days**(power - 1))
-        # Annual growth = (10^(growth_rate_per_day * 365.25) - 1) * 100
-        annual_growth_factor = 10**(growth_rate_per_day * 365.25)
-        annual_growth_pct = (annual_growth_factor - 1) * 100
-    
-    return annual_growth_pct
-
-def save_optimization_results(slope, optimal_intercept, optimal_r2, projections, df=None):
+def save_optimization_results(slope, optimal_intercept, optimal_r2, projections):
     """Save optimization results to a text file (parametric model)."""
-    
-    # Calculate annual growth rate
-    # Get current days from dataframe if available, otherwise estimate
-    if df is not None and 'Days_Since_Genesis' in df.columns:
-        current_days = df['Days_Since_Genesis'].iloc[-1]
-    else:
-        # Estimate from current price and model
-        current_fair_price = projections['current_fair_price']
-        if POWER == 1.0:
-            # For power=1: log10(price) = slope * days + intercept
-            # days = (log10(price) - intercept) / slope
-            current_days = (np.log10(current_fair_price) - optimal_intercept) / slope
-        else:
-            # For other powers, use a reasonable estimate
-            current_days = 5500  # Rough estimate for Bitcoin
-    
-    annual_growth_pct = calculate_annual_growth_rate(slope, POWER, current_days)
     
     # Save - ONLY use script directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -991,8 +903,7 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections,
         f.write(f"Fixed Slope: {slope:.6f}\n")
         f.write(f"Optimal Intercept: {optimal_intercept:.6f}\n")
         f.write(f"Power: {POWER:.6f}\n")
-        f.write(f"Maximum R²: {optimal_r2:.6f}\n")
-        f.write(f"Annual Growth Rate: {annual_growth_pct:+.2f}%\n\n")
+        f.write(f"Maximum R²: {optimal_r2:.6f}\n\n")
         
         f.write("MODEL FORMULA\n")
         f.write("-" * 20 + "\n")
@@ -1203,33 +1114,6 @@ def main():
     model_type_to_use = MODEL_TYPE if MODEL_TYPE and MODEL_TYPE.strip() else None
     use_saved_model = False
     
-    # ALWAYS prioritize saved model parameters - they were optimized together
-    if saved_model and saved_model.get('model_type') == 'parametric':
-        saved_slope = saved_model.get('slope')
-        saved_power = saved_model.get('power')
-        
-        if saved_slope is not None:
-            # Always use saved slope (override config if different)
-            if FIXED_SLOPE is None or (FIXED_SLOPE is not None and abs(FIXED_SLOPE - saved_slope) > 0.0001):
-                if FIXED_SLOPE is not None:
-                    print(f"\nUsing saved slope: {saved_slope:.6f} (overriding config slope: {FIXED_SLOPE:.6f})")
-                else:
-                    print(f"\nUsing saved slope: {saved_slope:.6f}")
-                FIXED_SLOPE = saved_slope
-        
-        if saved_power is not None:
-            # Always use saved power (override config if different)
-            if POWER is None or abs(POWER - saved_power) > 0.0001:
-                if POWER is not None:
-                    print(f"Using saved power: {saved_power:.6f} (overriding config power: {POWER:.6f})")
-                else:
-                    print(f"Using saved power: {saved_power:.6f}")
-                POWER = saved_power
-            else:
-                print(f"Using saved power: {POWER:.6f}")
-        
-        print(f"  Note: Using saved model parameters (slope={FIXED_SLOPE:.6f}, power={POWER:.6f}) from interactive_point_selector.py")
-    
     # Determine if config explicitly sets model type or parameters
     config_explicitly_sets_model = False
     
@@ -1241,7 +1125,6 @@ def main():
         elif model_type_to_use == 'exponential' and EXPONENTIAL_B is not None:
             config_explicitly_sets_model = True
         elif model_type_to_use == 'parametric' and FIXED_SLOPE is not None:
-            # For parametric, we already handled power above, so just check slope
             config_explicitly_sets_model = True
     
     # If config doesn't explicitly set model, check for saved model
@@ -1274,15 +1157,15 @@ def main():
                 if EXPONENTIAL_FIRST_DAY_OFFSET is None:
                     EXPONENTIAL_FIRST_DAY_OFFSET = saved_model.get('exponential_first_day_offset')
                 print(f"  Using saved exponential parameters: b={EXPONENTIAL_B}, a={EXPONENTIAL_A}, offset={EXPONENTIAL_FIRST_DAY_OFFSET}")
-            elif saved_type == 'parametric':
-                # Already handled power above, just handle slope if not set
-                if FIXED_SLOPE is None and 'slope' in saved_model:
+            elif saved_type == 'parametric' and 'slope' in saved_model:
+                if FIXED_SLOPE is None:
                     FIXED_SLOPE = saved_model.get('slope')
+                saved_power = saved_model.get('power')
+                if saved_power is not None:
+                    POWER = saved_power
                 print(f"  Using saved parametric parameters: slope={FIXED_SLOPE}, power={POWER}")
     elif config_explicitly_sets_model:
-        print(f"\nUsing model type and parameters from config.py")
-        if model_type_to_use == 'parametric':
-            print(f"  (Note: Power was set to {POWER:.6f} from saved model to match slope)")
+        print(f"\nUsing model type and parameters from config.py (overrides saved model)")
     
     # If still no model type determined, default to parametric
     if not model_type_to_use:
@@ -1401,11 +1284,11 @@ def main():
         print(f"\nResults saved to: {results_file}")
     
     else:  # parametric model
-        print(f"Using Power: {POWER:.6f}")
+        print(f"Using Power: {POWER:.2f} (from config.py)")
         
-        # Use saved slope if available, otherwise use config, otherwise optimize
+        # Use fixed slope from config if provided, otherwise optimize
         if FIXED_SLOPE is not None:
-            print(f"Using slope: {FIXED_SLOPE:.6f}")
+            print(f"\nUsing fixed slope from config: {FIXED_SLOPE:.6f}")
             fixed_slope = FIXED_SLOPE
         else:
             print("\nOptimizing slope to maximize R²...")
@@ -1427,7 +1310,7 @@ def main():
         
         # Save results
         print("\nSaving optimization results...")
-        results_file = save_optimization_results(fixed_slope, optimal_intercept, optimal_r2, projections, df=df)
+        results_file = save_optimization_results(fixed_slope, optimal_intercept, optimal_r2, projections)
         
         # Print summary
         print("\n" + "=" * 60)

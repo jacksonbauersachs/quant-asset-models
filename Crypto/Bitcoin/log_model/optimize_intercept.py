@@ -120,13 +120,14 @@ def load_data():
     
     return df_filtered
 
-def rainbow_model(x, slope, intercept, power=1.0):
-    """Growth model: price = 10^(slope * (days^power) + intercept)"""
-    # Ensure x is at least 1 to avoid issues
+def rainbow_model(x, slope, intercept):
+    """Logarithmic growth model: price = 10^(slope * ln(days_since_genesis) + intercept)"""
+    # Ensure x is at least 1 to avoid log(0) errors
     x = np.maximum(x, 1)
-    # Calculate exponent and prevent overflow
-    exponent = slope * (x**power) + intercept
-    exponent = np.clip(exponent, -30, 30)  # Prevent overflow
+    # Calculate exponent: slope * ln(x) + intercept
+    exponent = slope * np.log(x) + intercept
+    # Prevent overflow by clipping exponent
+    exponent = np.clip(exponent, -30, 30)
     result = 10**exponent
     result = np.where(np.isfinite(result), result, np.nan)
     return result
@@ -137,10 +138,14 @@ def calculate_r2(y_actual, y_pred):
     valid_mask = (y_actual > 0) & (y_pred > 0) & np.isfinite(y_actual) & np.isfinite(y_pred)
     
     if not np.any(valid_mask):
-        return 0.0  # No valid data
+        return -999.0  # No valid data - return very bad score
     
     y_actual_valid = y_actual[valid_mask]
     y_pred_valid = y_pred[valid_mask]
+    
+    # Check if we have enough valid points
+    if len(y_actual_valid) < 2:
+        return -999.0
     
     # Calculate R² in log space (standard for logarithmic models)
     log_actual = np.log10(y_actual_valid)
@@ -152,14 +157,21 @@ def calculate_r2(y_actual, y_pred):
     if ss_tot == 0:
         return 0.0
     
-    return 1 - (ss_res / ss_tot)
+    r2 = 1 - (ss_res / ss_tot)
+    
+    # Ensure R² is finite
+    if not np.isfinite(r2):
+        return -999.0
+    
+    return r2
 
 def objective_function(intercept):
     """Objective function to minimize (negative R² to maximize R²)."""
     global df_filtered, fixed_slope
     
-    # Calculate model predictions with fixed slope, fixed power, and variable intercept
-    y_pred = rainbow_model(df_filtered['Days_Since_Genesis'], fixed_slope, intercept, POWER)
+    # Calculate model predictions with fixed slope and variable intercept
+    # Model: price = 10^(slope * ln(days) + intercept)
+    y_pred = rainbow_model(df_filtered['Days_Since_Genesis'], fixed_slope, intercept)
     
     # Calculate R²
     r2 = calculate_r2(df_filtered['Price'], y_pred)
@@ -168,48 +180,84 @@ def objective_function(intercept):
     return -r2
 
 def optimize_intercept_for_r2(df, slope):
-    """Find the optimal intercept that maximizes R² for a given fixed slope."""
+    """Find the optimal intercept that maximizes R² for a given fixed slope.
+    Uses logarithmic model: price = 10^(slope * ln(days) + intercept)
+    Intercept is calculated to anchor the model at the first data point."""
     global df_filtered, fixed_slope
     df_filtered = df
     fixed_slope = slope
     
     print(f"Optimizing intercept for fixed slope: {slope:.6f}")
-    print("Searching for optimal intercept...")
+    print("Model: price = 10^(slope * ln(days) + intercept)")
     
-    # Use wide bounds for intercept (in log space, so can be negative or positive)
-    wide_min = -20.0
-    wide_max = 20.0
+    # Calculate initial intercept guess from first data point
+    # first_price = 10^(slope * ln(first_days) + intercept)
+    # log10(first_price) = slope * ln(first_days) + intercept
+    # intercept = log10(first_price) - slope * ln(first_days)
+    first_price = df['Price'].iloc[0]
+    first_days = df['Days_Since_Genesis'].iloc[0]
+    initial_intercept = np.log10(first_price) - slope * np.log(first_days)
+    print(f"Initial intercept guess (from first point): {initial_intercept:.6f}")
+    
+    # Use bounds centered around initial guess, but allow some flexibility
+    # In log space, intercept can vary significantly, so use wide but reasonable bounds
+    wide_min = initial_intercept - 10.0
+    wide_max = initial_intercept + 10.0
+    
+    print("Searching for optimal intercept...")
     
     try:
         result = minimize_scalar(objective_function, bounds=(wide_min, wide_max), method='bounded')
         optimal_intercept = result.x
         optimal_r2 = -result.fun  # Convert back to positive R²
         
-        # If we hit a boundary, try even wider
-        if abs(optimal_intercept - wide_min) < 0.1 or abs(optimal_intercept - wide_max) < 0.1:
-            print(f"Intercept hit boundary. Trying wider range...")
-            wider_min = -50.0
-            wider_max = 50.0
+        # If R² is negative or we hit a boundary, try wider range
+        if optimal_r2 < 0 or abs(optimal_intercept - wide_min) < 0.1 or abs(optimal_intercept - wide_max) < 0.1:
+            if optimal_r2 < 0:
+                print(f"Warning: Optimization found negative R² ({optimal_r2:.6f}). Trying wider range...")
+            else:
+                print(f"Intercept hit boundary. Trying wider range...")
+            wider_min = initial_intercept - 20.0
+            wider_max = initial_intercept + 20.0
             result = minimize_scalar(objective_function, bounds=(wider_min, wider_max), method='bounded')
             optimal_intercept = result.x
             optimal_r2 = -result.fun
         
         # Validate the result makes sense
-        test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept, POWER)
-        if not np.isfinite(test_pred) or test_pred > df['Price'].max() * 1000:
-            print(f"Warning: Optimal intercept produces unrealistic predictions. Using default intercept.")
-            # Calculate default intercept from first point
-            first_price = df['Price'].iloc[0]
-            first_days = df['Days_Since_Genesis'].iloc[0]
-            optimal_intercept = np.log10(first_price) - slope * (first_days**POWER)
+        test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept)
+        max_actual = df['Price'].max()
+        min_actual = df['Price'].min()
+        
+        if optimal_r2 < 0:
+            print(f"\nWARNING: Optimization found negative R² ({optimal_r2:.6f})!")
+            print(f"  Trying intercept calculated from first data point instead...")
+            
+            # Calculate default intercept from first point (anchored)
+            optimal_intercept = initial_intercept
             optimal_r2 = -objective_function(optimal_intercept)
+            
+            print(f"  Using intercept from first point: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}")
+            
+            # Recalculate test prediction with new intercept
+            test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept)
+        
+        # Check if predictions are unrealistic
+        if not np.isfinite(test_pred) or test_pred > max_actual * 1000 or test_pred < min_actual * 0.001:
+            print(f"\nWARNING: Optimal intercept produces unrealistic predictions.")
+            print(f"  Predicted: {test_pred:.2e}, Actual range: ${min_actual:.2f} to ${max_actual:.2f}")
+            print(f"  Using intercept from first point instead...")
+            optimal_intercept = initial_intercept
+            optimal_r2 = -objective_function(optimal_intercept)
+            test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept)
     except Exception as e:
-        print(f"Warning: Optimization failed: {e}. Using default intercept.")
-        # Calculate default intercept from first point
-        first_price = df['Price'].iloc[0]
-        first_days = df['Days_Since_Genesis'].iloc[0]
-        optimal_intercept = np.log10(first_price) - slope * np.log(first_days)
+        print(f"Warning: Optimization failed: {e}")
+        print(f"  Using intercept from first data point (anchored)...")
+        
+        # Use intercept from first point (anchored model)
+        optimal_intercept = initial_intercept
         optimal_r2 = -objective_function(optimal_intercept)
+        
+        print(f"  Using intercept from first point: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}")
     
     print(f"Optimal intercept: {optimal_intercept:.6f}")
     print(f"Maximum R²: {optimal_r2:.6f}")
@@ -221,7 +269,7 @@ def create_optimization_chart(df, slope, optimal_intercept, optimal_r2):
     
     # Calculate model predictions with optimal parameters
     df['Model_Price'] = df['Days_Since_Genesis'].apply(
-        lambda x: rainbow_model(x, slope, optimal_intercept, POWER)
+        lambda x: rainbow_model(x, slope, optimal_intercept)
     )
     
     # Cap unrealistic predictions to prevent display issues
@@ -253,7 +301,7 @@ def create_optimization_chart(df, slope, optimal_intercept, optimal_r2):
     for ax, ylabel_suffix in [(ax1, 'Log Scale'), (ax2, 'Normal Scale')]:
         ax.set_xlabel('Date', fontsize=12)
         ax.set_ylabel(f'{CURRENCY_NAME} Price (USD) - {ylabel_suffix}', fontsize=12)
-        ax.set_title(f'{CURRENCY_NAME} Optimized Model - {ylabel_suffix}\nPower: {POWER:.2f}, Slope: {slope:.6f}, Intercept: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}', 
+        ax.set_title(f'{CURRENCY_NAME} Optimized Model - {ylabel_suffix}\nSlope: {slope:.6f}, Intercept: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}', 
                     fontsize=14, fontweight='bold')
         ax.grid(True, alpha=0.3, which='both')
         
@@ -333,7 +381,7 @@ def calculate_projections(df, slope, intercept):
     current_days = df['Days_Since_Genesis'].iloc[-1]
     
     # Calculate current fair value using logarithmic model
-    current_fair_price = rainbow_model(current_days, slope, intercept, POWER)
+    current_fair_price = rainbow_model(current_days, slope, intercept)
     
     # Calculate undervaluation
     undervaluation = ((current_price - current_fair_price) / current_fair_price) * 100
@@ -343,7 +391,7 @@ def calculate_projections(df, slope, intercept):
     
     for years in horizons:
         future_days = current_days + (years * 365.25)
-        model_future_price = rainbow_model(future_days, slope, intercept, POWER)
+        model_future_price = rainbow_model(future_days, slope, intercept)
         
         # Both projections use the same dollar value (model_future_price)
         # Model-based projection: percentage relative to fair value
@@ -383,11 +431,12 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections)
         f.write("-" * 30 + "\n")
         f.write(f"Fixed Slope: {slope:.6f}\n")
         f.write(f"Optimal Intercept: {optimal_intercept:.6f}\n")
-        f.write(f"Maximum R²: {optimal_r2:.6f}\n\n")
+        f.write(f"Maximum R²: {optimal_r2:.6f}\n")
+        f.write(f"Model Type: Logarithmic (ln)\n\n")
         
         f.write("MODEL FORMULA\n")
         f.write("-" * 20 + "\n")
-        f.write(f"price = 10^({slope:.6f} × (day^{POWER:.2f}) + {optimal_intercept:.6f})\n")
+        f.write(f"price = 10^({slope:.6f} × ln(day) + {optimal_intercept:.6f})\n")
         f.write("\n")
         
         f.write("CURRENT ANALYSIS\n")
@@ -425,15 +474,15 @@ def optimize_slope_for_r2(df):
     
     def r2_for_slope(slope):
         """Calculate R² for a given slope (optimizing intercept via linear regression)."""
-        # Use linear regression in log space: log10(price) = slope * (days^power) + intercept
+        # Use linear regression in log space: log10(price) = slope * ln(days) + intercept
         log_prices = np.log10(prices)
-        days_powered = days**POWER
+        log_days = np.log(days)
         
         # Calculate intercept that minimizes error for this slope
-        # intercept = mean(log_prices) - slope * mean(days_powered)
-        intercept = np.mean(log_prices) - slope * np.mean(days_powered)
+        # intercept = mean(log_prices) - slope * mean(log_days)
+        intercept = np.mean(log_prices) - slope * np.mean(log_days)
         
-        y_pred = rainbow_model(days, slope, intercept, POWER)
+        y_pred = rainbow_model(days, slope, intercept)
         
         # Check if predictions are reasonable
         max_pred = np.max(y_pred)
@@ -474,8 +523,8 @@ def optimize_slope_for_r2(df):
 def main():
     """Main function to optimize intercept."""
     
-    print(f"{CURRENCY_NAME} Intercept Optimization (Growth Model)")
-    print(f"Using Power: {POWER:.2f} (from config.py)")
+    print(f"{CURRENCY_NAME} Intercept Optimization (Logarithmic Model)")
+    print("Model: price = 10^(slope × ln(days) + intercept)")
     print("=" * 40)
     
     # Load data
