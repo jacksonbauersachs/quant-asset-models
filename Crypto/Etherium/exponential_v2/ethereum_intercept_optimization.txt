@@ -1,18 +1,18 @@
 ETHEREUM INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-07 16:34:55
+Analysis Date: 2026-01-07 21:03:16
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000389 per day
 Annualized Growth Rate: 14.21% per year
-Optimal Intercept: 0.851489
+Optimal Intercept: 0.851490
 Maximum R²: 0.041209
 
 MODEL FORMULA
 --------------------
-price = 729.12 × e^(0.000389 × (day - 1758) + 0.851489)
+price = 729.12 × e^(0.000389 × (day - 1758) + 0.851490)
 
 CURRENT ANALYSIS
 --------------------

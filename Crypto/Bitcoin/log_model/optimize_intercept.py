@@ -182,84 +182,82 @@ def objective_function(intercept):
 def optimize_intercept_for_r2(df, slope):
     """Find the optimal intercept that maximizes R² for a given fixed slope.
     Uses logarithmic model: price = 10^(slope * ln(days) + intercept)
-    Intercept is calculated to anchor the model at the first data point."""
+    The intercept is anchored at the first data point (base intercept calculated from first point),
+    then a small vertical offset is optimized to minimize R² without changing
+    the fundamental position of the curve."""
     global df_filtered, fixed_slope
     df_filtered = df
     fixed_slope = slope
     
     print(f"Optimizing intercept for fixed slope: {slope:.6f}")
     print("Model: price = 10^(slope * ln(days) + intercept)")
+    print("Anchoring curve at first data point, then optimizing small vertical offset...")
     
-    # Calculate initial intercept guess from first data point
+    # Calculate base intercept to make model pass through first point exactly
     # first_price = 10^(slope * ln(first_days) + intercept)
     # log10(first_price) = slope * ln(first_days) + intercept
     # intercept = log10(first_price) - slope * ln(first_days)
     first_price = df['Price'].iloc[0]
     first_days = df['Days_Since_Genesis'].iloc[0]
-    initial_intercept = np.log10(first_price) - slope * np.log(first_days)
-    print(f"Initial intercept guess (from first point): {initial_intercept:.6f}")
+    base_intercept = np.log10(first_price) - slope * np.log(first_days)
+    print(f"Base intercept (anchored at first point): {base_intercept:.6f}")
     
-    # Use bounds centered around initial guess, but allow some flexibility
-    # In log space, intercept can vary significantly, so use wide but reasonable bounds
-    wide_min = initial_intercept - 10.0
-    wide_max = initial_intercept + 10.0
+    def objective_function_offset(vertical_offset):
+        """Objective function: minimize negative R² with small vertical offset.
+        The offset is in log space, so it's a multiplicative adjustment."""
+        # Base intercept makes model pass through first point exactly
+        intercept = base_intercept + vertical_offset
+        
+        # Calculate model predictions
+        y_pred = rainbow_model(df_filtered['Days_Since_Genesis'], fixed_slope, intercept)
+        
+        # Calculate R²
+        r2 = calculate_r2(df_filtered['Price'], y_pred)
+        
+        return -r2
     
-    print("Searching for optimal intercept...")
+    # Use much smaller bounds for vertical offset (just fine-tuning)
+    # This keeps the curve anchored at the first point
+    offset_min = -2.0  # Small adjustment range
+    offset_max = 2.0
+    
+    print("Searching for optimal vertical offset...")
     
     try:
-        result = minimize_scalar(objective_function, bounds=(wide_min, wide_max), method='bounded')
-        optimal_intercept = result.x
-        optimal_r2 = -result.fun  # Convert back to positive R²
-        
-        # If R² is negative or we hit a boundary, try wider range
-        if optimal_r2 < 0 or abs(optimal_intercept - wide_min) < 0.1 or abs(optimal_intercept - wide_max) < 0.1:
-            if optimal_r2 < 0:
-                print(f"Warning: Optimization found negative R² ({optimal_r2:.6f}). Trying wider range...")
-            else:
-                print(f"Intercept hit boundary. Trying wider range...")
-            wider_min = initial_intercept - 20.0
-            wider_max = initial_intercept + 20.0
-            result = minimize_scalar(objective_function, bounds=(wider_min, wider_max), method='bounded')
-            optimal_intercept = result.x
-            optimal_r2 = -result.fun
+        result = minimize_scalar(objective_function_offset, bounds=(offset_min, offset_max), method='bounded')
+        optimal_offset = result.x
+        optimal_intercept = base_intercept + optimal_offset  # Base intercept + offset
+        optimal_r2 = -result.fun
         
         # Validate the result makes sense
         test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept)
         max_actual = df['Price'].max()
         min_actual = df['Price'].min()
         
-        if optimal_r2 < 0:
-            print(f"\nWARNING: Optimization found negative R² ({optimal_r2:.6f})!")
-            print(f"  Trying intercept calculated from first data point instead...")
-            
-            # Calculate default intercept from first point (anchored)
-            optimal_intercept = initial_intercept
-            optimal_r2 = -objective_function(optimal_intercept)
-            
-            print(f"  Using intercept from first point: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}")
-            
-            # Recalculate test prediction with new intercept
+        # Check if R² is negative or predictions are unrealistic
+        if optimal_r2 < 0 or not np.isfinite(test_pred) or test_pred > max_actual * 1000 or test_pred < min_actual * 0.001:
+            print(f"\nWARNING: Optimal offset produces negative R² or unrealistic predictions.")
+            print(f"  Using base intercept (anchored at first point) without offset...")
+            optimal_intercept = base_intercept
+            optimal_offset = 0.0
+            optimal_r2 = -objective_function_offset(0.0)
             test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept)
-        
-        # Check if predictions are unrealistic
-        if not np.isfinite(test_pred) or test_pred > max_actual * 1000 or test_pred < min_actual * 0.001:
-            print(f"\nWARNING: Optimal intercept produces unrealistic predictions.")
-            print(f"  Predicted: {test_pred:.2e}, Actual range: ${min_actual:.2f} to ${max_actual:.2f}")
-            print(f"  Using intercept from first point instead...")
-            optimal_intercept = initial_intercept
-            optimal_r2 = -objective_function(optimal_intercept)
-            test_pred = rainbow_model(df['Days_Since_Genesis'].iloc[-1], slope, optimal_intercept)
+            
+            if optimal_r2 < 0 or not np.isfinite(test_pred) or test_pred > max_actual * 1000:
+                print(f"  WARNING: Even base intercept produces issues!")
+                print(f"  R²: {optimal_r2:.6f}, Predicted: {test_pred:.2e}")
     except Exception as e:
         print(f"Warning: Optimization failed: {e}")
-        print(f"  Using intercept from first data point (anchored)...")
+        print(f"  Using base intercept (anchored at first point) without offset...")
         
-        # Use intercept from first point (anchored model)
-        optimal_intercept = initial_intercept
-        optimal_r2 = -objective_function(optimal_intercept)
+        # Use base intercept from first point (anchored model)
+        optimal_intercept = base_intercept
+        optimal_offset = 0.0
+        optimal_r2 = -objective_function_offset(0.0)
         
-        print(f"  Using intercept from first point: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}")
+        print(f"  Using base intercept: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}")
     
-    print(f"Optimal intercept: {optimal_intercept:.6f}")
+    print(f"Optimal intercept: {optimal_intercept:.6f} (base: {base_intercept:.6f}, offset: {optimal_offset:.6f})")
     print(f"Maximum R²: {optimal_r2:.6f}")
     
     return optimal_intercept, optimal_r2
