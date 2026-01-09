@@ -1,0 +1,45 @@
+CHAINLINK INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-07 21:14:35
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000194 per day
+Annualized Growth Rate: 7.09% per year
+Optimal Intercept: 1.121569
+Maximum R²: -0.092491
+
+MODEL FORMULA
+--------------------
+price = 3.93 × e^(0.000194 × (day - 949) + 1.121569)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $13.52
+Model Fair Price: $17.91
+Undervaluation: -24.55%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $19.23 | Growth: +7.34%
+  3-Year: $22.16 | Growth: +23.69%
+  5-Year: $25.53 | Growth: +42.52%
+  10-Year: $36.39 | Growth: +103.11%
+  15-Year: $51.86 | Growth: +189.47%
+  20-Year: $73.90 | Growth: +312.54%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $19.23 | Return: +42.28%
+  3-Year: $22.16 | Return: +63.94%
+  5-Year: $25.53 | Return: +88.90%
+  10-Year: $36.39 | Return: +169.21%
+  15-Year: $51.86 | Return: +283.67%
+  20-Year: $73.90 | Return: +446.80%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points
