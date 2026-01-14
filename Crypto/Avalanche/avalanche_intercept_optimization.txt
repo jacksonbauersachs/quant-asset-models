@@ -1,0 +1,45 @@
+AVALANCHE INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-09 20:47:29
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000000 per day
+Annualized Growth Rate: 0.00% per year
+Optimal Intercept: 1.799387
+Maximum R²: -0.000000
+
+MODEL FORMULA
+--------------------
+price = 4.90 × e^(0.000000 × (day - 1) + 1.799387)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $13.76
+Model Fair Price: $29.60
+Undervaluation: -53.53%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $29.60 | Growth: +0.00%
+  3-Year: $29.60 | Growth: +0.00%
+  5-Year: $29.60 | Growth: +0.00%
+  10-Year: $29.60 | Growth: +0.00%
+  15-Year: $29.60 | Growth: +0.00%
+  20-Year: $29.60 | Growth: +0.00%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $29.60 | Return: +115.21%
+  3-Year: $29.60 | Return: +115.21%
+  5-Year: $29.60 | Return: +115.21%
+  10-Year: $29.60 | Return: +115.21%
+  15-Year: $29.60 | Return: +115.21%
+  20-Year: $29.60 | Return: +115.21%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points
