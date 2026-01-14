@@ -151,13 +151,23 @@ def extract_data_from_output(output_file):
         print(f"  Error extracting data: {e}")
         return None, None
 
-def run_script(script_path, working_dir):
+def run_script(script_path, working_dir, script_dir=None):
     """Run a Python script in a specific directory.
-    Handles Unicode encoding issues on Windows."""
+    Handles Unicode encoding issues on Windows.
+    script_dir: Directory containing the script (for PYTHONPATH if needed)."""
     try:
         # Set environment to use UTF-8 encoding to avoid Windows cp1252 issues
         env = os.environ.copy()
         env['PYTHONIOENCODING'] = 'utf-8'
+        
+        # Add script directory to PYTHONPATH so it can import config.py
+        # Python automatically adds script directory to sys.path[0], but this ensures it works
+        if script_dir:
+            pythonpath = env.get('PYTHONPATH', '')
+            if pythonpath:
+                env['PYTHONPATH'] = f"{script_dir}{os.pathsep}{pythonpath}"
+            else:
+                env['PYTHONPATH'] = script_dir
         
         result = subprocess.run(
             [sys.executable, script_path],
@@ -217,7 +227,9 @@ def process_currency(currency_name):
     # Run update_prices.py
     print(f"  [1/2] Running update_prices.py...")
     script_dir = os.path.dirname(update_script)
-    success, stdout, stderr = run_script(update_script, script_dir)
+    # Run from project root so OUTPUT_FOLDER paths resolve correctly
+    project_root = os.path.dirname(os.path.dirname(CRYPTO_DIR))  # Go up from Crypto/ to project root
+    success, stdout, stderr = run_script(update_script, project_root, script_dir)
     if not success:
         # Clean up stderr to remove encoding issues
         stderr_clean = stderr.encode('ascii', 'replace').decode('ascii') if stderr else ""
@@ -229,7 +241,9 @@ def process_currency(currency_name):
     # Run optimize_intercept.py
     print(f"  [2/2] Running optimize_intercept.py...")
     script_dir = os.path.dirname(optimize_script)
-    success, stdout, stderr = run_script(optimize_script, script_dir)
+    # Run from project root so OUTPUT_FOLDER paths resolve correctly
+    project_root = os.path.dirname(os.path.dirname(CRYPTO_DIR))  # Go up from Crypto/ to project root
+    success, stdout, stderr = run_script(optimize_script, project_root, script_dir)
     if not success:
         # Clean up stderr to remove encoding issues
         stderr_clean = stderr.encode('ascii', 'replace').decode('ascii') if stderr else ""
