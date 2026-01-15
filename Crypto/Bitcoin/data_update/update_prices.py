@@ -12,6 +12,7 @@ import pandas as pd
 import os
 from datetime import datetime, timedelta
 import sys
+from pathlib import Path
 
 # Import configuration
 try:
@@ -147,11 +148,30 @@ def update_prices():
     Update price data from the last available date to today.
     If the file doesn't exist, fetches all available historical data.
     """
-    # Build file path
-    data_file = os.path.join(DATA_FOLDER, HISTORICAL_DATA_FILE)
+    # Resolve DATA_FOLDER relative to script location, not cwd
+    script_dir = Path(__file__).parent
+    
+    # If DATA_FOLDER is absolute, use it as-is
+    if os.path.isabs(DATA_FOLDER):
+        data_folder_path = Path(DATA_FOLDER)
+    else:
+        # DATA_FOLDER is like "Crypto/Shib" - need to find project root
+        # Go up from script until we find a parent that contains "Crypto"
+        current = script_dir
+        while current.parent != current:
+            if (current / "Crypto").exists() or current.name == "Crypto":
+                # Found project root or Crypto folder
+                data_folder_path = current / DATA_FOLDER
+                break
+            current = current.parent
+        else:
+            # Fallback: assume DATA_FOLDER is relative to script
+            data_folder_path = script_dir / DATA_FOLDER
+    
+    data_file = data_folder_path / HISTORICAL_DATA_FILE
     
     # Ensure data folder exists
-    os.makedirs(DATA_FOLDER, exist_ok=True)
+    os.makedirs(data_folder_path, exist_ok=True)
     
     # Check if the file exists
     if not os.path.exists(data_file):
@@ -175,7 +195,7 @@ def update_prices():
         df['Date'] = df['Date'].dt.strftime('%m/%d/%Y')
         
         # Save the data
-        df.to_csv(data_file, index=False)
+        df.to_csv(str(data_file), index=False)
         
         # Get price range (need to convert back to numeric since Date is now string)
         df_temp = df.copy()
@@ -269,7 +289,7 @@ def update_prices():
     combined_df['Date'] = combined_df['Date'].dt.strftime('%m/%d/%Y')
     
     # Save updated data
-    combined_df.to_csv(data_file, index=False)
+    combined_df.to_csv(str(data_file), index=False)
     
     print(f"\nSuccessfully updated {CURRENCY_NAME} data!")
     print(f"Total records: {len(combined_df)}")

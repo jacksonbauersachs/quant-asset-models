@@ -147,11 +147,23 @@ def update_prices():
     Update price data from the last available date to today.
     If the file doesn't exist, fetches all available historical data.
     """
-    # Build file path
-    data_file = os.path.join(DATA_FOLDER, HISTORICAL_DATA_FILE)
+    # Build file path - DATA_FOLDER is relative to project root
+    # Script is in currency folder (e.g., Crypto/Render/update_prices.py)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Go up to project root: currency folder -> Crypto -> project root
+    project_root = os.path.dirname(os.path.dirname(script_dir))
+    
+    # DATA_FOLDER is like "Crypto/Render" - it's relative to project root
+    # Just join it with project root directly
+    data_folder_full = os.path.join(project_root, DATA_FOLDER)
+    data_file = os.path.join(data_folder_full, HISTORICAL_DATA_FILE)
+    
+    # Normalize paths
+    data_file = os.path.normpath(data_file)
+    data_folder_full = os.path.normpath(data_folder_full)
     
     # Ensure data folder exists
-    os.makedirs(DATA_FOLDER, exist_ok=True)
+    os.makedirs(data_folder_full, exist_ok=True)
     
     # Check if the file exists
     if not os.path.exists(data_file):
@@ -268,8 +280,9 @@ def update_prices():
     # Convert Date back to M/D/YYYY string format for consistency with original format
     combined_df['Date'] = combined_df['Date'].dt.strftime('%m/%d/%Y')
     
-    # Save updated data
+    # Save updated data - use the resolved path
     combined_df.to_csv(data_file, index=False)
+    print(f"Saved updated data to: {data_file}")
     
     print(f"\nSuccessfully updated {CURRENCY_NAME} data!")
     print(f"Total records: {len(combined_df)}")

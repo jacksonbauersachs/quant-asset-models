@@ -12,6 +12,7 @@ import pandas as pd
 import os
 from datetime import datetime, timedelta
 import sys
+from pathlib import Path
 
 # Import configuration
 try:
@@ -147,11 +148,39 @@ def update_prices():
     Update price data from the last available date to today.
     If the file doesn't exist, fetches all available historical data.
     """
-    # Build file path
-    data_file = os.path.join(DATA_FOLDER, HISTORICAL_DATA_FILE)
+    # Resolve DATA_FOLDER relative to script location, not cwd
+    script_dir = Path(__file__).parent.resolve()
+    
+    # If DATA_FOLDER is absolute, use it as-is
+    if os.path.isabs(DATA_FOLDER):
+        data_folder_path = Path(DATA_FOLDER)
+    else:
+        # DATA_FOLDER is like "Crypto/Doge" - need to find project root
+        # Project root is the directory that CONTAINS the "Crypto" folder
+        # Script is in Crypto/Doge/update_prices.py, so we need to go up 2 levels
+        current = script_dir
+        project_root = None
+        
+        # Walk up until we find a directory that contains "Crypto" folder
+        while current.parent != current:
+            # Check if current directory contains "Crypto" folder
+            crypto_path = current / "Crypto"
+            if crypto_path.exists() and crypto_path.is_dir():
+                # Found project root (directory containing Crypto folder)
+                project_root = current
+                break
+            current = current.parent
+        
+        if project_root:
+            data_folder_path = project_root / DATA_FOLDER
+        else:
+            # Fallback: assume DATA_FOLDER is relative to script
+            data_folder_path = script_dir / DATA_FOLDER
+    
+    data_file = data_folder_path / HISTORICAL_DATA_FILE
     
     # Ensure data folder exists
-    os.makedirs(DATA_FOLDER, exist_ok=True)
+    os.makedirs(data_folder_path, exist_ok=True)
     
     # Check if the file exists
     if not os.path.exists(data_file):
@@ -175,13 +204,13 @@ def update_prices():
         df['Date'] = df['Date'].dt.strftime('%m/%d/%Y')
         
         # Save the data
-        df.to_csv(data_file, index=False)
+        df.to_csv(str(data_file), index=False)
         
         # Get price range (need to convert back to numeric since Date is now string)
         df_temp = df.copy()
         df_temp['Price'] = pd.to_numeric(df_temp['Price'], errors='coerce')
         
-        print(f"\n✅ Successfully created {CURRENCY_NAME} data file!")
+        print(f"\n[SUCCESS] Successfully created {CURRENCY_NAME} data file!")
         print(f"Total records: {len(df)}")
         print(f"Date range: {df['Date'].iloc[0]} to {df['Date'].iloc[-1]}")
         print(f"Price range: ${df_temp['Price'].min():.2f} to ${df_temp['Price'].max():.2f}")
@@ -269,7 +298,7 @@ def update_prices():
     combined_df['Date'] = combined_df['Date'].dt.strftime('%m/%d/%Y')
     
     # Save updated data
-    combined_df.to_csv(data_file, index=False)
+    combined_df.to_csv(str(data_file), index=False)
     
     print(f"\nSuccessfully updated {CURRENCY_NAME} data!")
     print(f"Total records: {len(combined_df)}")
@@ -287,11 +316,11 @@ def main():
     try:
         updated_df = update_prices()
         if updated_df is not None:
-            print("\n✅ Update completed successfully!")
+            print("\n[SUCCESS] Update completed successfully!")
         else:
-            print("\n❌ Update failed or no new data available.")
+            print("\n[FAILED] Update failed or no new data available.")
     except Exception as e:
-        print(f"\n❌ Error during update: {e}")
+        print(f"\n[ERROR] Error during update: {e}")
 
 if __name__ == "__main__":
     main()

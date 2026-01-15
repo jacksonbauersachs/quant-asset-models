@@ -20,6 +20,7 @@ from datetime import datetime
 import gc
 import subprocess
 import platform
+from pathlib import Path
 
 # Import configuration
 try:
@@ -49,14 +50,42 @@ output_files = get_output_files()
 def load_data():
     """Load and prepare price data for analysis."""
     
-    data_file = os.path.join(DATA_FOLDER, HISTORICAL_DATA_FILE)
+    # Resolve DATA_FOLDER relative to script location, not cwd
+    script_dir = Path(__file__).parent.resolve()
+    
+    # If DATA_FOLDER is absolute, use it as-is
+    if os.path.isabs(DATA_FOLDER):
+        data_folder_path = Path(DATA_FOLDER)
+    else:
+        # DATA_FOLDER is like "Crypto/Doge" - need to find project root
+        # Project root is the directory that CONTAINS the "Crypto" folder
+        current = script_dir
+        project_root = None
+        
+        # Walk up until we find a directory that contains "Crypto" folder
+        while current.parent != current:
+            # Check if current directory contains "Crypto" folder
+            crypto_path = current / "Crypto"
+            if crypto_path.exists() and crypto_path.is_dir():
+                # Found project root (directory containing Crypto folder)
+                project_root = current
+                break
+            current = current.parent
+        
+        if project_root:
+            data_folder_path = project_root / DATA_FOLDER
+        else:
+            # Fallback: assume DATA_FOLDER is relative to script
+            data_folder_path = script_dir / DATA_FOLDER
+    
+    data_file = data_folder_path / HISTORICAL_DATA_FILE
     
     if not os.path.exists(data_file):
         print(f"Error: {CURRENCY_NAME} data file not found - {data_file}")
         return None
     
     # Read the data
-    df = pd.read_csv(data_file)
+    df = pd.read_csv(str(data_file))
     
     # Convert Date to datetime - handle multiple formats
     try:

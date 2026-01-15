@@ -1,0 +1,45 @@
+INJECTION INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-14 18:56:47
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000098 per day
+Annualized Growth Rate: 3.58% per year
+Optimal Intercept: 1.999994
+Maximum R²: -0.058451
+
+MODEL FORMULA
+--------------------
+price = 1.13 × e^(0.000098 × (day - 39) + 1.999994)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $5.52
+Model Fair Price: $10.07
+Undervaluation: -45.16%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $10.44 | Growth: +3.64%
+  3-Year: $11.21 | Growth: +11.34%
+  5-Year: $12.04 | Growth: +19.60%
+  10-Year: $14.40 | Growth: +43.04%
+  15-Year: $17.23 | Growth: +71.07%
+  20-Year: $20.60 | Growth: +104.60%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $10.44 | Return: +89.01%
+  3-Year: $11.21 | Return: +103.04%
+  5-Year: $12.04 | Return: +118.11%
+  10-Year: $14.40 | Return: +160.85%
+  15-Year: $17.23 | Return: +211.98%
+  20-Year: $20.60 | Return: +273.12%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

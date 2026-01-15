@@ -1,0 +1,45 @@
+FLOKI INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-14 18:57:08
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.001107 per day
+Annualized Growth Rate: 40.43% per year
+Optimal Intercept: 1.788633
+Maximum R²: 0.092279
+
+MODEL FORMULA
+--------------------
+price = 0.00 × e^(0.001107 × (day - 1) + 1.788633)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $0.000053
+Model Fair Price: $0.000148
+Undervaluation: -64.03%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $0.000222 | Growth: +49.83%
+  3-Year: $0.000499 | Growth: +236.35%
+  5-Year: $0.001120 | Growth: +655.08%
+  10-Year: $0.008456 | Growth: +5601.52%
+  15-Year: $0.06385 | Growth: +42951.25%
+  20-Year: $0.4821 | Growth: +324973.04%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $0.000222 | Return: +316.54%
+  3-Year: $0.000499 | Return: +835.09%
+  5-Year: $0.001120 | Return: +1999.20%
+  10-Year: $0.008456 | Return: +15750.69%
+  15-Year: $0.06385 | Return: +119586.03%
+  20-Year: $0.4821 | Return: +903629.99%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points
