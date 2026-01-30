@@ -1,0 +1,45 @@
+SPHCF INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-20 22:14:21
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000142 per day
+Annualized Growth Rate: 5.19% per year
+Optimal Intercept: -0.041670
+Maximum R²: 0.131467
+
+MODEL FORMULA
+--------------------
+price = 8.25 × e^(0.000142 × (day - 1) + -0.041670)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $12.12
+Model Fair Price: $8.53
+Undervaluation: +42.11%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $8.99 | Growth: +5.32%
+  3-Year: $9.97 | Growth: +16.84%
+  5-Year: $11.06 | Growth: +29.61%
+  10-Year: $14.33 | Growth: +67.98%
+  15-Year: $18.57 | Growth: +117.71%
+  20-Year: $24.07 | Growth: +182.16%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $8.99 | Return: -25.89%
+  3-Year: $9.97 | Return: -17.79%
+  5-Year: $11.06 | Return: -8.80%
+  10-Year: $14.33 | Return: +18.20%
+  15-Year: $18.57 | Return: +53.19%
+  20-Year: $24.07 | Return: +98.54%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

@@ -1,42 +1,42 @@
 COPPER INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-01 22:01:41
+Analysis Date: 2026-01-30 12:48:19
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000142 per day
 Annualized Growth Rate: 5.19% per year
-Optimal Intercept: 0.539384
-Maximum R²: 0.093049
+Optimal Intercept: 0.540899
+Maximum R²: 0.117868
 
 MODEL FORMULA
 --------------------
-price = 0.93 × e^(0.000142 × (day - 1160) + 0.539384)
+price = 0.93 × e^(0.000142 × (day - 1160) + 0.540899)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $5.74
-Model Fair Price: $5.04
-Undervaluation: +13.92%
+Current Price: $6.01
+Model Fair Price: $5.07
+Undervaluation: +18.68%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $5.31 | Growth: +5.32%
-  3-Year: $5.89 | Growth: +16.84%
-  5-Year: $6.53 | Growth: +29.61%
-  10-Year: $8.47 | Growth: +67.98%
-  15-Year: $10.97 | Growth: +117.71%
-  20-Year: $14.22 | Growth: +182.16%
+  1-Year: $5.34 | Growth: +5.32%
+  3-Year: $5.92 | Growth: +16.84%
+  5-Year: $6.57 | Growth: +29.61%
+  10-Year: $8.51 | Growth: +67.98%
+  15-Year: $11.03 | Growth: +117.71%
+  20-Year: $14.30 | Growth: +182.16%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $5.31 | Return: -7.55%
-  3-Year: $5.89 | Return: +2.56%
-  5-Year: $6.53 | Return: +13.77%
-  10-Year: $8.47 | Return: +47.45%
-  15-Year: $10.97 | Return: +91.10%
-  20-Year: $14.22 | Return: +147.68%
+  1-Year: $5.34 | Return: -11.25%
+  3-Year: $5.92 | Return: -1.55%
+  5-Year: $6.57 | Return: +9.21%
+  10-Year: $8.51 | Return: +41.54%
+  15-Year: $11.03 | Return: +83.44%
+  20-Year: $14.30 | Return: +137.75%
 
 NOTES
 ----------

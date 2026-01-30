@@ -1,0 +1,45 @@
+SPRUTT INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-01-20 21:59:01
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000239 per day
+Annualized Growth Rate: 8.73% per year
+Optimal Intercept: 0.305247
+Maximum R²: 0.428531
+
+MODEL FORMULA
+--------------------
+price = 9.27 × e^(0.000239 × (day - 1) + 0.305247)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $21.62
+Model Fair Price: $18.62
+Undervaluation: +16.10%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $20.32 | Growth: +9.12%
+  3-Year: $24.20 | Growth: +29.94%
+  5-Year: $28.81 | Growth: +54.72%
+  10-Year: $44.58 | Growth: +139.40%
+  15-Year: $68.98 | Growth: +270.40%
+  20-Year: $106.73 | Growth: +473.10%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $20.32 | Return: -6.01%
+  3-Year: $24.20 | Return: +11.92%
+  5-Year: $28.81 | Return: +33.27%
+  10-Year: $44.58 | Return: +106.20%
+  15-Year: $68.98 | Return: +219.05%
+  20-Year: $106.73 | Return: +393.64%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

@@ -20,7 +20,6 @@ from datetime import datetime
 import gc
 import subprocess
 import platform
-from pathlib import Path
 
 # Import configuration
 try:
@@ -50,42 +49,14 @@ output_files = get_output_files()
 def load_data():
     """Load and prepare price data for analysis."""
     
-    # Resolve DATA_FOLDER relative to script location, not cwd
-    script_dir = Path(__file__).parent.resolve()
-    
-    # If DATA_FOLDER is absolute, use it as-is
-    if os.path.isabs(DATA_FOLDER):
-        data_folder_path = Path(DATA_FOLDER)
-    else:
-        # DATA_FOLDER is like "Crypto/Doge" - need to find project root
-        # Project root is the directory that CONTAINS the "Crypto" folder
-        current = script_dir
-        project_root = None
-        
-        # Walk up until we find a directory that contains "Crypto" folder
-        while current.parent != current:
-            # Check if current directory contains "Crypto" folder
-            crypto_path = current / "Crypto"
-            if crypto_path.exists() and crypto_path.is_dir():
-                # Found project root (directory containing Crypto folder)
-                project_root = current
-                break
-            current = current.parent
-        
-        if project_root:
-            data_folder_path = project_root / DATA_FOLDER
-        else:
-            # Fallback: assume DATA_FOLDER is relative to script
-            data_folder_path = script_dir / DATA_FOLDER
-    
-    data_file = data_folder_path / HISTORICAL_DATA_FILE
+    data_file = os.path.join(DATA_FOLDER, HISTORICAL_DATA_FILE)
     
     if not os.path.exists(data_file):
         print(f"Error: {CURRENCY_NAME} data file not found - {data_file}")
         return None
     
     # Read the data
-    df = pd.read_csv(str(data_file))
+    df = pd.read_csv(data_file)
     
     # Convert Date to datetime - handle multiple formats
     try:
@@ -319,9 +290,15 @@ def create_optimization_chart(df, growth_rate, optimal_intercept, optimal_r2):
         elif max_price >= 1:
             def price_formatter(x, pos):
                 return f'${x:.2f}'
-        else:
+        elif max_price >= 0.01:
             def price_formatter(x, pos):
                 return f'${x:.4f}'
+        elif max_price >= 0.0001:
+            def price_formatter(x, pos):
+                return f'${x:.6f}'
+        else:
+            def price_formatter(x, pos):
+                return f'${x:.8f}'
         
         ax.yaxis.set_major_formatter(plt.FuncFormatter(price_formatter))
         
@@ -334,8 +311,17 @@ def create_optimization_chart(df, growth_rate, optimal_intercept, optimal_r2):
             padding = price_range * 0.1  # 10% padding
             ax.set_ylim(max(0, min_price - padding), max_price + padding)
         else:  # Log scale
-            # For log scale, let matplotlib handle it automatically
-            ax.set_ylim(max(0.01, min_price * 0.5), max_price * 2)
+            # For log scale with very small values, use actual min/max with small multipliers
+            # Don't use a fixed 0.01 minimum - use actual data range
+            if min_price < 0.01:
+                # For very small prices, use a smaller multiplier to ensure visibility
+                y_min = min_price * 0.1  # 10% below minimum
+                y_max = max_price * 2.0  # 2x above maximum
+            else:
+                # For larger prices, use standard approach
+                y_min = max(0.01, min_price * 0.5)
+                y_max = max_price * 2.0
+            ax.set_ylim(y_min, y_max)
         
         # Add legend
         ax.legend(fontsize=10, loc='upper left', bbox_to_anchor=(0, 1))

@@ -1,47 +1,45 @@
-INJECTION INTERCEPT OPTIMIZATION RESULTS (PARAMETRIC MODEL)
+INJECTION INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-03 22:54:02
+Analysis Date: 2026-01-19 12:00:54
 
 OPTIMIZATION PARAMETERS
 ------------------------------
-Fixed Slope: 0.000098
-Optimal Intercept: 0.838160
-Power: 1.000000
-Maximum R²: 0.085838
-Annual Growth Rate: +8.59%
+Fixed Growth Rate: 0.000098 per day
+Annualized Growth Rate: 3.58% per year
+Optimal Intercept: 1.999994
+Maximum R²: -0.057508
 
 MODEL FORMULA
 --------------------
-price = 10^(0.000098 × (day^1.000000) + 0.838160)
+price = 1.13 × e^(0.000098 × (day - 39) + 1.999994)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $5.01
-Model Fair Price: $10.58
-Undervaluation: -52.64%
+Current Price: $4.76
+Model Fair Price: $10.07
+Undervaluation: -52.79%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $11 | Growth: +8.59%
-  3-Year: $14 | Growth: +28.05%
-  5-Year: $16 | Growth: +51.00%
-  10-Year: $24 | Growth: +128.01%
-  15-Year: $36 | Growth: +244.28%
-  20-Year: $55 | Growth: +419.86%
+  1-Year: $10.44 | Growth: +3.64%
+  3-Year: $11.22 | Growth: +11.34%
+  5-Year: $12.05 | Growth: +19.60%
+  10-Year: $14.41 | Growth: +43.04%
+  15-Year: $17.24 | Growth: +71.07%
+  20-Year: $20.61 | Growth: +104.60%
 
-Current Price-Based Projections (converges toward model's future fair value):
-  1-Year: $11 | Return: +129.27%
-  3-Year: $14 | Return: +170.35%
-  5-Year: $16 | Return: +218.80%
-  10-Year: $24 | Return: +381.38%
-  15-Year: $36 | Return: +626.88%
-  20-Year: $55 | Return: +997.58%
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $10.44 | Return: +119.56%
+  3-Year: $11.22 | Return: +135.85%
+  5-Year: $12.05 | Return: +153.35%
+  10-Year: $14.41 | Return: +203.01%
+  15-Year: $17.24 | Return: +262.40%
+  20-Year: $20.61 | Return: +333.42%
 
 NOTES
 ----------
-- Model-based projections start from the model's fair value
-- Current price-based projections show convergence toward model's future fair value
-- If undervalued: price converges upward then grows with model
-- If overvalued: price converges downward to model's future fair value
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

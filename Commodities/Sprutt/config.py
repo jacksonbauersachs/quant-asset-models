@@ -11,7 +11,7 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 CURRENCY_NAME = "Sprutt"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
 CURRENCY_NAME_LOWER = "sprutt"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "SPRT-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+YAHOO_TICKER = "SRUUF"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES
@@ -44,7 +44,7 @@ OUTPUT_FOLDER = "Commodities/Sprutt"
 # This is typically found by running the interactive rainbow chart first
 # Growth rate is in "per day" units (e.g., 0.001 = 0.1% per day ≈ 36.5% per year)
 # Set to None to let optimize_intercept.py find the optimal growth rate automatically
-FIXED_GROWTH_RATE = .000158  # Example: 0.001 for 0.1% daily growth
+FIXED_GROWTH_RATE = .000239  # Example: 0.001 for 0.1% daily growth
 
 # ============================================
 # DATA SOURCE
