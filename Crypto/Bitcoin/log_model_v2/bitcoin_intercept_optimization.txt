@@ -1,7 +1,7 @@
 BITCOIN INTERCEPT OPTIMIZATION RESULTS (LOGARITHMIC MODEL)
 ==================================================
 
-Analysis Date: 2026-01-07 20:57:31
+Analysis Date: 2026-02-05 16:40:37
 
 OPTIMIZATION PARAMETERS
 ------------------------------

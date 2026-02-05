@@ -34,7 +34,7 @@ START_DATE = "2011-04-10"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Chainlink"
-DATA_FOLDER = "Crypto/Bitcoin/data_update"
+DATA_FOLDER = "Crypto/Bitcoin/log_model_v2"
 
 # Example: "Chainlink_historical_data.csv"
 HISTORICAL_DATA_FILE = "BTC_historical_data.csv"
