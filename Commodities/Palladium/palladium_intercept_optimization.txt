@@ -1,42 +1,42 @@
 PALLADIUM INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-07 17:11:30
+Analysis Date: 2026-03-05 20:11:00
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000176 per day
 Annualized Growth Rate: 6.43% per year
-Optimal Intercept: 0.715348
-Maximum R²: 0.322488
+Optimal Intercept: 0.714833
+Maximum R²: 0.329953
 
 MODEL FORMULA
 --------------------
-price = 316.75 × e^(0.000176 × (day - 4048) + 0.715348)
+price = 316.75 × e^(0.000176 × (day - 4048) + 0.714833)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $1,817
-Model Fair Price: $1,834
-Undervaluation: -0.95%
+Current Price: $1,655
+Model Fair Price: $1,852
+Undervaluation: -10.64%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $1,956 | Growth: +6.64%
-  3-Year: $2,225 | Growth: +21.27%
-  5-Year: $2,530 | Growth: +37.91%
-  10-Year: $3,489 | Growth: +90.19%
-  15-Year: $4,811 | Growth: +162.28%
-  20-Year: $6,635 | Growth: +261.71%
+  1-Year: $1,975 | Growth: +6.64%
+  3-Year: $2,246 | Growth: +21.27%
+  5-Year: $2,554 | Growth: +37.91%
+  10-Year: $3,522 | Growth: +90.19%
+  15-Year: $4,857 | Growth: +162.28%
+  20-Year: $6,699 | Growth: +261.71%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $1,956 | Return: +7.66%
-  3-Year: $2,225 | Return: +22.44%
-  5-Year: $2,530 | Return: +39.23%
-  10-Year: $3,489 | Return: +92.01%
-  15-Year: $4,811 | Return: +164.80%
-  20-Year: $6,635 | Return: +265.19%
+  1-Year: $1,975 | Return: +19.33%
+  3-Year: $2,246 | Return: +35.71%
+  5-Year: $2,554 | Return: +54.32%
+  10-Year: $3,522 | Return: +112.83%
+  15-Year: $4,857 | Return: +193.50%
+  20-Year: $6,699 | Return: +304.77%
 
 NOTES
 ----------
