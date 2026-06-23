@@ -1,42 +1,42 @@
 LITECOIN INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-03-05 20:46:09
+Analysis Date: 2026-05-10 15:28:56
 
 OPTIMIZATION PARAMETERS
 ------------------------------
-Fixed Growth Rate: 0.000134 per day
-Annualized Growth Rate: 4.89% per year
-Optimal Intercept: 1.239254
-Maximum R²: -0.050170
+Fixed Growth Rate: 0.000333 per day
+Annualized Growth Rate: 12.16% per year
+Optimal Intercept: 0.771418
+Maximum R²: -0.327063
 
 MODEL FORMULA
 --------------------
-price = 21.04 × e^(0.000134 × (day - 959) + 1.239254)
+price = 21.04 × e^(0.000333 × (day - 959) + 0.771418)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $56.79
-Model Fair Price: $111.97
-Undervaluation: -49.28%
+Current Price: $59.96
+Model Fair Price: $136.30
+Undervaluation: -56.01%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $117.59 | Growth: +5.02%
-  3-Year: $129.68 | Growth: +15.82%
-  5-Year: $143.01 | Growth: +27.73%
-  10-Year: $182.67 | Growth: +63.14%
-  15-Year: $233.31 | Growth: +108.37%
-  20-Year: $298.00 | Growth: +166.14%
+  1-Year: $153.93 | Growth: +12.93%
+  3-Year: $196.32 | Growth: +44.03%
+  5-Year: $250.39 | Growth: +83.70%
+  10-Year: $459.97 | Growth: +237.46%
+  15-Year: $844.96 | Growth: +519.92%
+  20-Year: $1,552 | Growth: +1038.81%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $117.59 | Return: +107.04%
-  3-Year: $129.68 | Return: +128.34%
-  5-Year: $143.01 | Return: +151.82%
-  10-Year: $182.67 | Return: +221.64%
-  15-Year: $233.31 | Return: +310.81%
-  20-Year: $298.00 | Return: +424.71%
+  1-Year: $153.93 | Return: +156.72%
+  3-Year: $196.32 | Return: +227.42%
+  5-Year: $250.39 | Return: +317.59%
+  10-Year: $459.97 | Return: +667.12%
+  15-Year: $844.96 | Return: +1309.21%
+  20-Year: $1,552 | Return: +2488.74%
 
 NOTES
 ----------

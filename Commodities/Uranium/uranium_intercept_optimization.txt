@@ -1,42 +1,42 @@
 URANIUM INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-07 17:13:02
+Analysis Date: 2026-05-10 14:26:52
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000166 per day
 Annualized Growth Rate: 6.06% per year
-Optimal Intercept: 0.749476
-Maximum R²: -0.163801
+Optimal Intercept: 0.760621
+Maximum R²: -0.101754
 
 MODEL FORMULA
 --------------------
-price = 7.10 × e^(0.000166 × (day - 4018) + 0.749476)
+price = 7.10 × e^(0.000166 × (day - 4018) + 0.760621)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $81.55
-Model Fair Price: $68.38
-Undervaluation: +19.25%
+Current Price: $86.35
+Model Fair Price: $70.54
+Undervaluation: +22.41%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $72.66 | Growth: +6.25%
-  3-Year: $82.03 | Growth: +19.95%
-  5-Year: $92.60 | Growth: +35.41%
-  10-Year: $125.39 | Growth: +83.37%
-  15-Year: $169.80 | Growth: +148.30%
-  20-Year: $229.93 | Growth: +236.23%
+  1-Year: $74.95 | Growth: +6.25%
+  3-Year: $84.61 | Growth: +19.95%
+  5-Year: $95.52 | Growth: +35.41%
+  10-Year: $129.35 | Growth: +83.37%
+  15-Year: $175.16 | Growth: +148.30%
+  20-Year: $237.19 | Growth: +236.23%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $72.66 | Return: -10.90%
-  3-Year: $82.03 | Return: +0.58%
-  5-Year: $92.60 | Return: +13.55%
-  10-Year: $125.39 | Return: +53.76%
-  15-Year: $169.80 | Return: +108.22%
-  20-Year: $229.93 | Return: +181.95%
+  1-Year: $74.95 | Return: -13.20%
+  3-Year: $84.61 | Return: -2.01%
+  5-Year: $95.52 | Return: +10.62%
+  10-Year: $129.35 | Return: +49.80%
+  15-Year: $175.16 | Return: +102.85%
+  20-Year: $237.19 | Return: +174.68%
 
 NOTES
 ----------

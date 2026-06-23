@@ -9,9 +9,9 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 # CURRENCY INFORMATION
 # ============================================
-CURRENCY_NAME = "Litecoin"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
-CURRENCY_NAME_LOWER = "litecoin"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "LTC-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+CURRENCY_NAME = "SPHCF"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
+CURRENCY_NAME_LOWER = "sphcf"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
+YAHOO_TICKER = "SPHCF-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES

@@ -38,3 +38,9 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp 
+# Personal portfolio allocation outputs (kept private, regenerated locally)
+Portfolio/Asset_Allocation/asset_allocation_results*.txt
+Portfolio/**/optimal_investment_strategy*.txt
+Portfolio/**/*kelly_results*.txt
+Portfolio/**/comprehensive_strategy_findings*.txt
+Portfolio/Models/updated_models.txt

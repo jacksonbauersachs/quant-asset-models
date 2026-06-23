@@ -1,42 +1,42 @@
 TONCOIN INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-03-05 20:47:14
+Analysis Date: 2026-05-06 19:54:01
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000000 per day
 Annualized Growth Rate: 0.00% per year
-Optimal Intercept: 1.433458
+Optimal Intercept: 1.413640
 Maximum R²: -0.000000
 
 MODEL FORMULA
 --------------------
-price = 0.69 × e^(0.000000 × (day - 1) + 1.433458)
+price = 0.69 × e^(0.000000 × (day - 1) + 1.413640)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $1.30
-Model Fair Price: $2.88
-Undervaluation: -54.75%
+Current Price: $2.47
+Model Fair Price: $2.82
+Undervaluation: -12.65%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $2.88 | Growth: +0.00%
-  3-Year: $2.88 | Growth: +0.00%
-  5-Year: $2.88 | Growth: +0.00%
-  10-Year: $2.88 | Growth: +0.00%
-  15-Year: $2.88 | Growth: +0.00%
-  20-Year: $2.88 | Growth: +0.00%
+  1-Year: $2.82 | Growth: +0.00%
+  3-Year: $2.82 | Growth: +0.00%
+  5-Year: $2.82 | Growth: +0.00%
+  10-Year: $2.82 | Growth: +0.00%
+  15-Year: $2.82 | Growth: +0.00%
+  20-Year: $2.82 | Growth: +0.00%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $2.88 | Return: +121.00%
-  3-Year: $2.88 | Return: +121.00%
-  5-Year: $2.88 | Return: +121.00%
-  10-Year: $2.88 | Return: +121.00%
-  15-Year: $2.88 | Return: +121.00%
-  20-Year: $2.88 | Return: +121.00%
+  1-Year: $2.82 | Return: +14.48%
+  3-Year: $2.82 | Return: +14.48%
+  5-Year: $2.82 | Return: +14.48%
+  10-Year: $2.82 | Return: +14.48%
+  15-Year: $2.82 | Return: +14.48%
+  20-Year: $2.82 | Return: +14.48%
 
 NOTES
 ----------

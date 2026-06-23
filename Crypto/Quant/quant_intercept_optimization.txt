@@ -1,42 +1,42 @@
 QUANT INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-03 22:16:08
+Analysis Date: 2026-05-17 19:34:30
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000000 per day
 Annualized Growth Rate: 0.00% per year
-Optimal Intercept: 0.061943
+Optimal Intercept: 0.035625
 Maximum R²: -0.000000
 
 MODEL FORMULA
 --------------------
-price = 94.50 × e^(0.000000 × (day - 1358) + 0.061943)
+price = 94.50 × e^(0.000000 × (day - 1358) + 0.035625)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $79.88
-Model Fair Price: $100.53
-Undervaluation: -20.55%
+Current Price: $75.70
+Model Fair Price: $97.92
+Undervaluation: -22.69%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $100.53 | Growth: +0.00%
-  3-Year: $100.53 | Growth: +0.00%
-  5-Year: $100.53 | Growth: +0.00%
-  10-Year: $100.53 | Growth: +0.00%
-  15-Year: $100.53 | Growth: +0.00%
-  20-Year: $100.53 | Growth: +0.00%
+  1-Year: $97.92 | Growth: +0.00%
+  3-Year: $97.92 | Growth: +0.00%
+  5-Year: $97.92 | Growth: +0.00%
+  10-Year: $97.92 | Growth: +0.00%
+  15-Year: $97.92 | Growth: +0.00%
+  20-Year: $97.92 | Growth: +0.00%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $100.53 | Return: +25.86%
-  3-Year: $100.53 | Return: +25.86%
-  5-Year: $100.53 | Return: +25.86%
-  10-Year: $100.53 | Return: +25.86%
-  15-Year: $100.53 | Return: +25.86%
-  20-Year: $100.53 | Return: +25.86%
+  1-Year: $97.92 | Return: +29.36%
+  3-Year: $97.92 | Return: +29.36%
+  5-Year: $97.92 | Return: +29.36%
+  10-Year: $97.92 | Return: +29.36%
+  15-Year: $97.92 | Return: +29.36%
+  20-Year: $97.92 | Return: +29.36%
 
 NOTES
 ----------

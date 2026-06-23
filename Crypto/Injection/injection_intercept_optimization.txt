@@ -1,14 +1,14 @@
 INJECTION INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-03-05 20:35:09
+Analysis Date: 2026-05-17 19:49:48
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000098 per day
 Annualized Growth Rate: 3.58% per year
 Optimal Intercept: 1.999994
-Maximum R²: -0.049521
+Maximum R²: -0.038313
 
 MODEL FORMULA
 --------------------
@@ -16,27 +16,27 @@ price = 1.13 × e^(0.000098 × (day - 39) + 1.999994)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $3.12
-Model Fair Price: $10.12
-Undervaluation: -69.17%
+Current Price: $4.50
+Model Fair Price: $10.19
+Undervaluation: -55.81%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $10.49 | Growth: +3.64%
-  3-Year: $11.27 | Growth: +11.34%
-  5-Year: $12.10 | Growth: +19.60%
-  10-Year: $14.47 | Growth: +43.04%
-  15-Year: $17.31 | Growth: +71.07%
-  20-Year: $20.70 | Growth: +104.60%
+  1-Year: $10.56 | Growth: +3.64%
+  3-Year: $11.35 | Growth: +11.34%
+  5-Year: $12.19 | Growth: +19.60%
+  10-Year: $14.58 | Growth: +43.04%
+  15-Year: $17.44 | Growth: +71.07%
+  20-Year: $20.85 | Growth: +104.60%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $10.49 | Return: +236.14%
-  3-Year: $11.27 | Return: +261.08%
-  5-Year: $12.10 | Return: +287.88%
-  10-Year: $14.47 | Return: +363.90%
-  15-Year: $17.31 | Return: +454.82%
-  20-Year: $20.70 | Return: +563.56%
+  1-Year: $10.56 | Return: +134.53%
+  3-Year: $11.35 | Return: +151.94%
+  5-Year: $12.19 | Return: +170.63%
+  10-Year: $14.58 | Return: +223.67%
+  15-Year: $17.44 | Return: +287.11%
+  20-Year: $20.85 | Return: +362.98%
 
 NOTES
 ----------

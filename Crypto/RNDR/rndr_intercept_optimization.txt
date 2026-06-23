@@ -1,42 +1,42 @@
 RNDR INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-03-05 20:42:17
+Analysis Date: 2026-05-17 19:53:14
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000330 per day
 Annualized Growth Rate: 12.05% per year
-Optimal Intercept: 2.455374
-Maximum R²: 0.135928
+Optimal Intercept: 2.416739
+Maximum R²: 0.109788
 
 MODEL FORMULA
 --------------------
-price = 0.20 × e^(0.000330 × (day - 249) + 2.455374)
+price = 0.20 × e^(0.000330 × (day - 249) + 2.416739)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $1.40
-Model Fair Price: $4.30
-Undervaluation: -67.32%
+Current Price: $1.78
+Model Fair Price: $4.23
+Undervaluation: -57.95%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $4.85 | Growth: +12.81%
-  3-Year: $6.17 | Growth: +43.56%
-  5-Year: $7.85 | Growth: +82.70%
-  10-Year: $14.34 | Growth: +233.78%
-  15-Year: $26.20 | Growth: +509.82%
-  20-Year: $47.87 | Growth: +1014.12%
+  1-Year: $4.78 | Growth: +12.81%
+  3-Year: $6.08 | Growth: +43.56%
+  5-Year: $7.73 | Growth: +82.70%
+  10-Year: $14.13 | Growth: +233.78%
+  15-Year: $25.81 | Growth: +509.82%
+  20-Year: $47.16 | Growth: +1014.12%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $4.85 | Return: +245.21%
-  3-Year: $6.17 | Return: +339.31%
-  5-Year: $7.85 | Return: +459.07%
-  10-Year: $14.34 | Return: +921.41%
-  15-Year: $26.20 | Return: +1766.09%
-  20-Year: $47.87 | Return: +3309.31%
+  1-Year: $4.78 | Return: +168.28%
+  3-Year: $6.08 | Return: +241.41%
+  5-Year: $7.73 | Return: +334.48%
+  10-Year: $14.13 | Return: +693.78%
+  15-Year: $25.81 | Return: +1350.22%
+  20-Year: $47.16 | Return: +2549.52%
 
 NOTES
 ----------

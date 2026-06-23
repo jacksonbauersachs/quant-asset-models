@@ -122,6 +122,7 @@ def convert_data_to_dataframe(data_dict):
         
         record = {
             'Date': date_dt.strftime('%m/%d/%Y'),  # Convert to M/D/YYYY format
+            'Value': close_price,
             'Price': close_price,  # Use close price as Price
             'Open': open_price,
             'High': float(values['High']),

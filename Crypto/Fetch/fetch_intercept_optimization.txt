@@ -1,0 +1,45 @@
+FETCH INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-05-17 19:23:05
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000300 per day
+Annualized Growth Rate: 10.96% per year
+Optimal Intercept: -0.221948
+Maximum R²: 0.135035
+
+MODEL FORMULA
+--------------------
+price = 0.41 × e^(0.000300 × (day - 1) + -0.221948)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $0.1934
+Model Fair Price: $0.7193
+Undervaluation: -73.11%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $0.8026 | Growth: +11.58%
+  3-Year: $0.9993 | Growth: +38.92%
+  5-Year: $1.24 | Growth: +72.96%
+  10-Year: $2.15 | Growth: +199.14%
+  15-Year: $3.72 | Growth: +417.39%
+  20-Year: $6.44 | Growth: +794.86%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $0.8026 | Return: +315.00%
+  3-Year: $0.9993 | Return: +416.69%
+  5-Year: $1.24 | Return: +543.28%
+  10-Year: $2.15 | Return: +1012.60%
+  15-Year: $3.72 | Return: +1824.33%
+  20-Year: $6.44 | Return: +3228.27%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

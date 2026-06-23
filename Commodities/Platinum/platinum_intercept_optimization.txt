@@ -1,42 +1,42 @@
 PLATINUM INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-03-05 20:26:24
+Analysis Date: 2026-05-10 14:48:14
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000085 per day
 Annualized Growth Rate: 3.10% per year
-Optimal Intercept: 0.010480
-Maximum R²: -0.012699
+Optimal Intercept: 0.045485
+Maximum R²: 0.578454
 
 MODEL FORMULA
 --------------------
-price = 2232.30 × e^(0.000085 × (day - 20816) + 0.010480)
+price = 237.50 × e^(0.000085 × (day - 1) + 0.045485)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $2,130
-Model Fair Price: $2,268
-Undervaluation: -6.10%
+Current Price: $2,059
+Model Fair Price: $1,474
+Undervaluation: +39.69%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $2,340 | Growth: +3.15%
-  3-Year: $2,490 | Growth: +9.76%
-  5-Year: $2,649 | Growth: +16.79%
-  10-Year: $3,094 | Growth: +36.41%
-  15-Year: $3,614 | Growth: +59.31%
-  20-Year: $4,221 | Growth: +86.06%
+  1-Year: $1,521 | Growth: +3.15%
+  3-Year: $1,618 | Growth: +9.76%
+  5-Year: $1,722 | Growth: +16.79%
+  10-Year: $2,011 | Growth: +36.41%
+  15-Year: $2,349 | Growth: +59.31%
+  20-Year: $2,743 | Growth: +86.06%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $2,340 | Return: +9.85%
-  3-Year: $2,490 | Return: +16.89%
-  5-Year: $2,649 | Return: +24.38%
-  10-Year: $3,094 | Return: +45.26%
-  15-Year: $3,614 | Return: +69.66%
-  20-Year: $4,221 | Return: +98.15%
+  1-Year: $1,521 | Return: -26.15%
+  3-Year: $1,618 | Return: -21.42%
+  5-Year: $1,722 | Return: -16.39%
+  10-Year: $2,011 | Return: -2.35%
+  15-Year: $2,349 | Return: +14.05%
+  20-Year: $2,743 | Return: +33.20%
 
 NOTES
 ----------

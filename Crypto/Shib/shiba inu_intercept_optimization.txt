@@ -1,42 +1,42 @@
 SHIBA INU INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-03 20:58:11
+Analysis Date: 2026-05-10 15:18:56
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000000 per day
 Annualized Growth Rate: 0.00% per year
-Optimal Intercept: 2.709835
-Maximum R²: -0.000000
+Optimal Intercept: 1.999994
+Maximum R²: -0.585477
 
 MODEL FORMULA
 --------------------
-price = 0.00 × e^(0.000000 × (day - 258) + 2.709835)
+price = 0.00 × e^(0.000000 × (day - 258) + 1.999994)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $0.000008
-Model Fair Price: $0.000015
-Undervaluation: -45.41%
+Current Price: $0.000007
+Model Fair Price: $0.000007
+Undervaluation: -9.87%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $0.000015 | Growth: +0.00%
-  3-Year: $0.000015 | Growth: +0.00%
-  5-Year: $0.000015 | Growth: +0.00%
-  10-Year: $0.000015 | Growth: +0.00%
-  15-Year: $0.000015 | Growth: +0.00%
-  20-Year: $0.000015 | Growth: +0.00%
+  1-Year: $0.000007 | Growth: +0.00%
+  3-Year: $0.000007 | Growth: +0.00%
+  5-Year: $0.000007 | Growth: +0.00%
+  10-Year: $0.000007 | Growth: +0.00%
+  15-Year: $0.000007 | Growth: +0.00%
+  20-Year: $0.000007 | Growth: +0.00%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $0.000015 | Return: +83.20%
-  3-Year: $0.000015 | Return: +83.20%
-  5-Year: $0.000015 | Return: +83.20%
-  10-Year: $0.000015 | Return: +83.20%
-  15-Year: $0.000015 | Return: +83.20%
-  20-Year: $0.000015 | Return: +83.20%
+  1-Year: $0.000007 | Return: +10.95%
+  3-Year: $0.000007 | Return: +10.95%
+  5-Year: $0.000007 | Return: +10.95%
+  10-Year: $0.000007 | Return: +10.95%
+  15-Year: $0.000007 | Return: +10.95%
+  20-Year: $0.000007 | Return: +10.95%
 
 NOTES
 ----------

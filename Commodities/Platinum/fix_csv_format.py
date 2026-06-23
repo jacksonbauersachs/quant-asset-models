@@ -32,7 +32,12 @@ for r in rows[1:]:
     # Pad row to header length
     while len(r) < len(header):
         r.append("")
-    # Fill Value from Price when Value is empty
+    # Historical rows: price was only in Value; copy to Price
+    if (value_i < len(r) and price_i < len(r) and
+        (not r[price_i] or not str(r[price_i]).strip()) and
+        r[value_i] and str(r[value_i]).strip()):
+        r[price_i] = r[value_i]
+    # Newer Yahoo rows: close is in Price but Value was missing from export
     if (value_i < len(r) and price_i < len(r) and
         (not r[value_i] or not str(r[value_i]).strip()) and
         r[price_i] and str(r[price_i]).strip()):

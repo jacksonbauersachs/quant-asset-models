@@ -50,7 +50,7 @@ OUTPUT_FOLDER = "Crypto/Bitcoin/log_model_v2"
 # For logarithmic model: price = 10^(slope × ln(day) + intercept)
 # Slope typically ranges from 0.5 to 5.0 for cryptocurrencies
 # Set to None to let optimize_intercept.py find the optimal slope automatically
-FIXED_GROWTH_RATE = 1.7475  # This is used as FIXED_SLOPE for logarithmic models
+FIXED_GROWTH_RATE = 1.7679  # This is used as FIXED_SLOPE for logarithmic models
 # Example: 2.5 for a slope of 2.5
 
 # Power for the growth model (OPTIONAL - default: 1.0)

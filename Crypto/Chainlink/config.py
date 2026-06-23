@@ -69,7 +69,7 @@ MODEL_TYPE = ''  # Options: 'parametric', 'powerlaw', or 'exponential'
 # For parametric model: price = 10^(slope × (days^power) + intercept)
 # Slope typically ranges from 0.5 to 5.0 for cryptocurrencies
 # Set to None to let optimize_intercept.py find the optimal slope automatically
-FIXED_GROWTH_RATE = .000194  # This is used as FIXED_SLOPE for parametric models (set to None to auto-optimize)
+FIXED_GROWTH_RATE = .000330  # This is used as FIXED_SLOPE for parametric models (set to None to auto-optimize)
 # Example: 2.5 for a slope of 2.5
 
 # Power for the parametric growth model (OPTIONAL - default: 1.0)

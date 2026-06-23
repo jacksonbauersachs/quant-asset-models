@@ -1,42 +1,42 @@
 AAVE INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-03 22:05:13
+Analysis Date: 2026-05-10 15:27:24
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000138 per day
 Annualized Growth Rate: 5.04% per year
-Optimal Intercept: 1.026319
-Maximum R²: -0.030716
+Optimal Intercept: 0.994620
+Maximum R²: -0.044867
 
 MODEL FORMULA
 --------------------
-price = 53.15 × e^(0.000138 × (day - 1) + 1.026319)
+price = 53.15 × e^(0.000138 × (day - 1) + 0.994620)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $163.47
-Model Fair Price: $193.31
-Undervaluation: -15.43%
+Current Price: $102.03
+Model Fair Price: $190.56
+Undervaluation: -46.46%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $203.30 | Growth: +5.17%
-  3-Year: $224.87 | Growth: +16.32%
-  5-Year: $248.72 | Growth: +28.66%
-  10-Year: $320.00 | Growth: +65.54%
-  15-Year: $411.72 | Growth: +112.99%
-  20-Year: $529.74 | Growth: +174.04%
+  1-Year: $200.41 | Growth: +5.17%
+  3-Year: $221.67 | Growth: +16.32%
+  5-Year: $245.18 | Growth: +28.66%
+  10-Year: $315.46 | Growth: +65.54%
+  15-Year: $405.87 | Growth: +112.99%
+  20-Year: $522.21 | Growth: +174.04%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $203.30 | Return: +24.36%
-  3-Year: $224.87 | Return: +37.55%
-  5-Year: $248.72 | Return: +52.14%
-  10-Year: $320.00 | Return: +95.75%
-  15-Year: $411.72 | Return: +151.86%
-  20-Year: $529.74 | Return: +224.05%
+  1-Year: $200.41 | Return: +96.43%
+  3-Year: $221.67 | Return: +117.26%
+  5-Year: $245.18 | Return: +140.30%
+  10-Year: $315.46 | Return: +209.18%
+  15-Year: $405.87 | Return: +297.80%
+  20-Year: $522.21 | Return: +411.82%
 
 NOTES
 ----------

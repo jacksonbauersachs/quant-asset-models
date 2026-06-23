@@ -1,42 +1,42 @@
 SILVER INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-03-05 20:11:37
+Analysis Date: 2026-05-10 14:49:29
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000157 per day
 Annualized Growth Rate: 5.73% per year
-Optimal Intercept: 0.770188
-Maximum R²: 0.387710
+Optimal Intercept: 0.795158
+Maximum R²: 0.404091
 
 MODEL FORMULA
 --------------------
-price = 4.03 × e^(0.000157 × (day - 453) + 0.770188)
+price = 4.03 × e^(0.000157 × (day - 453) + 0.795158)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $82.30
-Model Fair Price: $34.98
-Undervaluation: +135.28%
+Current Price: $80.86
+Model Fair Price: $36.23
+Undervaluation: +123.22%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $37.04 | Growth: +5.90%
-  3-Year: $41.55 | Growth: +18.77%
-  5-Year: $46.59 | Growth: +33.21%
-  10-Year: $62.07 | Growth: +77.44%
-  15-Year: $82.68 | Growth: +136.35%
-  20-Year: $110.13 | Growth: +214.84%
+  1-Year: $38.36 | Growth: +5.90%
+  3-Year: $43.03 | Growth: +18.77%
+  5-Year: $48.26 | Growth: +33.21%
+  10-Year: $64.28 | Growth: +77.44%
+  15-Year: $85.62 | Growth: +136.35%
+  20-Year: $114.05 | Growth: +214.84%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $37.04 | Return: -54.99%
-  3-Year: $41.55 | Return: -49.52%
-  5-Year: $46.59 | Return: -43.38%
-  10-Year: $62.07 | Return: -24.58%
-  15-Year: $82.68 | Return: +0.46%
-  20-Year: $110.13 | Return: +33.81%
+  1-Year: $38.36 | Return: -52.56%
+  3-Year: $43.03 | Return: -46.79%
+  5-Year: $48.26 | Return: -40.33%
+  10-Year: $64.28 | Return: -20.51%
+  15-Year: $85.62 | Return: +5.88%
+  20-Year: $114.05 | Return: +41.04%
 
 NOTES
 ----------

@@ -1,0 +1,45 @@
+AVAX INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-05-17 19:33:24
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000000 per day
+Annualized Growth Rate: 0.00% per year
+Optimal Intercept: 0.324112
+Maximum R²: -0.000000
+
+MODEL FORMULA
+--------------------
+price = 16.01 × e^(0.000000 × (day - 704) + 0.324112)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $9.19
+Model Fair Price: $22.14
+Undervaluation: -58.49%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $22.14 | Growth: +0.00%
+  3-Year: $22.14 | Growth: +0.00%
+  5-Year: $22.14 | Growth: +0.00%
+  10-Year: $22.14 | Growth: +0.00%
+  15-Year: $22.14 | Growth: +0.00%
+  20-Year: $22.14 | Growth: +0.00%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $22.14 | Return: +140.89%
+  3-Year: $22.14 | Return: +140.89%
+  5-Year: $22.14 | Return: +140.89%
+  10-Year: $22.14 | Return: +140.89%
+  15-Year: $22.14 | Return: +140.89%
+  20-Year: $22.14 | Return: +140.89%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

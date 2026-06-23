@@ -1,0 +1,45 @@
+BCH INTERCEPT OPTIMIZATION RESULTS
+==================================================
+
+Analysis Date: 2026-05-10 15:55:44
+
+OPTIMIZATION PARAMETERS
+------------------------------
+Fixed Growth Rate: 0.000200 per day
+Annualized Growth Rate: 7.31% per year
+Optimal Intercept: 0.461334
+Maximum R²: 0.058714
+
+MODEL FORMULA
+--------------------
+price = 164.85 × e^(0.000200 × (day - 418) + 0.461334)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $461.24
+Model Fair Price: $447.46
+Undervaluation: +3.08%
+
+FORWARD PROJECTIONS
+-------------------------
+Model-Based Projections (from fair value):
+  1-Year: $481.38 | Growth: +7.58%
+  3-Year: $557.10 | Growth: +24.50%
+  5-Year: $644.74 | Growth: +44.09%
+  10-Year: $928.99 | Growth: +107.61%
+  15-Year: $1,339 | Growth: +199.14%
+  20-Year: $1,929 | Growth: +331.03%
+
+Current Price-Based Projections (same dollar values, percentage relative to current price):
+  1-Year: $481.38 | Return: +4.37%
+  3-Year: $557.10 | Return: +20.78%
+  5-Year: $644.74 | Return: +39.78%
+  10-Year: $928.99 | Return: +101.41%
+  15-Year: $1,339 | Return: +190.21%
+  20-Year: $1,929 | Return: +318.15%
+
+NOTES
+----------
+- Model-based projections: percentage relative to model's fair value
+- Current price-based projections: same dollar values, percentage relative to current actual price
+- Both show the model's predicted future price, just from different reference points

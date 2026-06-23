@@ -1,42 +1,42 @@
 DOGECOIN INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-01-03 20:46:49
+Analysis Date: 2026-05-10 15:24:15
 
 OPTIMIZATION PARAMETERS
 ------------------------------
-Fixed Growth Rate: 0.000189 per day
-Annualized Growth Rate: 6.90% per year
-Optimal Intercept: 0.853695
-Maximum R²: 0.143758
+Fixed Growth Rate: 0.000337 per day
+Annualized Growth Rate: 12.31% per year
+Optimal Intercept: 0.706168
+Maximum R²: 0.179073
 
 MODEL FORMULA
 --------------------
-price = 0.05 × e^(0.000189 × (day - 1682) + 0.853695)
+price = 0.05 × e^(0.000337 × (day - 1682) + 0.706168)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $0.1459
-Model Fair Price: $0.1590
-Undervaluation: -8.23%
+Current Price: $0.1112
+Model Fair Price: $0.1735
+Undervaluation: -35.88%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $0.1704 | Growth: +7.15%
-  3-Year: $0.1956 | Growth: +23.01%
-  5-Year: $0.2246 | Growth: +41.22%
-  10-Year: $0.3172 | Growth: +99.44%
-  15-Year: $0.4479 | Growth: +181.65%
-  20-Year: $0.6326 | Growth: +297.75%
+  1-Year: $0.1962 | Growth: +13.10%
+  3-Year: $0.2509 | Growth: +44.67%
+  5-Year: $0.3210 | Growth: +85.05%
+  10-Year: $0.5939 | Growth: +242.43%
+  15-Year: $1.10 | Growth: +533.66%
+  20-Year: $2.03 | Growth: +1072.57%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $0.1704 | Return: +16.76%
-  3-Year: $0.1956 | Return: +34.05%
-  5-Year: $0.2246 | Return: +53.89%
-  10-Year: $0.3172 | Return: +117.33%
-  15-Year: $0.4479 | Return: +206.92%
-  20-Year: $0.6326 | Return: +333.43%
+  1-Year: $0.1962 | Return: +76.38%
+  3-Year: $0.2509 | Return: +125.61%
+  5-Year: $0.3210 | Return: +188.59%
+  10-Year: $0.5939 | Return: +434.03%
+  15-Year: $1.10 | Return: +888.21%
+  20-Year: $2.03 | Return: +1728.67%
 
 NOTES
 ----------

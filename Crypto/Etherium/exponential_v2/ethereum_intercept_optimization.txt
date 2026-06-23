@@ -1,42 +1,42 @@
 ETHEREUM INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-03-05 20:29:52
+Analysis Date: 2026-05-10 15:13:44
 
 OPTIMIZATION PARAMETERS
 ------------------------------
-Fixed Growth Rate: 0.000400 per day
-Annualized Growth Rate: 14.61% per year
-Optimal Intercept: 0.819097
-Maximum R²: -0.009553
+Fixed Growth Rate: 0.000463 per day
+Annualized Growth Rate: 16.91% per year
+Optimal Intercept: 0.711370
+Maximum R²: -0.154574
 
 MODEL FORMULA
 --------------------
-price = 730.37 × e^(0.000400 × (day - 1149) + 0.819097)
+price = 730.37 × e^(0.000463 × (day - 1149) + 0.711370)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $2,076
-Model Fair Price: $3,529
-Undervaluation: -41.16%
+Current Price: $2,327
+Model Fair Price: $3,678
+Undervaluation: -36.74%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $4,084 | Growth: +15.73%
-  3-Year: $5,470 | Growth: +55.01%
-  5-Year: $7,326 | Growth: +107.61%
-  10-Year: $15,209 | Growth: +331.03%
-  15-Year: $31,576 | Growth: +794.86%
-  20-Year: $65,555 | Growth: +1757.84%
+  1-Year: $4,355 | Growth: +18.43%
+  3-Year: $6,108 | Growth: +66.09%
+  5-Year: $8,567 | Growth: +132.93%
+  10-Year: $19,954 | Growth: +442.55%
+  15-Year: $46,478 | Growth: +1163.74%
+  20-Year: $108,261 | Growth: +2843.59%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $4,084 | Return: +96.68%
-  3-Year: $5,470 | Return: +163.43%
-  5-Year: $7,326 | Return: +252.82%
-  10-Year: $15,209 | Return: +632.51%
-  15-Year: $31,576 | Return: +1420.77%
-  20-Year: $65,555 | Return: +3057.30%
+  1-Year: $4,355 | Return: +87.21%
+  3-Year: $6,108 | Return: +162.55%
+  5-Year: $8,567 | Return: +268.21%
+  10-Year: $19,954 | Return: +757.66%
+  15-Year: $46,478 | Return: +1897.73%
+  20-Year: $108,261 | Return: +4553.24%
 
 NOTES
 ----------
