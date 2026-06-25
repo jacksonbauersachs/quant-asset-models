@@ -23,8 +23,7 @@ risk-adjusted portfolio allocations.
 
 ## Asset coverage
 
-- **Crypto:** Bitcoin, Ethereum, XRP, Litecoin, Chainlink, Uniswap, AAVE, Quant, RNDR, Ton,
-  Injective, Dogecoin, Shiba Inu, Pepe, Floki
+- **Crypto:**  Bitcoin, Ethereum, XRP, Litecoin, Chainlink, Uniswap, AAVE, Quant, RNDR, Ton, Injective
 - **Commodities:** Gold, Silver, Copper, Platinum, Palladium, Nickel, Lead, Crude Oil, Natural Gas,
   Uranium, Aluminum, and others
 - **Equities:** S&P 500
