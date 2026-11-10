@@ -19,7 +19,7 @@ YAHOO_TICKER = "SI=F"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD"
 # GENESIS_DATE is OPTIONAL - if not set, will auto-detect from earliest date in data file
 # Only set this if you want to use a specific launch date (e.g., actual crypto launch date)
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
-GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
+GENESIS_DATE = "2000-08-30"  # Day 0 used by earlier results (start of SI=F history); keeps formula offsets (e.g. day - 453) comparable
 
 START_DATE = "2001-11-26"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
@@ -29,10 +29,10 @@ START_DATE = "2001-11-26"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Commodities/Silver/exponential"
+DATA_FOLDER = "Commodities/Silver/Data"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "Silver_historical_data.csv"
+HISTORICAL_DATA_FILE = "Silver_all_time_price.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
 OUTPUT_FOLDER = "Commodities/Silver/exponential"
