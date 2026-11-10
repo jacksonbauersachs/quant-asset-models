@@ -145,9 +145,12 @@ def calculate_r2(y_actual, y_pred):
     y_actual_valid = y_actual[valid_mask]
     y_pred_valid = y_pred[valid_mask]
     
-    # Calculate R² in normal space (not log space for exponential model)
-    ss_res = np.sum((y_actual_valid - y_pred_valid) ** 2)
-    ss_tot = np.sum((y_actual_valid - np.mean(y_actual_valid)) ** 2)
+    # Calculate R² in log space: misses are scored as percentages, so every
+    # period of history counts equally regardless of price level.
+    log_actual = np.log(y_actual_valid)
+    log_pred = np.log(y_pred_valid)
+    ss_res = np.sum((log_actual - log_pred) ** 2)
+    ss_tot = np.sum((log_actual - np.mean(log_actual)) ** 2)
     
     if ss_tot == 0:
         return 0.0
@@ -210,7 +213,7 @@ def optimize_intercept_for_r2(df, growth_rate):
         optimal_r2 = -objective_function(optimal_intercept)
     
     print(f"Optimal intercept: {optimal_intercept:.6f}")
-    print(f"Maximum R²: {optimal_r2:.6f}")
+    print(f"Maximum R² (log): {optimal_r2:.6f}")
     
     return optimal_intercept, optimal_r2
 
@@ -256,7 +259,7 @@ def create_optimization_chart(df, growth_rate, optimal_intercept, optimal_r2):
         ax.set_xlabel('Date', fontsize=12)
         ax.set_ylabel(f'{CURRENCY_NAME} Price (USD) - {ylabel_suffix}', fontsize=12)
         annualized_rate = growth_rate * 365.25 * 100
-        ax.set_title(f'{CURRENCY_NAME} Optimized Model - {ylabel_suffix}\nGrowth Rate: {growth_rate:.6f} ({annualized_rate:.2f}%/yr), Intercept: {optimal_intercept:.6f}, R²: {optimal_r2:.6f}', 
+        ax.set_title(f'{CURRENCY_NAME} Optimized Model - {ylabel_suffix}\nGrowth Rate: {growth_rate:.6f} ({annualized_rate:.2f}%/yr), Intercept: {optimal_intercept:.6f}, R² (log): {optimal_r2:.6f}', 
                     fontsize=14, fontweight='bold')
         ax.grid(True, alpha=0.3, which='both')
         
@@ -407,7 +410,7 @@ def save_optimization_results(growth_rate, optimal_intercept, optimal_r2, projec
         f.write(f"Fixed Growth Rate: {growth_rate:.6f} per day\n")
         f.write(f"Annualized Growth Rate: {annualized_rate:.2f}% per year\n")
         f.write(f"Optimal Intercept: {optimal_intercept:.6f}\n")
-        f.write(f"Maximum R²: {optimal_r2:.6f}\n\n")
+        f.write(f"Maximum R² (log): {optimal_r2:.6f}\n\n")
         
         f.write("MODEL FORMULA\n")
         f.write("-" * 20 + "\n")
@@ -490,7 +493,7 @@ def main():
     print("=" * 60)
     print(f"Fixed Growth Rate: {fixed_growth_rate:.6f} per day ({annualized_rate:.2f}% per year)")
     print(f"Optimal Intercept: {optimal_intercept:.6f}")
-    print(f"Maximum R²: {optimal_r2:.6f}")
+    print(f"Maximum R² (log): {optimal_r2:.6f}")
     print(f"Current Price: ${projections['current_price']:,.2f}")
     print(f"Model Fair Price: ${projections['current_fair_price']:,.2f}")
     print(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value")

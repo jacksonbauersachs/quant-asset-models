@@ -1,42 +1,42 @@
 GOLD INTERCEPT OPTIMIZATION RESULTS
 ==================================================
 
-Analysis Date: 2026-11-10 17:14:24
+Analysis Date: 2026-11-10 17:26:18
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Growth Rate: 0.000233 per day
 Annualized Growth Rate: 8.51% per year
-Optimal Intercept: 0.388789
-Maximum R²: 0.788867
+Optimal Intercept: 0.370459
+Maximum R² (log): 0.849876
 
 MODEL FORMULA
 --------------------
-price = 255.85 × e^(0.000233 × (day - 9540) + 0.388789)
+price = 255.85 × e^(0.000233 × (day - 9540) + 0.370459)
 
 CURRENT ANALYSIS
 --------------------
 Current Price: $4,033
-Model Fair Price: $3,372
-Overvalued by 19.59% vs fair value
+Model Fair Price: $3,311
+Overvalued by 21.81% vs fair value
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $3,672 | Growth: +8.88%
-  3-Year: $4,353 | Growth: +29.09%
-  5-Year: $5,161 | Growth: +53.04%
-  10-Year: $7,898 | Growth: +134.21%
-  15-Year: $12,087 | Growth: +258.42%
-  20-Year: $18,498 | Growth: +448.53%
+  1-Year: $3,605 | Growth: +8.88%
+  3-Year: $4,274 | Growth: +29.09%
+  5-Year: $5,067 | Growth: +53.04%
+  10-Year: $7,755 | Growth: +134.21%
+  15-Year: $11,868 | Growth: +258.42%
+  20-Year: $18,162 | Growth: +448.53%
 
 Current Price-Based Projections (same dollar values, percentage relative to current price):
-  1-Year: $3,672 | Return: -8.96%
-  3-Year: $4,353 | Return: +7.94%
-  5-Year: $5,161 | Return: +27.97%
-  10-Year: $7,898 | Return: +95.84%
-  15-Year: $12,087 | Return: +199.70%
-  20-Year: $18,498 | Return: +358.66%
+  1-Year: $3,605 | Return: -10.61%
+  3-Year: $4,274 | Return: +5.98%
+  5-Year: $5,067 | Return: +25.64%
+  10-Year: $7,755 | Return: +92.28%
+  15-Year: $11,868 | Return: +194.26%
+  20-Year: $18,162 | Return: +350.33%
 
 NOTES
 ----------

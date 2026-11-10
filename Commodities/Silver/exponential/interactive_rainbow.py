@@ -136,9 +136,12 @@ def calculate_r2(y_actual, y_pred):
     y_actual_valid = y_actual[valid_mask]
     y_pred_valid = y_pred[valid_mask]
     
-    # Calculate R² in normal space (not log space for exponential model)
-    ss_res = np.sum((y_actual_valid - y_pred_valid) ** 2)
-    ss_tot = np.sum((y_actual_valid - np.mean(y_actual_valid)) ** 2)
+    # Calculate R² in log space: misses are scored as percentages, so every
+    # period of history counts equally regardless of price level.
+    log_actual = np.log(y_actual_valid)
+    log_pred = np.log(y_pred_valid)
+    ss_res = np.sum((log_actual - log_pred) ** 2)
+    ss_tot = np.sum((log_actual - np.mean(log_actual)) ** 2)
     
     if ss_tot == 0:
         return 0.0
@@ -234,8 +237,8 @@ def update_model(val):
     r2 = calculate_r2(df_filtered['Price'], df_filtered['Model_Price'])
     
     # Update titles
-    ax1.set_title(f'{CURRENCY_NAME} Rainbow Chart - Log Scale\nR² = {r2:.6f}', fontsize=14, fontweight='bold')
-    ax2.set_title(f'{CURRENCY_NAME} Rainbow Chart - Normal Scale\nR² = {r2:.6f}', fontsize=14, fontweight='bold')
+    ax1.set_title(f'{CURRENCY_NAME} Rainbow Chart - Log Scale\nR² (log) = {r2:.6f}', fontsize=14, fontweight='bold')
+    ax2.set_title(f'{CURRENCY_NAME} Rainbow Chart - Normal Scale\nR² (log) = {r2:.6f}', fontsize=14, fontweight='bold')
     
     # Update info text
     current_price = df_filtered['Price'].iloc[-1]
@@ -260,7 +263,7 @@ def update_model(val):
     # Calculate annualized growth rate for display
     annualized_rate = growth_rate * 365.25 * 100  # Convert to percentage
     
-    info_text = f"Growth Rate: {growth_rate:.6f} ({annualized_rate:.2f}%/yr) | R²: {r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
+    info_text = f"Growth Rate: {growth_rate:.6f} ({annualized_rate:.2f}%/yr) | R² (log): {r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
     
     ax_info.texts[0].set_text(info_text)
     
@@ -287,7 +290,7 @@ def main():
     print(f"Optimal growth rate: {initial_growth_rate:.6f} per day")
     annualized_rate = initial_growth_rate * 365.25 * 100
     print(f"Annualized growth rate: {annualized_rate:.2f}% per year")
-    print(f"Maximum R²: {optimal_r2:.6f}")
+    print(f"Maximum R² (log): {optimal_r2:.6f}")
     
     # Create figure with two subplots
     plt.style.use('default')
@@ -340,7 +343,7 @@ def main():
     # Add model information
     initial_r2 = calculate_r2(df_filtered['Price'], df_filtered['Model_Price'])
     annualized_rate = initial_growth_rate * 365.25 * 100
-    formula_text = f'Model: price = {first_price:.2f} × e^({initial_growth_rate:.6f} × (day - {first_days:.0f}))\nGrowth: {annualized_rate:.2f}%/yr | R² = {initial_r2:.4f}'
+    formula_text = f'Model: price = {first_price:.2f} × e^({initial_growth_rate:.6f} × (day - {first_days:.0f}))\nGrowth: {annualized_rate:.2f}%/yr | R² (log) = {initial_r2:.4f}'
     ax1.text(0.02, 0.02, formula_text, transform=ax1.transAxes, fontsize=10, 
             color='black', bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.5'))
     ax2.text(0.02, 0.02, formula_text, transform=ax2.transAxes, fontsize=10, 
@@ -350,7 +353,7 @@ def main():
     for ax, ylabel_suffix in [(ax1, 'Log Scale'), (ax2, 'Normal Scale')]:
         ax.set_xlabel('Date', fontsize=12)
         ax.set_ylabel(f'{CURRENCY_NAME} Price (USD) - {ylabel_suffix}', fontsize=12)
-        ax.set_title(f'{CURRENCY_NAME} Rainbow Chart - {ylabel_suffix}\nR² = {initial_r2:.6f}', fontsize=14, fontweight='bold')
+        ax.set_title(f'{CURRENCY_NAME} Rainbow Chart - {ylabel_suffix}\nR² (log) = {initial_r2:.6f}', fontsize=14, fontweight='bold')
         ax.grid(True, alpha=0.3, which='both')
         
         # Dynamic y-axis formatting based on data range
@@ -434,7 +437,7 @@ def main():
     # Calculate annualized growth rate for display
     annualized_rate = initial_growth_rate * 365.25 * 100
     
-    info_text = f"Growth Rate: {initial_growth_rate:.6f} ({annualized_rate:.2f}%/yr) | R²: {initial_r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
+    info_text = f"Growth Rate: {initial_growth_rate:.6f} ({annualized_rate:.2f}%/yr) | R² (log): {initial_r2:.6f} | Current: {current_str} | Model: {model_str} | Deviation: {deviation:+.1f}%"
     
     ax_info.text(0.02, 0.5, info_text, transform=ax_info.transAxes, fontsize=11, 
                 verticalalignment='center', bbox=dict(facecolor='lightgray', alpha=0.8, boxstyle='round,pad=0.3'))
