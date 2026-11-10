@@ -26,7 +26,7 @@ Set MODEL_TYPE below to choose which model to use.
 # ============================================
 CURRENCY_NAME = "Gold"  # Display name (capitalized, e.g., "Bitcoin", "Chainlink")
 CURRENCY_NAME_LOWER = "gold"  # Lowercase name for file naming (e.g., "bitcoin", "chainlink")
-YAHOO_TICKER = "GLD-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
+YAHOO_TICKER = "GC=F"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "LINK-USD")
 
 # ============================================
 # DATES
@@ -44,7 +44,7 @@ START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysi
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Chainlink"
-DATA_FOLDER = "Portfolio/Data"
+DATA_FOLDER = "Commodities/Gold/Data"
 
 # Example: "Chainlink_historical_data.csv"
 HISTORICAL_DATA_FILE = "Gold_all_time_price.csv"

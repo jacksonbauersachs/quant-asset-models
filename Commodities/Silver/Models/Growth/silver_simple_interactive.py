@@ -8,7 +8,7 @@ import os
 def load_silver_data():
     """Load the comprehensive silver data."""
     try:
-        df = pd.read_csv('Portfolio/Data/Silver_all_time_price.csv')
+        df = pd.read_csv('Commodities/Silver/exponential/Silver_historical_data.csv')
         
         # Convert date column
         df['Date'] = pd.to_datetime(df['Date'], errors='coerce')

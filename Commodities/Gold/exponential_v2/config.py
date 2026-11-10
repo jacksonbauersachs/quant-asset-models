@@ -11,7 +11,7 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 CURRENCY_NAME = "Gold"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
 CURRENCY_NAME_LOWER = "gold"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "GOLD-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+YAHOO_TICKER = "GC=F"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES
@@ -19,7 +19,7 @@ YAHOO_TICKER = "GOLD-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-
 # GENESIS_DATE is OPTIONAL - if not set, will auto-detect from earliest date in data file
 # Only set this if you want to use a specific launch date (e.g., actual crypto launch date)
 # GENESIS_DATE = "2015-07-30"  # Launch/genesis date (YYYY-MM-DD format) - OPTIONAL
-GENESIS_DATE = None  # Set to None to auto-detect from data, or specify a date string
+GENESIS_DATE = "1975-01-03"  # First date of the original 1975+ gold dataset; keeps day numbering (e.g. day 9540 = 2001-02-15) consistent with past results
 
 START_DATE = "2001-02-15"  # Analysis start date - when to begin the rainbow chart analysis (YYYY-MM-DD format)
 # Leave as empty string "" to auto-detect from first date in data file
@@ -29,7 +29,7 @@ START_DATE = "2001-02-15"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Portfolio/Data"
+DATA_FOLDER = "Commodities/Gold/Data"
 
 # Example: "Ethereum Historical Data.csv"
 HISTORICAL_DATA_FILE = "Gold_all_time_price.csv"
@@ -44,7 +44,7 @@ OUTPUT_FOLDER = "Commodities/Gold/exponential_v2"
 # This is typically found by running the interactive rainbow chart first
 # Growth rate is in "per day" units (e.g., 0.001 = 0.1% per day ≈ 36.5% per year)
 # Set to None to let optimize_intercept.py find the optimal growth rate automatically
-FIXED_GROWTH_RATE = .000237  # Example: 0.001 for 0.1% daily growth
+FIXED_GROWTH_RATE = .000233  # Example: 0.001 for 0.1% daily growth
 
 # ============================================
 # DATA SOURCE

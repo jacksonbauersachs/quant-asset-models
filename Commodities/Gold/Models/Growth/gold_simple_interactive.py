@@ -8,7 +8,7 @@ import os
 def load_gold_data():
     """Load the comprehensive gold data."""
     try:
-        df = pd.read_csv('Portfolio/Data/Gold_all_time_price.csv')
+        df = pd.read_csv('Commodities/Gold/Data/Gold_all_time_price.csv')
         
         # Convert date column
         df['Date'] = pd.to_datetime(df['Date'], errors='coerce')

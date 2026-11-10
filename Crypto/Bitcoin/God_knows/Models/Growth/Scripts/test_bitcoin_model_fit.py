@@ -50,7 +50,7 @@ def main():
     print("=" * 60)
     
     # Load Bitcoin data
-    df = pd.read_csv("Portfolio/Data/Bitcoin_all_time_price.csv")
+    df = pd.read_csv("Crypto/Bitcoin/data_update/BTC_historical_data.csv")
     df['Date'] = pd.to_datetime(df['Date'])
     
     # Handle Price column

@@ -2,8 +2,7 @@
 
 A quantitative research framework for modeling the long-term fair value, expected return, and risk
 of investments across cryptocurrencies, commodities, and equities. It fits valuation models to
-years of price history, simulates forward price paths with Monte Carlo methods, and derives
-risk-adjusted portfolio allocations.
+years of price history and simulates forward price paths with Monte Carlo methods.
 
 > Research and educational project. Nothing here is financial advice.
 
@@ -17,9 +16,6 @@ risk-adjusted portfolio allocations.
 - **Forward simulation** — Geometric Brownian Motion (GBM) and stochastic mean-reversion variants
   drive Monte Carlo simulations that produce probabilistic price projections with confidence
   intervals.
-- **Portfolio optimization** — Applies the Kelly criterion (single-asset, no-leverage, and
-  multi-asset variants) to translate return and volatility estimates into risk-adjusted
-  allocations.
 
 ## Asset coverage
 
@@ -35,7 +31,6 @@ risk-adjusted portfolio allocations.
 | Valuation   | Logarithmic / exponential growth-curve fitting, intercept-slope optimization, overvaluation analysis |
 | Risk        | Exponential-decay volatility modeling                                      |
 | Simulation  | Geometric Brownian Motion, stochastic mean reversion, Monte Carlo          |
-| Allocation  | Kelly criterion (single-asset, no-leverage, three-asset)                   |
 
 ## Tech stack
 
@@ -49,7 +44,6 @@ Data sources: Yahoo Finance, Alpha Vantage, FRED, CoinDesk, and metals-price API
 Crypto/           Per-asset valuation models and analysis for each cryptocurrency
 Commodities/      Per-asset valuation models for each commodity
 SP500/            S&P 500 data, models, simulations, and visualizations
-Portfolio/        Allocation optimizers (Kelly criterion) and overvaluation tools
 model_templates/  Reusable model scaffolds (log, exponential, point-selection)
 ```
 
@@ -66,8 +60,7 @@ the required variables.
 ## Output
 
 For each asset, the framework produces:
-- a fitted long-term fair-value curve and an overvaluation estimate versus the current price,
-- Monte Carlo price projections with confidence intervals, and
-- risk-adjusted portfolio allocations (expected return, volatility, Sharpe ratio) derived from those inputs.
+- a fitted long-term fair-value curve and an overvaluation estimate versus the current price, and
+- Monte Carlo price projections with confidence intervals.
 
 All figures are model output for research purposes, not predictions.

@@ -474,7 +474,7 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections,
         f.write("-" * 20 + "\n")
         f.write(f"Current Price: ${projections['current_price']:,.2f}\n")
         f.write(f"Model Fair Price: ${projections['current_fair_price']:,.2f}\n")
-        f.write(f"Undervaluation: {projections['undervaluation']:+.2f}%\n")
+        f.write(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value\n")
         
         # Add 30-year return (calculate manually since it's not in standard projections)
         current_price = projections['current_price']
@@ -611,7 +611,7 @@ def main():
     print(f"Maximum R²: {optimal_r2:.6f}")
     print(f"Current Price: ${projections['current_price']:,.2f}")
     print(f"Model Fair Price: ${projections['current_fair_price']:,.2f}")
-    print(f"Undervaluation: {projections['undervaluation']:+.2f}%")
+    print(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value")
     print(f"\nResults saved to: {results_file}")
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ This is the ONLY file you need to modify when cloning the template.
 # ============================================
 CURRENCY_NAME = "Gold"  # Display name (capitalized, e.g., "Bitcoin", "Dogecoin")
 CURRENCY_NAME_LOWER = "gold"  # Lowercase name for file naming (e.g., "bitcoin", "dogecoin")
-YAHOO_TICKER = "DGLD-USD"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
+YAHOO_TICKER = "GC=F"  # Yahoo Finance ticker symbol (e.g., "BTC-USD", "ETH-USD", "DOGE-USD")
 
 # ============================================
 # DATES
@@ -29,7 +29,7 @@ START_DATE = "1976-08-30"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Portfolio/Data"
+DATA_FOLDER = "Commodities/Gold/Data"
 
 # Example: "Ethereum Historical Data.csv"
 HISTORICAL_DATA_FILE = "Gold_all_time_price.csv"

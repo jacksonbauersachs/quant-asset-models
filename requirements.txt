@@ -6,5 +6,6 @@ matplotlib
 seaborn
 yfinance
 requests
+beautifulsoup4
 python-dotenv
 tqdm

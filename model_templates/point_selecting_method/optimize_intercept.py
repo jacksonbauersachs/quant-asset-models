@@ -957,7 +957,7 @@ def save_optimization_results(slope, optimal_intercept, optimal_r2, projections,
         f.write("-" * 20 + "\n")
         f.write(f"Current Price: ${projections['current_price']:,.2f}\n")
         f.write(f"Model Fair Price: ${projections['current_fair_price']:,.2f}\n")
-        f.write(f"Undervaluation: {projections['undervaluation']:+.2f}%\n\n")
+        f.write(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value\n\n")
         
         f.write("FORWARD PROJECTIONS\n")
         f.write("-" * 25 + "\n")
@@ -1045,7 +1045,7 @@ def save_optimization_results_powerlaw(a, b, first_day_offset, optimal_r2, proje
         f.write("-" * 20 + "\n")
         f.write(f"Current Price: ${projections['current_price']:,.2f}\n")
         f.write(f"Model Fair Price: ${projections['current_fair_price']:,.2f}\n")
-        f.write(f"Undervaluation: {projections['undervaluation']:+.2f}%\n\n")
+        f.write(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value\n\n")
         
         f.write("FORWARD PROJECTIONS\n")
         f.write("-" * 25 + "\n")
@@ -1098,7 +1098,7 @@ def save_optimization_results_exponential(a, b, first_day_offset, optimal_r2, pr
         f.write("-" * 20 + "\n")
         f.write(f"Current Price: ${projections['current_price']:,.2f}\n")
         f.write(f"Model Fair Price: ${projections['current_fair_price']:,.2f}\n")
-        f.write(f"Undervaluation: {projections['undervaluation']:+.2f}%\n\n")
+        f.write(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value\n\n")
         
         f.write("FORWARD PROJECTIONS\n")
         f.write("-" * 25 + "\n")
@@ -1307,7 +1307,7 @@ def main():
         print(f"Maximum R²: {optimal_r2:.6f}")
         print(f"Current Price: ${projections['current_price']:,.2f}")
         print(f"Model Fair Price: ${projections['current_fair_price']:,.2f}")
-        print(f"Undervaluation: {projections['undervaluation']:+.2f}%")
+        print(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value")
         print(f"\nResults saved to: {results_file}")
     
     elif model_type_to_use == 'exponential':
@@ -1359,7 +1359,7 @@ def main():
         print(f"Maximum R²: {optimal_r2:.6f}")
         print(f"Current Price: ${projections['current_price']:,.2f}")
         print(f"Model Fair Price: ${projections['current_fair_price']:,.2f}")
-        print(f"Undervaluation: {projections['undervaluation']:+.2f}%")
+        print(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value")
         print(f"\nResults saved to: {results_file}")
     
     else:  # parametric model
@@ -1400,7 +1400,7 @@ def main():
         print(f"Maximum R²: {optimal_r2:.6f}")
         print(f"Current Price: ${projections['current_price']:,.2f}")
         print(f"Model Fair Price: ${projections['current_fair_price']:,.2f}")
-        print(f"Undervaluation: {projections['undervaluation']:+.2f}%")
+        print(f"{'Overvalued' if projections['undervaluation'] > 0 else 'Undervalued'} by {abs(projections['undervaluation']):.2f}% vs fair value")
         print(f"\nResults saved to: {results_file}")
 
 if __name__ == "__main__":

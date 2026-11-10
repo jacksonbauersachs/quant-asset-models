@@ -36,7 +36,7 @@ import os
 # =============================================================================
 
 # Current Bitcoin growth model coefficients (updated 2025-08-25)
-# These coefficients are fitted on the current Portfolio/Data/Bitcoin_all_time_price.csv dataset
+# These coefficients are fitted on the current Crypto/Bitcoin/data_update/BTC_historical_data.csv dataset
 BITCOIN_GROWTH_COEFFICIENTS = {
     'slope': 2.464300,
     'intercept': -16.448768,
@@ -221,7 +221,7 @@ def load_bitcoin_data():
     
     # Try multiple possible file locations
     possible_files = [
-        "Portfolio/Data/Bitcoin_all_time_price.csv",
+        "Crypto/Bitcoin/data_update/BTC_historical_data.csv",
         "Crypto/Bitcoin/Data/Bitcoin_all_time_price.csv",
         "Crypto/Bitcoin/Data Sets/Bitcoin Data/Bitcoin_Final_Complete_Data_20250719.csv"
     ]
@@ -301,7 +301,7 @@ def main():
     
     if fig:
         # Save the chart
-        output_file = "Portfolio/bitcoin_rainbow_chart_latest.png"
+        output_file = "Crypto/Bitcoin/God_knows/Models/Growth/bitcoin_rainbow_chart_latest.png"
         fig.savefig(output_file, dpi=300, bbox_inches='tight')
         print(f"Rainbow chart saved to: {output_file}")
         
@@ -309,7 +309,7 @@ def main():
         plt.show()
     
     # Save analysis results
-    results_file = "Portfolio/bitcoin_rainbow_analysis_latest.txt"
+    results_file = "Crypto/Bitcoin/God_knows/Models/Growth/bitcoin_rainbow_analysis_latest.txt"
     with open(results_file, 'w') as f:
         f.write("BITCOIN RAINBOW CHART ANALYSIS\n")
         f.write("=" * 50 + "\n\n")

@@ -8,7 +8,7 @@ from datetime import datetime
 def load_gold_data():
     """Load the comprehensive gold data."""
     try:
-        df = pd.read_csv('Portfolio/Data/Gold_all_time_price.csv')
+        df = pd.read_csv('Commodities/Gold/Data/Gold_all_time_price.csv')
         
         # Convert date column
         df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
@@ -185,7 +185,7 @@ CURRENT ANALYSIS
 --------------------
 Current Price: ${current_price:,.2f}
 Model Fair Price: ${fair_value:,.2f}
-Undervaluation: {deviation:+.1f}%
+{'Overvalued' if deviation > 0 else 'Undervalued'} by {abs(deviation):.1f}% vs fair value
 
 FORWARD PROJECTIONS
 -------------------------
