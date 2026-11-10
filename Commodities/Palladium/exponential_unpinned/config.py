@@ -25,5 +25,5 @@ SPIKE_CHECK_YEARS = 2
 
 # Paths (resolved from this file, so scripts work from any working directory)
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DATA_FILE = REPO_ROOT / "Commodities" / "Palladium" / "Palladium_historical_data.csv"
+DATA_FILE = REPO_ROOT / "Commodities" / "Palladium" / "Data" / "Palladium_all_time_price.csv"
 OUTPUT_FOLDER = Path(__file__).resolve().parent

@@ -29,10 +29,10 @@ START_DATE = "2009-10-28"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Commodities/Palladium"
+DATA_FOLDER = "Commodities/Palladium/Data"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "Palladium_historical_data.csv"
+HISTORICAL_DATA_FILE = "Palladium_all_time_price.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
 OUTPUT_FOLDER = "Commodities/Palladium"

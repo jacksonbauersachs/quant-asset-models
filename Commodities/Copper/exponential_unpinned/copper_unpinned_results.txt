@@ -1,0 +1,42 @@
+COPPER UNPINNED EXPONENTIAL MODEL
+==================================================
+Analysis Date: 2026-11-10 18:12:36
+Data: 2003-11-03 to 2026-11-10 (5786 days)
+
+FIT (log scale, growth and level fitted together)
+------------------------------
+Growth rate: 0.000094 per day (fitted)
+Annual growth (compounded): 3.50% per year
+R² (log): 0.397136
+Sigma (typical log deviation): 0.2818 (1σ band = x0.75 to x1.33 of fair value)
+
+MODEL FORMULA
+--------------------
+fair price = 2.06 × e^(0.000094 × days since 2003-11-03)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $6.27
+Model Fair Price: $4.55
+Overvalued by 37.67% vs fair value (+1.13 sigma from trend)
+Bands today: -2σ $2.59 | -1σ $3.43 | +1σ $6.03 | +2σ $8.00
+
+SPIKE CHECK (refit without the last 2 years)
+------------------------------
+Fit through 2024-11-10: 2.91%/yr, fair value today $4.16
+Full fit: 3.50%/yr, fair value today $4.55 (+9.35% from recent data)
+
+FORWARD PROJECTIONS (fair value path)
+-------------------------
+   1-Year: $4.71 | from fair value: +3.50% | from current price: -24.82%
+   3-Year: $5.05 | from fair value: +10.88% | from current price: -19.46%
+   5-Year: $5.41 | from fair value: +18.79% | from current price: -13.72%
+  10-Year: $6.42 | from fair value: +41.11% | from current price: +2.49%
+  15-Year: $7.63 | from fair value: +67.62% | from current price: +21.75%
+  20-Year: $9.07 | from fair value: +99.11% | from current price: +44.62%
+
+NOTES
+----------
+- Unlike the pinned exponential model, the curve is not pinned to the start-date price.
+- R² (log) is not comparable with dollar-scale R² from older results.
+- σ bands show typical swings around trend; they are not price targets.

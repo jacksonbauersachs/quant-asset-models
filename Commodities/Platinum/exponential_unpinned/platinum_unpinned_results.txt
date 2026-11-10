@@ -1,0 +1,42 @@
+PLATINUM UNPINNED EXPONENTIAL MODEL
+==================================================
+Analysis Date: 2026-11-10 18:12:33
+Data: 1985-01-28 to 2026-11-10 (10822 days)
+
+FIT (log scale, growth and level fitted together)
+------------------------------
+Growth rate: 0.000093 per day (fitted)
+Annual growth (compounded): 3.47% per year
+R² (log): 0.592866
+Sigma (typical log deviation): 0.3401 (1σ band = x0.71 to x1.41 of fair value)
+
+MODEL FORMULA
+--------------------
+fair price = 364.90 × e^(0.000093 × days since 1985-01-28)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $1,545
+Model Fair Price: $1,520
+Overvalued by 1.68% vs fair value (+0.05 sigma from trend)
+Bands today: -2σ $769.73 | -1σ $1,082 | +1σ $2,135 | +2σ $3,001
+
+SPIKE CHECK (refit without the last 2 years)
+------------------------------
+Fit through 2024-11-10: 3.47%/yr, fair value today $1,520
+Full fit: 3.47%/yr, fair value today $1,520 (+0.01% from recent data)
+
+FORWARD PROJECTIONS (fair value path)
+-------------------------
+   1-Year: $1,573 | from fair value: +3.47% | from current price: +1.76%
+   3-Year: $1,684 | from fair value: +10.79% | from current price: +8.96%
+   5-Year: $1,803 | from fair value: +18.62% | from current price: +16.66%
+  10-Year: $2,138 | from fair value: +40.70% | from current price: +38.37%
+  15-Year: $2,536 | from fair value: +66.89% | from current price: +64.13%
+  20-Year: $3,008 | from fair value: +97.96% | from current price: +94.69%
+
+NOTES
+----------
+- Unlike the pinned exponential model, the curve is not pinned to the start-date price.
+- R² (log) is not comparable with dollar-scale R² from older results.
+- σ bands show typical swings around trend; they are not price targets.

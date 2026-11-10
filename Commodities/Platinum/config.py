@@ -29,10 +29,10 @@ START_DATE = ""  # Analysis start date - when to begin the rainbow chart analysi
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "Commodities/Platinum"
+DATA_FOLDER = "Commodities/Platinum/Data"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "Platinum_historical_data.csv"
+HISTORICAL_DATA_FILE = "Platinum_all_time_price.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
 OUTPUT_FOLDER = "Commodities/Platinum"
