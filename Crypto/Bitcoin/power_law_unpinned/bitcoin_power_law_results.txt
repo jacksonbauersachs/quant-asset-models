@@ -1,0 +1,50 @@
+BITCOIN UNPINNED POWER-LAW MODEL
+==================================================
+Analysis Date: 2026-11-10 17:50:45
+Day 0 (genesis): 2010-07-18
+Fit data: 2011-04-10 to 2026-11-10 (5694 days)
+
+FIT (log scale, exponent and level fitted together)
+------------------------------
+Exponent k: 4.0125 (fitted)
+  = log_model_v2-style slope 1.7426 (log10 price per ln day)
+R² (log): 0.936856
+Sigma (typical log deviation): 0.7567 (1σ band = x0.47 to x2.13 of fair value)
+
+MODEL FORMULA
+--------------------
+fair price = 6.4179e-11 × days^4.0125   (days since 2010-07-18)
+
+GROWTH (slows as the asset ages)
+------------------------------
+  Annual growth          now: 27.0%
+  Annual growth   in 5 years: 20.2%
+  Annual growth  in 10 years: 16.1%
+  Annual growth  in 20 years: 11.5%
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $73,695
+Model Fair Price: $90,181
+Undervalued by 18.28% vs fair value (-0.27 sigma from trend)
+Bands today: -2σ $19,855 | -1σ $42,315 | +1σ $192,192 | +2σ $409,596
+
+SPIKE CHECK (refit without the last 2 years)
+------------------------------
+Fit through 2024-11-10: k=3.9542, fair value today $82,393
+Full fit: k=4.0125, fair value today $90,181 (+9.45% from recent data)
+
+FORWARD PROJECTIONS (fair value path)
+-------------------------
+   1-Year: $114,494 | from fair value: +26.96% | from current price: +55.36%
+   3-Year: $177,527 | from fair value: +96.85% | from current price: +140.89%
+   5-Year: $263,609 | from fair value: +192.31% | from current price: +257.70%
+  10-Year: $614,009 | from fair value: +580.86% | from current price: +733.18%
+  15-Year: $1,233,996 | from fair value: +1268.35% | from current price: +1574.47%
+  20-Year: $2,235,892 | from fair value: +2379.33% | from current price: +2934.00%
+
+NOTES
+----------
+- A power law depends on day 0 (GENESIS_DATE); keep it fixed between runs.
+- R² (log) is comparable with log_model_v2's R², which is also log-scale.
+- σ bands show typical swings around trend; they are not price targets.

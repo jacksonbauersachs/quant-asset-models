@@ -1,44 +1,44 @@
 BITCOIN INTERCEPT OPTIMIZATION RESULTS (LOGARITHMIC MODEL)
 ==================================================
 
-Analysis Date: 2026-05-10 15:10:21
+Analysis Date: 2026-11-10 17:50:48
 
 OPTIMIZATION PARAMETERS
 ------------------------------
 Fixed Slope: 1.767900
-Optimal Intercept: -10.387944
-Maximum R²: 0.934367
-Annual Growth Rate: +29.36%
+Optimal Intercept: -10.390996
+Maximum R²: 0.936658
+Annual Growth Rate: +28.34%
 Model Type: Logarithmic (ln)
 
 MODEL FORMULA
 --------------------
-price = 10^(1.767900 × ln(day) + -10.387944)
+price = 10^(1.767900 × ln(day) + -10.390996)
 
 CURRENT ANALYSIS
 --------------------
-Current Price: $81,218.01
-Model Fair Price: $84,014.95
-Undervaluation: -3.33%
-30-Year Return (from current price): +7759.99%
+Current Price: $73,694.66
+Model Fair Price: $94,788.25
+Undervalued by 22.25% vs fair value
+30-Year Return (from current price): +8893.36%
 
 FORWARD PROJECTIONS
 -------------------------
 Model-Based Projections (from fair value):
-  1-Year: $107,839 | Growth: +28.36%
-  3-Year: $170,413 | Growth: +102.84%
-  5-Year: $257,117 | Growth: +206.04%
-  10-Year: $617,720 | Growth: +635.25%
-  15-Year: $1,270,089 | Growth: +1411.74%
-  20-Year: $2,342,590 | Growth: +2688.30%
+  1-Year: $120,760 | Growth: +27.40%
+  3-Year: $188,440 | Growth: +98.80%
+  5-Year: $281,426 | Growth: +196.90%
+  10-Year: $663,609 | Growth: +600.10%
+  15-Year: $1,347,270 | Growth: +1321.35%
+  20-Year: $2,462,302 | Growth: +2497.69%
 
 Current Price-Based Projections (converges toward model's future fair value):
-  1-Year: $107,839 | Return: +32.78%
-  3-Year: $170,413 | Return: +109.82%
-  5-Year: $257,117 | Return: +216.58%
-  10-Year: $617,720 | Return: +660.57%
-  15-Year: $1,270,089 | Return: +1463.80%
-  20-Year: $2,342,590 | Return: +2784.32%
+  1-Year: $120,760 | Return: +63.87%
+  3-Year: $188,440 | Return: +155.70%
+  5-Year: $281,426 | Return: +281.88%
+  10-Year: $663,609 | Return: +800.49%
+  15-Year: $1,347,270 | Return: +1728.18%
+  20-Year: $2,462,302 | Return: +3241.22%
 
 NOTES
 ----------
