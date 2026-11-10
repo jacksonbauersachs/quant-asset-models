@@ -43,8 +43,10 @@ def load_data(end_date=None):
         prices = prices.str.replace(",", "", regex=False)
     df["Price"] = pd.to_numeric(prices, errors="coerce")
     df = df.dropna(subset=["Date", "Price"]).sort_values("Date")
-    genesis = pd.Timestamp(GENESIS_DATE) if GENESIS_DATE else df["Date"].min()
-    df = df[df["Date"] >= pd.Timestamp(START_DATE)] if START_DATE else df[df["Date"] >= genesis]
+    if not GENESIS_DATE or not START_DATE:
+        raise ValueError("Set both GENESIS_DATE and START_DATE in config.py")
+    genesis = pd.Timestamp(GENESIS_DATE)
+    df = df[df["Date"] >= pd.Timestamp(START_DATE)]
     if end_date is not None:
         df = df[df["Date"] <= pd.Timestamp(end_date)]
     df = df[df["Price"] > 0].reset_index(drop=True)

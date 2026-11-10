@@ -15,9 +15,10 @@ CURRENCY_NAME_LOWER = "bitcoin"
 # 2010-07-18 is the first day of the Bitcoin price history (same as log_model_v2).
 GENESIS_DATE = "2010-07-18"
 
-# First date included in the fit. Prices before ~2011 are rounded to $0.1
-# steps in the source data, so the fit starts later (same as log_model_v2).
-# "" = use all data from GENESIS_DATE.
+# First date included in the fit and shown on the charts (required).
+# Prices before ~2011 are rounded to $0.1 steps in the source data, and the
+# first months would dominate a log-of-days fit, so the fit starts here
+# (same as log_model_v2). Day 0 stays at GENESIS_DATE.
 START_DATE = "2011-04-10"
 
 # None = fit the exponent k automatically.

@@ -40,20 +40,23 @@ def make_chart(df, model, v, chart_file):
     days = df["Days"].to_numpy()
     fair = fair_price(model, days)
     fig, axes = plt.subplots(2, 1, figsize=(14, 10))
-    for ax, x_log in zip(axes, [False, True]):
-        x = df["Date"] if not x_log else days
+    x = df["Date"]
+    for ax, log_scale in zip(axes, [True, False]):
         for n, colour in BANDS:
             ax.fill_between(x, fair * np.exp(-n * model["sigma"]),
                             fair * np.exp(n * model["sigma"]), color=colour, label=f"±{n}σ band")
         ax.plot(x, df["Price"], color="blue", linewidth=1.2, label=f"{CURRENCY_NAME} price")
         ax.plot(x, fair, color="black", linestyle="--", linewidth=2, label="Fair value (power law)")
-        ax.scatter(x.iloc[-1] if not x_log else days[-1], v["current"], color="red", s=80,
+        ax.scatter(x.iloc[-1], v["current"], color="red", s=80,
                    zorder=10, label=f"Current: {format_price(v['current'])}")
-        ax.set_yscale("log")
-        if x_log:
-            ax.set_xscale("log")
-            ax.set_xlabel(f"Days since {df.attrs['genesis']:%Y-%m-%d} (log scale) — a power law is a straight line here")
-        ax.set_ylabel("Price (USD, log scale)")
+        if log_scale:
+            ax.set_yscale("log")
+            ax.set_ylabel("Price (USD, log scale)")
+        else:
+            # Dollar scale: cap the view so the +2σ band doesn't squash the price line
+            ax.set_ylim(0, max(df["Price"].max(), fair[-1] * np.exp(model["sigma"])) * 1.1)
+            ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, _: f"${val:,.0f}"))
+            ax.set_ylabel("Price (USD, dollar scale)")
         ax.grid(True, alpha=0.3, which="both")
         ax.legend(loc="upper left", fontsize=9)
     axes[0].set_title(

@@ -24,22 +24,23 @@ def main():
     start_k = FIXED_EXPONENT if FIXED_EXPONENT is not None else auto["k"]
     print(f"Automatic fit: k = {auto['k']:.4f}, R² (log) {auto['r2']:.4f}")
 
-    fig, (ax_time, ax_loglog) = plt.subplots(2, 1, figsize=(14, 10))
+    fig, (ax_time, ax_dollar) = plt.subplots(2, 1, figsize=(14, 10))
     plt.subplots_adjust(bottom=0.12, top=0.88)
     lines, fills = [], []
-    for ax, x in [(ax_time, df["Date"]), (ax_loglog, days)]:
+    x = df["Date"]
+    for ax in (ax_time, ax_dollar):
         ax.plot(x, df["Price"], color="blue", linewidth=1.2, label=f"{CURRENCY_NAME} price")
         ax.plot(x, fair_price(auto, days), color="grey", linewidth=1,
                 label=f"Automatic fit (k = {auto['k']:.3f})")
         (line,) = ax.plot(x, fair_price(auto, days), color="black", linestyle="--",
                           linewidth=2, label="Slider model")
         lines.append((ax, x, line))
-        ax.set_yscale("log")
-        ax.set_ylabel("Price (USD, log scale)")
         ax.grid(True, alpha=0.3, which="both")
         ax.legend(loc="upper left", fontsize=9)
-    ax_loglog.set_xscale("log")
-    ax_loglog.set_xlabel(f"Days since {df.attrs['genesis']:%Y-%m-%d} (log scale)")
+    ax_time.set_yscale("log")
+    ax_time.set_ylabel("Price (USD, log scale)")
+    ax_dollar.set_ylabel("Price (USD, dollar scale)")
+    ax_dollar.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, _: f"${val:,.0f}"))
     info = fig.text(0.5, 0.94, "", ha="center", fontsize=11,
                     bbox=dict(facecolor="lightgray", alpha=0.8, boxstyle="round,pad=0.3"))
 
@@ -59,6 +60,7 @@ def main():
             fills.append(ax.fill_between(x, fair * np.exp(-model["sigma"]),
                                          fair * np.exp(model["sigma"]), color="#fce5cd",
                                          alpha=0.7, zorder=0))
+        ax_dollar.set_ylim(0, max(df["Price"].max(), fair[-1] * np.exp(model["sigma"])) * 1.1)
         v = valuation(df, model)
         info.set_text(f"k {k:.4f} | R² (log) {model['r2']:.4f} | growth now "
                       f"{annual_growth_at(model, days[-1]):.1f}%/yr | Fair {format_price(v['fair'])} | "

@@ -1,6 +1,6 @@
 BITCOIN UNPINNED POWER-LAW MODEL
 ==================================================
-Analysis Date: 2026-11-10 17:50:45
+Analysis Date: 2026-11-10 17:54:47
 Day 0 (genesis): 2010-07-18
 Fit data: 2011-04-10 to 2026-11-10 (5694 days)
 
