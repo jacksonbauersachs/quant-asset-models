@@ -29,13 +29,13 @@ START_DATE = "2020-06-15"  # Analysis start date - when to begin the rainbow cha
 # FILE PATHS (relative to project root)
 # ============================================
 # Example: "Crypto/Etherium/Data"
-DATA_FOLDER = "model_templates\exponential_adjust"
+DATA_FOLDER = "Commodities/SPHCF"
 
 # Example: "Ethereum Historical Data.csv"
-HISTORICAL_DATA_FILE = "Litecoin_historical_data.csv"
+HISTORICAL_DATA_FILE = "SPHCF_historical_data.csv"
 
 # Example: "Crypto/Etherium/Models/Growth"
-OUTPUT_FOLDER = "model_templates\exponential_adjust"
+OUTPUT_FOLDER = "Commodities/SPHCF"
 
 # ============================================
 # MODEL PARAMETERS

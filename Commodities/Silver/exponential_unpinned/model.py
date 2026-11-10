@@ -18,15 +18,30 @@ import pandas as pd
 from config import DATA_FILE, START_DATE
 
 
+def _parse_dates(dates):
+    """Parse dates written as MM/DD/YYYY, YYYY-MM-DD, or anything pandas recognises."""
+    for fmt in ("%m/%d/%Y", "%Y-%m-%d"):
+        try:
+            return pd.to_datetime(dates, format=fmt)
+        except (ValueError, TypeError):
+            pass
+    return pd.to_datetime(dates, format="mixed")
+
+
 def load_data(end_date=None):
     """Load prices from DATA_FILE, filtered to START_DATE (and optionally end_date)."""
     if not DATA_FILE.exists():
         raise FileNotFoundError(f"Data file not found: {DATA_FILE}")
-    df = pd.read_csv(DATA_FILE)
-    df["Date"] = pd.to_datetime(df["Date"], format="%m/%d/%Y")
-    if df["Price"].dtype == object:
-        df["Price"] = df["Price"].str.replace(",", "", regex=False)
-    df["Price"] = df["Price"].astype(float)
+    df = pd.read_csv(DATA_FILE, encoding="utf-8-sig")
+    df["Date"] = _parse_dates(df["Date"])
+    price_col = next((c for c in ["Price", "Close", "Adj Close", "Value"] if c in df.columns), None)
+    if price_col is None:
+        raise ValueError(f"No price column found in {DATA_FILE}: {list(df.columns)}")
+    prices = df[price_col]
+    if prices.dtype == object:
+        prices = prices.str.replace(",", "", regex=False)
+    df["Price"] = pd.to_numeric(prices, errors="coerce")
+    df = df.dropna(subset=["Date", "Price"])
     df = df.sort_values("Date")
     if START_DATE:
         df = df[df["Date"] >= pd.Timestamp(START_DATE)]
