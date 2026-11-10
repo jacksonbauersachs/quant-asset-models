@@ -1,0 +1,42 @@
+GOLD UNPINNED EXPONENTIAL MODEL
+==================================================
+Analysis Date: 2026-11-10 17:37:24
+Data: 2001-02-15 to 2026-11-10 (6658 days)
+
+FIT (log scale, growth and level fitted together)
+------------------------------
+Growth rate: 0.000234 per day (fitted)
+Annual growth (compounded): 8.93% per year
+R² (log): 0.849896
+Sigma (typical log deviation): 0.2672 (1σ band = x0.77 to x1.31 of fair value)
+
+MODEL FORMULA
+--------------------
+fair price = 368.58 × e^(0.000234 × days since 2001-02-15)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $4,033
+Model Fair Price: $3,329
+Overvalued by 21.15% vs fair value (+0.72 sigma from trend)
+Bands today: -2σ $1,951 | -1σ $2,549 | +1σ $4,348 | +2σ $5,680
+
+SPIKE CHECK (refit without the last 2 years)
+------------------------------
+Fit through 2024-11-10: 8.39%/yr, fair value today $3,052
+Full fit: 8.93%/yr, fair value today $3,329 (+9.08% from recent data)
+
+FORWARD PROJECTIONS (fair value path)
+-------------------------
+   1-Year: $3,626 | from fair value: +8.93% | from current price: -10.09%
+   3-Year: $4,303 | from fair value: +29.25% | from current price: +6.69%
+   5-Year: $5,105 | from fair value: +53.36% | from current price: +26.59%
+  10-Year: $7,830 | from fair value: +135.19% | from current price: +94.14%
+  15-Year: $12,007 | from fair value: +260.69% | from current price: +197.73%
+  20-Year: $18,415 | from fair value: +453.15% | from current price: +356.59%
+
+NOTES
+----------
+- Unlike the pinned exponential model, the curve is not pinned to the start-date price.
+- R² (log) is not comparable with dollar-scale R² from older results.
+- σ bands show typical swings around trend; they are not price targets.
