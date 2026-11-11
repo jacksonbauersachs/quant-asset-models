@@ -13,6 +13,8 @@ Half Kelly, monthly             5.09%       21.9%        -65%       -61%        
 Half Kelly, 5% bands            5.27%       21.9%        -65%       -61%        27%      28,904
 Half Kelly shrunk, bands        6.20%       18.7%        -59%       -58%        30%      34,689
 Half Kelly equal-mu, bands     10.62%       11.6%        -33%       -31%        25%      80,546
+  + pooled tilt, bands          8.03%       12.5%        -46%       -43%        59%      49,292
+  + per-asset tilt, bands       6.29%       13.3%        -38%       -34%       170%      35,277
 
 AVERAGE KELLY WEIGHTS OVER THE TEST (rest = T-bills)
                S&P 500      Gold    Silver  Platinum Palladium    Copper   Uranium      Cash
@@ -20,6 +22,8 @@ Full Kelly         33%        0%        0%        0%       12%       52%        
 Half Kelly         38%        0%        0%        0%       10%       42%       11%       -0%
 Half shrunk        43%        0%        0%        0%        8%       30%       20%       -0%
 Half eq-mu         38%       33%        0%        3%        2%        3%       20%       -0%
++pool tilt         50%       14%        0%        5%        4%        6%       20%       -0%
++asset tilt        27%       17%        0%        5%       10%       15%       26%       -0%
 
 KELLY WEIGHTS AT THE LATEST MONTH (2026-09) — model output, not advice
                S&P 500      Gold    Silver  Platinum Palladium    Copper   Uranium      Cash
@@ -27,6 +31,8 @@ Full Kelly         67%        0%        0%        0%       33%        0%        
 Half Kelly         70%        0%        0%        0%       27%        0%        3%       -0%
 Half shrunk        62%        0%        0%        0%       22%        3%       13%       -0%
 Half eq-mu         34%       33%        0%        0%        7%       11%       15%       -0%
++pool tilt         36%       20%        0%        0%       13%       12%       19%        0%
++asset tilt        24%        0%        0%        0%       54%        0%       22%       -0%
 
 LATEST INPUTS (annual)
              Exp. return  Volatility
@@ -38,3 +44,15 @@ Palladium          13.1%       29.8%
 Copper              9.4%       21.0%
 Uranium             8.2%       26.5%
 T-bill rate now: 3.93%
+
+BELOW-TREND TILT AT THE LATEST MONTH (beta = extra return per year per unit of log gap)
+Pooled beta: 0.013
+              Gap vs trend  Asset beta  Tilt to exp. return
+S&P 500               +27%       0.015                -0.4%
+Gold                 +108%       0.016                -1.1%
+Silver               +108%       0.086                -6.3%
+Platinum              +14%       0.000                -0.0%
+Palladium             -31%       0.192                +7.1%
+Copper                +21%       0.037                -0.7%
+Uranium               +14%       0.000                -0.0%
+(Pooled beta at the start of the test, 2006-01: 0.122)
