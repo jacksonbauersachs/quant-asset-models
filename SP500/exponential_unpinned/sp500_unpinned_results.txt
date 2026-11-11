@@ -1,0 +1,42 @@
+S&P 500 UNPINNED EXPONENTIAL MODEL
+==================================================
+Analysis Date: 2026-11-10 22:43:02
+Data: 1957-03-04 to 2026-11-10 (17541 data points)
+
+FIT (log scale, growth and level fitted together)
+------------------------------
+Growth rate: 0.000196 per day (fitted)
+Annual growth (compounded): 7.41% per year
+R² (log): 0.961886
+Sigma (typical log deviation): 0.2859 (1σ band = x0.75 to x1.33 of fair value)
+
+MODEL FORMULA
+--------------------
+fair price = 34.51 × e^(0.000196 × days since 1957-03-04)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $7,521
+Model Fair Price: $5,021
+Overvalued by 49.80% vs fair value (+1.41 sigma from trend)
+Bands today: -2σ $2,834 | -1σ $3,772 | +1σ $6,682 | +2σ $8,895
+
+SPIKE CHECK (refit without the last 2 years)
+------------------------------
+Fit through 2024-11-10: 7.31%/yr, fair value today $4,805
+Full fit: 7.41%/yr, fair value today $5,021 (+4.50% from recent data)
+
+FORWARD PROJECTIONS (fair value path)
+-------------------------
+   1-Year: $5,392 | from fair value: +7.41% | from current price: -28.30%
+   3-Year: $6,221 | from fair value: +23.91% | from current price: -17.28%
+   5-Year: $7,177 | from fair value: +42.95% | from current price: -4.58%
+  10-Year: $10,259 | from fair value: +104.34% | from current price: +36.41%
+  15-Year: $14,665 | from fair value: +192.11% | from current price: +94.99%
+  20-Year: $20,964 | from fair value: +317.56% | from current price: +178.74%
+
+NOTES
+----------
+- Unlike the pinned exponential model, the curve is not pinned to the start-date price.
+- R² (log) is not comparable with dollar-scale R² from older results.
+- σ bands show typical swings around trend; they are not price targets.
