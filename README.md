@@ -44,6 +44,7 @@ Data sources: Yahoo Finance, Alpha Vantage, FRED, CoinDesk, and metals-price API
 Crypto/           Per-asset valuation models and analysis for each cryptocurrency
 Commodities/      Per-asset valuation models for each commodity
 SP500/            S&P 500 data, models, simulations, and visualizations
+Allocation/       Out-of-sample backtests of Kelly vs equal-weight rebalancing across assets
 model_templates/  Reusable model scaffolds (log, exponential, point-selection)
 ```
 

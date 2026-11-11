@@ -1,0 +1,40 @@
+KELLY vs EQUAL-WEIGHT REBALANCING BACKTEST (out of sample, no Bitcoin)
+========================================================================
+Period: 2006-01 to 2026-09  |  assets: S&P 500, Gold, Silver, Platinum, Palladium, Copper, Uranium
+Costs: fund expense ratios, 0.1% per dollar traded; cash earns 3-month T-bills.
+
+Strategy                    Growth/yr  Volatility  Worst drop  Worst 12m  Traded/yr     $10k ->
+S&P 500 only                   11.02%       15.1%        -51%       -43%         5%      86,666
+Equal weight, monthly           8.33%       16.2%        -46%       -43%        55%      52,251
+Equal weight, yearly            8.30%       16.6%        -48%       -44%        19%      51,894
+Equal weight, 5% bands          8.78%       16.2%        -45%       -41%        21%      56,906
+Full Kelly, monthly             4.28%       23.4%        -65%       -61%        36%      23,773
+Half Kelly, monthly             5.09%       21.9%        -65%       -61%        41%      27,877
+Half Kelly, 5% bands            5.27%       21.9%        -65%       -61%        27%      28,904
+Half Kelly shrunk, bands        6.20%       18.7%        -59%       -58%        30%      34,689
+Half Kelly equal-mu, bands     10.62%       11.6%        -33%       -31%        25%      80,546
+
+AVERAGE KELLY WEIGHTS OVER THE TEST (rest = T-bills)
+               S&P 500      Gold    Silver  Platinum Palladium    Copper   Uranium      Cash
+Full Kelly         33%        0%        0%        0%       12%       52%        3%       -0%
+Half Kelly         38%        0%        0%        0%       10%       42%       11%       -0%
+Half shrunk        43%        0%        0%        0%        8%       30%       20%       -0%
+Half eq-mu         38%       33%        0%        3%        2%        3%       20%       -0%
+
+KELLY WEIGHTS AT THE LATEST MONTH (2026-09) — model output, not advice
+               S&P 500      Gold    Silver  Platinum Palladium    Copper   Uranium      Cash
+Full Kelly         67%        0%        0%        0%       33%        0%        0%       -0%
+Half Kelly         70%        0%        0%        0%       27%        0%        3%       -0%
+Half shrunk        62%        0%        0%        0%       22%        3%       13%       -0%
+Half eq-mu         34%       33%        0%        0%        7%       11%       15%       -0%
+
+LATEST INPUTS (annual)
+             Exp. return  Volatility
+S&P 500            11.8%       16.4%
+Gold                6.3%       16.5%
+Silver              9.2%       29.8%
+Platinum            6.2%       24.9%
+Palladium          13.1%       29.8%
+Copper              9.4%       21.0%
+Uranium             8.2%       26.5%
+T-bill rate now: 3.93%
