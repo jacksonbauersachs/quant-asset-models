@@ -7,7 +7,7 @@ growth rate and level are both fitted to the whole history on a log scale
 """
 from pathlib import Path
 
-CURRENCY_NAME = "S&P 500"
+CURRENCY_NAME = "S&P 500 (dividends reinvested)"
 CURRENCY_NAME_LOWER = "sp500"
 
 # First date included in the fit. "" = use all available data.
@@ -25,5 +25,5 @@ SPIKE_CHECK_YEARS = 2
 
 # Paths (resolved from this file, so scripts work from any working directory)
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DATA_FILE = REPO_ROOT / "SP500" / "Data" / "SP500_all_time_price.csv"
+DATA_FILE = REPO_ROOT / "SP500" / "Data" / "SP500_total_return.csv"  # dividends reinvested; price-only: SP500_all_time_price.csv
 OUTPUT_FOLDER = Path(__file__).resolve().parent
