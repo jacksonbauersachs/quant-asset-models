@@ -29,7 +29,7 @@ def spike_check(df):
         return None
     cutoff = df["Date"].iloc[-1] - pd.DateOffset(years=SPIKE_CHECK_YEARS)
     df_old = df[df["Date"] <= cutoff]
-    if len(df_old) < 500:
+    if len(df_old) < 24 or (df_old["Date"].iloc[-1] - df_old["Date"].iloc[0]).days < 5 * 365:
         return None
     m_old = fit(df_old, FIXED_EXPONENT)
     return {"cutoff": cutoff, "model": m_old,
@@ -75,7 +75,7 @@ def write_results(df, model, v, spike, results_file):
         "=" * 50,
         f"Analysis Date: {datetime.now():%Y-%m-%d %H:%M:%S}",
         f"Day 0 (genesis): {genesis:%Y-%m-%d}",
-        f"Fit data: {df['Date'].iloc[0]:%Y-%m-%d} to {df['Date'].iloc[-1]:%Y-%m-%d} ({len(df)} days)",
+        f"Fit data: {df['Date'].iloc[0]:%Y-%m-%d} to {df['Date'].iloc[-1]:%Y-%m-%d} ({len(df)} data points)",
         "",
         "FIT (log scale, exponent and level fitted together)",
         "-" * 30,
@@ -140,7 +140,7 @@ def main():
     print("=" * 40)
     df = load_data()
     print(f"Day 0: {df.attrs['genesis']:%Y-%m-%d} | fit data {df['Date'].iloc[0]:%Y-%m-%d} "
-          f"to {df['Date'].iloc[-1]:%Y-%m-%d} ({len(df)} days)")
+          f"to {df['Date'].iloc[-1]:%Y-%m-%d} ({len(df)} data points)")
     model = fit(df, FIXED_EXPONENT)
     v = valuation(df, model)
     spike = spike_check(df)

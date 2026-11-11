@@ -1,6 +1,6 @@
 SILVER UNPINNED EXPONENTIAL MODEL
 ==================================================
-Analysis Date: 2026-11-10 17:37:27
+Analysis Date: 2026-11-10 22:18:59
 Data: 2001-11-26 to 2026-11-10 (6458 days)
 
 FIT (log scale, growth and level fitted together)

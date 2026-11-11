@@ -1,0 +1,42 @@
+URANIUM UNPINNED EXPONENTIAL MODEL
+==================================================
+Analysis Date: 2026-11-10 22:30:07
+Data: 2001-01-01 to 2026-09-01 (309 data points)
+
+FIT (log scale, growth and level fitted together)
+------------------------------
+Growth rate: 0.000102 per day (fitted)
+Annual growth (compounded): 3.80% per year
+R² (log): 0.209362
+Sigma (typical log deviation): 0.5394 (1σ band = x0.58 to x1.72 of fair value)
+
+MODEL FORMULA
+--------------------
+fair price = 20.96 × e^(0.000102 × days since 2001-01-01)
+
+CURRENT ANALYSIS
+--------------------
+Current Price: $72.47
+Model Fair Price: $54.67
+Overvalued by 32.58% vs fair value (+0.52 sigma from trend)
+Bands today: -2σ $18.59 | -1σ $31.87 | +1σ $93.75 | +2σ $160.79
+
+SPIKE CHECK (refit without the last 2 years)
+------------------------------
+Fit through 2024-09-01: 3.37%/yr, fair value today $50.76
+Full fit: 3.80%/yr, fair value today $54.67 (+7.68% from recent data)
+
+FORWARD PROJECTIONS (fair value path)
+-------------------------
+   1-Year: $56.75 | from fair value: +3.80% | from current price: -21.70%
+   3-Year: $61.15 | from fair value: +11.85% | from current price: -15.63%
+   5-Year: $65.89 | from fair value: +20.53% | from current price: -9.09%
+  10-Year: $79.41 | from fair value: +45.27% | from current price: +9.57%
+  15-Year: $95.72 | from fair value: +75.09% | from current price: +32.07%
+  20-Year: $115.36 | from fair value: +111.04% | from current price: +59.18%
+
+NOTES
+----------
+- Unlike the pinned exponential model, the curve is not pinned to the start-date price.
+- R² (log) is not comparable with dollar-scale R² from older results.
+- σ bands show typical swings around trend; they are not price targets.
