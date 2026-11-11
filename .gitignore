@@ -38,3 +38,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp 
+
+# Personal holdings, strategy inputs and reports (own local repo, never pushed here)
+private/
